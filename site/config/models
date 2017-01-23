@@ -1,0 +1,11 @@
+-- Member Table.
+Member
+  ident Text
+  firstname Text Maybe
+  lastname Text Maybe
+  email Text Maybe
+  password Text Maybe
+  UniqueMember ident
+  deriving Typeable Show
+
+ -- By default this file is used in Model.hs (which is imported by Foundation.hs)

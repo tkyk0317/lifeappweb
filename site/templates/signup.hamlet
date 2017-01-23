@@ -1,0 +1,33 @@
+<div class="center_box">
+  <h1>Signup
+  <form method="POST" action="@{SignupR}" class="form_box">
+    $maybe error <- signup_error
+      <p style="color:red">#{error}
+
+    <table class="form_table">
+      <tr>
+        <td class="input_label">
+          <p>First Name
+        <td>
+          <input type="text" name="firstname" class="input_item" required>
+      <tr>
+        <td class="input_label">
+          <p>Last Name
+        <td>
+          <input type="text" name="lastname" class="input_item" required>
+      <tr>
+        <td class="input_label">
+          <p>Email
+        <td>
+          <input type="email" name="email" class="input_item" required>
+      <tr>
+        <td class="input_label">
+          <p>Password
+        <td>
+          <input type="password" name="password" class="input_item" required>
+      <tr>
+        <td>
+          <p>Password(Confirm)
+        <td>
+          <input type="password" name="password_confirm" class="input_item">
+    <input type="submit" value="Signup" class="create_account">

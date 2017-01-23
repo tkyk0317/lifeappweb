@@ -1,0 +1,5 @@
+<div class="center_box">
+  <button onclick=location.href='@{AuthR LoginR}' class="signin_button">Signin
+  <div class="message_box">
+    <p>Account create complete
+    <p>Please signin to this service

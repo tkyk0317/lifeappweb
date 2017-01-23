@@ -1,0 +1,18 @@
+<div class="center_box">
+  $maybe error <- login_error
+    <p style="color:red">#{error}
+  $nothing
+    <div>
+  <form method="POST" action=@{SigninR}>
+    <div>
+      <label>
+        <input type="email" name="email" placeholder="Email" class="input_item" value="" required>
+    <div>
+      <label>
+        <input type="password" name="password" placeholder="Password" class="input_item" value="" required>
+    <div>
+      <input type="submit" value="SignIn" class="login_item signin_button">
+  <div>
+    <button onclick=location.href='@{url}' class="login_item google_signin">Signin with Google
+  <div>
+    <a href="@{SignupR}" class="create_account">Create your Account?
