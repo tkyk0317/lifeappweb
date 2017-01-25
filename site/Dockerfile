@@ -2,8 +2,11 @@ FROM haskell:7.8
 
 #----------------------------------------------.
 # install database dependencies
-RUN ["apt-get", "update"]
+RUN apt-get update
 RUN ["apt-get", "-y", "install", "libpq-dev"]
+RUN ["apt-get", "-y", "install", "vim"]
+RUN ["apt-get", "-y", "install", "git"]
+RUN ["apt-get", "-y", "install", "less"]
 #----------------------------------------------.
 
 #----------------------------------------------.
@@ -28,16 +31,7 @@ RUN cd /opt/server && cabal install
 
 # Add installed cabal executables to PATH
 ENV PATH /root/.cabal/bin:$PATH
+#----------------------------------------------.
 
 # Default directory for container
 WORKDIR /opt/server
-#----------------------------------------------.
-
-#----------------------------------------------.
-# install npm.
-RUN ["apt-get", "update"]
-RUN ["apt-get", "-y", "install", "npm"]
-RUN npm install --save-dev webpack
-RUN npm install --save react react-dom
-RUN npm install --save-dev babel-loader babel-preset-react babel-preset-es2015
-#----------------------------------------------.

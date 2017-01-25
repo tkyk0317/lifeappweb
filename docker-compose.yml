@@ -1,24 +1,26 @@
 database:
-    build: database
-    volumes:
-      - ./database/data:/var/lib/postgresql/data
+  build: database
+  volumes:
+    - ./database/data:/var/lib/postgresql/data
+  container_name: lifeapp_db
 site:
-    build: site
-    command: yesod devel # dev setting
-    # command: /opt/server/dist/build/YourSiteName/YourSiteName # production
-    environment:
-        - PGHOST=database
-        - PGPORT=5432
-        - PGUSER=postgres
-        - PGPASS
-        - PGDATABASE=postgres
-    links:
-        - database
-    tty:
-        true # dev setting
-    # tty:
-    #     false # production
-    ports:
-        - "3000:3000" # dev setting
-    volumes:
-        - ./site:/opt/server/
+  build: site
+  command: yesod devel # dev setting
+  # command: /opt/server/dist/build/YourSiteName/YourSiteName # production
+  environment:
+    - PGHOST=database
+    - PGPORT=5432
+    - PGUSER=postgres
+    - PGPASS
+    - PGDATABASE=postgres
+  links:
+    - database
+  tty:
+    true # dev setting
+# tty:
+#   false # production
+  ports:
+    - "3000:3000" # dev setting
+  volumes:
+    - ./site:/opt/server/
+  container_name: lifeapp_site
