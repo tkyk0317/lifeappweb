@@ -1,5 +1,5 @@
 <h1>Welcome to LifeApp!
 
-<div class="flex">
+<div class="flex one two-1200">
   <div id="calendar">
   <div id="card_area">
