@@ -8,7 +8,8 @@ import moment from 'moment';
 var Calendar = React.createClass({
   getInitialState: function() {
     return {
-      month: this.props.selected.clone()
+      month: this.props.selected.clone(),
+      selected: this.props.selected
     };
   },
 
@@ -25,7 +26,7 @@ var Calendar = React.createClass({
   },
 
   select: function(d) {
-    this.props.selected = d.date;
+    this.setState({selected: d.date});
     this.forceUpdate();
   },
 
@@ -51,7 +52,8 @@ var Calendar = React.createClass({
     var count = 0;
 
     while(!done) {
-      weeks.push(<Week key={date.toString()} date={date.clone()} month={this.state.month} select={this.select} selected={this.props.selected} />);
+      weeks.push(<Week key={date.toString()} date={date.clone()}
+                       month={this.state.month} select={this.select} selected={this.state.selected} />);
       date.add(1, "w");
       done = count++ > 2 && monthIndex !== date.month();
       monthIndex = date.month();
