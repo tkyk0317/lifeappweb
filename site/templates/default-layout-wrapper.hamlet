@@ -13,6 +13,7 @@ $newline never
     <meta name="author" content="">
 
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />
 
     ^{pageHead pc}
 
@@ -22,12 +23,16 @@ $newline never
 
     <script>
       document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');
+
   <body>
     <div class="container">
       <header>
       <div id="main" role="main">
         ^{pageBody pc}
       <footer>
+        <p>
+          <a href="http://jigsaw.w3.org/css-validator/check/referer">
+            <img style="border:0;width:88px;height:31px" src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="正当なCSSです!">
         #{appCopyright $ appSettings master}
 
     $maybe analytics <- appAnalytics $ appSettings master
@@ -40,3 +45,5 @@ $newline never
           \  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
           })();
         }
+
+    <script src="/static/js/build/bundle.js">

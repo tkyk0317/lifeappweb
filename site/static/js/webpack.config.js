@@ -1,6 +1,6 @@
 module.exports = {
   /* ビルドの起点となるファイルの設定 */
-  entry: ['./app.js',  './calendar.js'],
+  entry: ['./calendar.js', './schedule_card.js'],
   /* 出力されるファイルの設定 */
   output: {
     path: './build/', // 出力先のパス
