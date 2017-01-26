@@ -47,16 +47,16 @@ var Calendar = React.createClass({
   renderWeeks: function() {
     var weeks = [];
     var done = false;
-    var date = this.state.month.clone().startOf("month").add("w", -1).day("Sunday");
-    var monthIndex = date.month();
+    var date = this.state.month.clone().startOf("month").add("w", -2).day("Sunday");
+    var startMonthIndex = date.month();
     var count = 0;
 
     while(!done) {
       weeks.push(<Week key={date.toString()} date={date.clone()}
-                       month={this.state.month} select={this.select} selected={this.state.selected} />);
+                       month={this.state.month} select={this.select}
+                       selected={this.state.selected} />);
       date.add(1, "w");
-      done = count++ > 2 && monthIndex !== date.month();
-      monthIndex = date.month();
+      done = count++ > 6 && startMonthIndex !== date.month();
     }
     return weeks;
   },
@@ -115,6 +115,6 @@ var Week = React.createClass({
 });
 
 ReactDOM.render(
-  <Calendar selected= {moment().startOf("day")} />,
+  <Calendar selected={moment().startOf("day")} />,
   document.getElementById('calendar')
 );
