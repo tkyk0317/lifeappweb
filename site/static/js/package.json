@@ -18,12 +18,19 @@
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.22.0",
     "css-loader": "^0.26.1",
+    "input-moment": "^0.3.2",
     "jsx-loader": "^0.13.2",
     "less": "^2.7.2",
     "moment": "^2.17.1",
+    "moment-range": "^3.0.0",
     "react": "^15.4.2",
+    "react-addons-css-transition-group": "^15.4.2",
+    "react-alert": "^1.0.14",
     "react-big-calendar": "^0.12.3",
+    "react-date-picker": "^5.3.28",
     "react-dom": "^15.4.2",
-    "style-loader": "^0.13.1"
+    "react-input-calendar": "^0.3.14",
+    "style-loader": "^0.13.1",
+    "superagent": "^3.4.0"
   }
 }

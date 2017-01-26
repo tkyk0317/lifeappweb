@@ -25,6 +25,8 @@ library
                      Handler.Signup
                      Handler.Signin
                      Handler.SignupComplete
+                     Handler.RegistSchedule
+                     Handler.FilterSchedule
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

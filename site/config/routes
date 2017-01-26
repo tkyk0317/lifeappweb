@@ -4,7 +4,9 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/ HomeR GET 
+/ HomeR GET
 /signup SignupR GET POST
 /signin SigninR POST
 /signup_complete SignupCompleteR GET
+/regist_schedule RegistScheduleR POST
+/regist_schedule/#Int FilterScheduleR GET UPDATE DELETE

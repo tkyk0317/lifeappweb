@@ -124,14 +124,28 @@ body {
   color: #2875C7;
   font-weight: bold;
 }
+
+/* Card Area Style */
 #card_area {
   padding-right: 0.6em;
 }
-#card_area .schdule_card {
-  border-left: 5px solid #00bfff
+#card_area .schedule_card {
+  border-left: 5px solid #2875C7;
 }
 #card_area .action_button {
   float: right;
   margin-left: 3px;
   margin-right: 3px;
+}
+
+/* Regist Modal */
+#card_area #_form {
+  width: 350px;
+}
+#card_area .regist_button {
+  width: 350px;
+  text-align: center;
+}
+#card_area h3 {
+  text-decorate: underline;
 }

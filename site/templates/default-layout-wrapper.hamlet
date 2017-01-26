@@ -12,8 +12,7 @@ $newline never
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/font-awesome-4.7.0/css/font-awesome.min.css" />
 
     ^{pageHead pc}
 
@@ -30,9 +29,6 @@ $newline never
       <div id="main" role="main">
         ^{pageBody pc}
       <footer>
-        <p>
-          <a href="http://jigsaw.w3.org/css-validator/check/referer">
-            <img style="border:0;width:88px;height:31px" src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="正当なCSSです!">
         #{appCopyright $ appSettings master}
 
     $maybe analytics <- appAnalytics $ appSettings master

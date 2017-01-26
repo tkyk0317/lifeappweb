@@ -8,4 +8,11 @@ Member
   UniqueMember ident
   deriving Typeable Show
 
- -- By default this file is used in Model.hs (which is imported by Foundation.hs)
+-- json keyword automatically create ToJson/FromJson method.
+Schedule json
+  memberid Int
+  startdatetime Text
+  enddatetime Text
+  summary Text
+  memo Text Maybe
+  deriving Typeable Show

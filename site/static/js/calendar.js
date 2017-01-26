@@ -123,6 +123,9 @@ var Week = React.createClass({
   }
 });
 
+//---------------------------------------------------------.
+// Render Component.
+//---------------------------------------------------------.
 ReactDOM.render(
   <Calendar selected={moment().startOf("day")} />,
   document.getElementById('calendar')

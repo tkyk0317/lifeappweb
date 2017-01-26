@@ -35,6 +35,8 @@ import Handler.Home
 import Handler.Signup
 import Handler.Signin
 import Handler.SignupComplete
+import Handler.RegistSchedule
+import Handler.FilterSchedule
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
