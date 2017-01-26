@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import moment from 'moment';
+var utility = require ('./utility.js');
 
 //---------------------------------------------------------.
 // Calendar Component.
@@ -48,6 +49,9 @@ var Calendar = React.createClass({
     var weeks = [];
     var done = false;
     var date = this.state.month.clone().startOf("month").add("w", -2).day("Sunday");
+    if(utility.isSmartPhone()) {
+      date = this.state.month.clone().startOf("month").add("w", -1).day("Sunday");
+    }
     var startMonthIndex = date.month();
     var count = 0;
 
@@ -56,7 +60,12 @@ var Calendar = React.createClass({
                        month={this.state.month} select={this.select}
                        selected={this.state.selected} />);
       date.add(1, "w");
-      done = count++ > 6 && startMonthIndex !== date.month();
+      if(utility.isSmartPhone()) {
+        done = count++ > 2 && startMonthIndex !== date.month();
+      }
+      else {
+        done = count++ > 6 && startMonthIndex !== date.month();
+      }
     }
     return weeks;
   },
