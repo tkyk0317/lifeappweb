@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AlertContainer from 'react-alert';
 
 //---------------------------------------------------------.
 // Schedule Card Component.
@@ -18,7 +17,7 @@ var ScheduleCardArea = React.createClass({
   loadSchedule: function() {
     var obj = this;
     var req = require('superagent');
-    req.get('http://localhost:3000/regist_schedule/1')
+    req.get('/regist_schedule/1')
        .end(function(err, res) {
          obj.setState({schedules: res.body.schedule});
     });
@@ -48,12 +47,14 @@ var ScheduleList = React.createClass({
       // display my schedules.
       var schedule_list =
        this.props.schedules.map(function(v) {
-                                 return (<Schedule startDateTime={v.startdatetime}
+                                 return (<ScheduleCard startDateTime={v.startdatetime}
                                                    endDateTime={v.enddatetime}
                                                    summary={v.summary}
                                                    memo={v.memo} />);}
       );
-      return (<div>{schedule_list}</div>);
+      return (<div>
+                {schedule_list}
+              </div>);
     }
     // loading icon.
     return (<div className="loading_icon">
@@ -64,22 +65,52 @@ var ScheduleList = React.createClass({
 });
 
 //---------------------------------------------------------.
-// Display Schedule Component.
+// Display ScheduleCard Component.
 //---------------------------------------------------------.
-var Schedule = React.createClass({
+var ScheduleCard = React.createClass({
   render: function() {
+    var modal_num = "modalEdit_" + Math.random();
     return (
-      <div>
-          <article className="card schedule_card">
-          <header>
-            <h3>{this.props.summary}</h3>
-            <p>&nbsp;{this.props.startDateTime} - {this.props.endDateTime}</p>
-            <p>&nbsp;{this.props.memo}</p>
-          </header>
-        </article>
-      </div>
-    );
-  }
+          <div>
+          <div className="mdl-card mdl-shadow--2dp schedule_card">
+            <div className="mdl-card__title" id="detail_sch">
+              <label htmlFor={modal_num}>
+                <h3 className="mdl-card__title-text">{this.props.summary}</h3>
+              </label>
+              <label htmlFor={modal_num}
+                     className="mdl-button mdl-button--icons mdl-js-button mdl-js-ripple-effect">
+                <i className="material-icons">description</i>
+              </label>
+            </div>
+            <div className="mdl-card__menu">
+              <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                <i className="material-icons">delete_forever</i>
+              </button>
+            </div>
+            <div className="mdl-card__supporting-text">&nbsp;{this.props.startDateTime} - {this.props.endDateTime}</div>
+            <div className="mdl-card__supporting-text">&nbsp;{this.props.memo}</div>
+          </div>
+          <Modal title="Edit Schedule"
+                 modalId={modal_num}
+                 startDateTime={this.props.startDateTime}
+                 endDateTime={this.props.endDateTime}
+                 summary={this.props.summary}
+                 memo={this.props.memo}
+                 confirmButtonTitle="Update"
+                 onSubmit={this.onSubmit}
+                 onChange={this.onChange}
+                 onCancel={this.onCancel}
+                 />
+          </div>
+          );
+  },
+
+  onSubmit: function() {
+  },
+
+  onChange: function(event) {
+    this.setState({ [event.target.name]: event.target.value });
+}
 });
 
 //---------------------------------------------------------.
@@ -91,56 +122,28 @@ var RegistSchedule = React.createClass({
       clear: "both"
     };
     return (<div>
-              <label htmlFor="modal_regist" className="button action_button">Add</label>
+              <label htmlFor="modal_regist"
+                     className="mdl-button mdl-button--icons mdl-js-button mdl-js-ripple-effect"
+                     id="regist_sch_button">
+                     <i className="material-icons">note_add</i>
+              </label>
               <div style={clearStyle}></div>
-              <Modal startDateTime={new Date()}
+              <Modal modalId="modal_regist"
+                     startDateTime={new Date()}
                      endDateTime={new Date()}
-                     onRegist={this.props.onRegist}
+                     confirmButtonTitle="Regist"
+                     onSubmit={this.onSubmit}
+                     onChange={this.onChange}
+                     onCancel={this.onCancel}
               />
             </div>);
-  }
-});
-
-//---------------------------------------------------------.
-// Registe Modal Component.
-//---------------------------------------------------------.
-var Modal= React.createClass({
-  getInitialState: function() {
-    return {
-      title: this.props.title,
-      startDateTime: this.props.startDateTime,
-      endDateTime: this.props.endDateTime,
-      summary: this.props.summary,
-      memo: this.props.memo
-    };
-  },
-
-  render: function() {
-    return (
-      <div className="modal">
-        <input id="modal_regist" type="checkbox" />
-        <label htmlFor="modal_regist" className="overlay"></label>
-        <ModalContent title={this.props.title}
-                      startDateTime={this.props.startDateTime}
-                      endDateTime={this.props.endDateTime}
-                      summary={this.props.summary}
-                      memo={this.props.memo}
-                      onSubmit={this.onSubmit}
-                      onCancel={this.onCancel}
-                      onChange={this.onChange}
-        />
-      </div>);
-  },
-
-  onChange: function(event) {
-    this.setState({ [event.target.name]: event.target.value });
   },
 
   onSubmit: function(event) {
     // regist event to table.
     var obj = this;
     var req = require('superagent');
-    req.post('http://localhost:3000/regist_schedule')
+    req.post('/regist_schedule')
        .send({
               "memberid": 1,
               "startdatetime": this.state.startdatetime,
@@ -160,6 +163,34 @@ var Modal= React.createClass({
   onCancel: function() {
     var mods = document.querySelectorAll('.modal > [type=checkbox]');
     [].forEach.call(mods, function(mod){ mod.checked = false; });
+  },
+
+  onChange: function(event) {
+    this.setState({ [event.target.name]: event.target.value });
+    console.log(event.target.name);
+  }
+});
+
+//---------------------------------------------------------.
+// Registe Modal Component.
+//---------------------------------------------------------.
+var Modal= React.createClass({
+  render: function() {
+    return (<div className="modal">
+              <input id={this.props.modalId} type="checkbox" />
+                <label htmlFor={this.props.modalId} className="overlay"></label>
+                  <ModalContent modalId={this.props.modalId}
+                                title={this.props.title}
+                                startDateTime={this.props.startDateTime}
+                                endDateTime={this.props.endDateTime}
+                                summary={this.props.summary}
+                                memo={this.props.memo}
+                                confirmButtonTitle={this.props.confirmButtonTitle}
+                                onSubmit={this.props.onSubmit}
+                                onCancel={this.props.onCancel}
+                                onChange={this.props.onChange}
+                  />
+            </div>);
   }
 });
 
@@ -172,7 +203,7 @@ var ModalContent = React.createClass({
         <article>
           <header>
             <p>Add schedule</p>
-            <label htmlFor="modal_regist" className="close">&times;</label>
+            <label htmlFor={this.props.modalId} className="close">&times;</label>
           </header>
           <section className="content">
             <div id="_form" className="third">
@@ -184,7 +215,8 @@ var ModalContent = React.createClass({
               <input name="enddatetime"
                      type="datetime-local"
                      defaultValue={this.props.endDateTime}
-                     className="stack" onChange={this.props.onChange}/>
+                     className="stack"
+                     onChange={this.props.onChange}/>
               <input name="summary" className="stack"
                      placeholder="subject"
                      defaultValue={this.props.summary}
@@ -196,7 +228,7 @@ var ModalContent = React.createClass({
                         defaultValue={this.props.memo}
                         onChange={this.props.onChange} />
               <button className="stack icon-paper-plane regist_button"
-                      onClick={this.props.onSubmit}>Regist</button>
+                      onClick={this.props.onSubmit}>{this.props.confirmButtonTitle}</button>
               <button className="stack icon-paper-plane regist_button error"
                       onClick={this.props.onCancel}>Cancel</button>
             </div>
