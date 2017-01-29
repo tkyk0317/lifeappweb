@@ -6,5 +6,11 @@ import Import
 postRegistScheduleR :: Handler ()
 postRegistScheduleR = do
   schedule <- requireJsonBody :: Handler Schedule
-  _ <- runDB $ insert schedule
+  _ <- runDB $ insertUnique schedule
   sendResponseStatus status201 ("CREATED" :: Text)
+
+-- get schedule data for login's user.
+getRegistScheduleR :: Handler Value
+getRegistScheduleR = do
+  schedules <- runDB $ selectList [ScheduleMemberid ==. 1] [Desc ScheduleStartdatetime] :: Handler [Entity Schedule]
+  return $ object ["schedule" .= schedules]

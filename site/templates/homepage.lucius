@@ -141,7 +141,7 @@ body {
 }
 
 /* Regist Modal */
-#card_area #_form {
+#card_area .dialog_form {
   width: 350px;
 }
 #card_area #add_button {
