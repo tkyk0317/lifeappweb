@@ -1,0 +1,5 @@
+// scroll to page top.
+function pageTop() {
+  var content = document.getElementById('content_main');
+  content.scrollTop = 0;
+}

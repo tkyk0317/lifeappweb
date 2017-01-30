@@ -1,9 +1,6 @@
 h1 {
     text-align: center;
 }
-footer {
-    text-align: center
-}
 html {
   width: 100%;
   height: 100%;
@@ -36,10 +33,9 @@ body {
   display: block;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
-  opacity: 0.8;
 }
 #calendar div.header {
-  background: #2875C7;
+  background: #3f51b5;
   height: 40px;
   color: white;
 }
@@ -114,7 +110,7 @@ body {
   color: #C0C0C0;
 }
 #calendar div.week span.day.selected {
-  background: #2875C7;
+  background: #3f51b5;
   color: white;
 }
 #calendar div.week.names {
@@ -130,7 +126,7 @@ body {
   padding-right: 0.6em;
 }
 #card_area .schedule_card {
-  border-left: 5px solid #2875C7;
+  border-left: 5px solid #3f51b5;
   width: 100%;
   margin-bottom: 5px;
 }
@@ -145,7 +141,7 @@ body {
   width: 350px;
 }
 #card_area #add_button {
-  backgournd-color: #2875C7;
+  backgournd-color: #3f51b5;
 }
 #card_area .regist_button {
   width: 350px;

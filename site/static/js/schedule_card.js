@@ -188,15 +188,13 @@ var RegistSchedule = React.createClass({
     var clearStyle = {
       clear: "both"
     };
-    var random=Math.random();
+
+    // to specify regist schedule event, set modalId(need unique id).
     return (<div>
-              <button id={random} className="mdl-button mdl-button--icons mdl-js-button mdl-js-ripple-effect">
-                <i className="material-icons" id={random}>note_add</i>
-              </button>
               <div style={clearStyle}></div>
               <Modal ref="modal"
                      modalId="modal_regist"
-                     onShowId={random}
+                     onShowId="schedule_regist"
                      title="Add Schedule"
                      startDateTime={new Date()}
                      endDateTime={new Date()}
