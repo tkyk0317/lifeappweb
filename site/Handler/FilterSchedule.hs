@@ -14,5 +14,8 @@ putFilterScheduleR schedule_id = do
   _ <- runDB $ replace schedule_id schedule
   sendResponseStatus status201 ("Updated" :: Text)
 
-deleteFilterScheduleR :: ScheduleId -> Handler Html
-deleteFilterScheduleR schedule_id = error "Not yet implemented: deleteFilterScheduleR"
+-- delete schedule.
+deleteFilterScheduleR :: ScheduleId -> Handler Value
+deleteFilterScheduleR schedule_id = do
+  runDB $ delete schedule_id
+  sendResponseStatus status201 ("Deleted" :: Text)

@@ -169,7 +169,14 @@ var ScheduleCard = React.createClass({
   },
 
   onDelete: function(event) {
-    console.log(this.state.scheduleId);
+    var obj = this;
+    var req = require('superagent');
+    req.del("/filter_schedule/" + this.props.scheduleId)
+       .set('Accept', 'application/json')
+       .set('Content-Type', 'application/json')
+       .end(function(err, res) {
+         obj.props.onRegist("Complete Delete");
+     });
   }
 });
 
