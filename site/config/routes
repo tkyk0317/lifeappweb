@@ -9,4 +9,4 @@
 /signin SigninR POST
 /signup_complete SignupCompleteR GET
 /regist_schedule RegistScheduleR POST GET
-/regist_schedule/#ScheduleId FilterScheduleR GET PUT DELETE
+/filter_schedule/#ScheduleId FilterScheduleR GET PUT DELETE

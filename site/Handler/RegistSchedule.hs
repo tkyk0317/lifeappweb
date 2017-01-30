@@ -12,5 +12,6 @@ postRegistScheduleR = do
 -- get schedule data for login's user.
 getRegistScheduleR :: Handler Value
 getRegistScheduleR = do
+  -- memberid must be changed login user id.
   schedules <- runDB $ selectList [ScheduleMemberid ==. 1] [Desc ScheduleStartdatetime] :: Handler [Entity Schedule]
   return $ object ["schedule" .= schedules]
