@@ -141,6 +141,7 @@ var ScheduleCard = React.createClass({
                            endDateTime={this.props.endDateTime}
                            summary={this.props.summary}
                            memo={this.props.memo}
+                           people=""
                            confirmButtonTitle="Update" />
           </div>);
   },
@@ -216,6 +217,7 @@ var RegistSchedule = React.createClass({
                             endDateTime={new Date()}
                             summary=""
                             memo=""
+                            people=""
                             confirmButtonTitle="Regist"
                             />);
   },
