@@ -61,7 +61,7 @@ var Calendar = React.createClass({
                        selected={this.state.selected} />);
       date.add(1, "w");
       if(utility.isSmartPhone()) {
-        done = count++ > 2 && startMonthIndex !== date.month();
+        done = (startMonthIndex + 2) === date.month();
       }
       else {
         done = count++ > 6 && startMonthIndex !== date.month();
@@ -103,12 +103,6 @@ var Week = React.createClass({
     var date = this.props.date;
     var month = this.props.month;
 
-    // change height for smartphone.
-    var phone_style = {};
-    if(utility.isSmartPhone()) {
-      phone_style = { height: "50px", };
-    }
-
     for(var i = 0 ; i < 7; i++) {
       var day = {
         name: date.format("dd").substring(0, 1),
@@ -117,7 +111,7 @@ var Week = React.createClass({
         isToday: date.isSame(new Date(), "day"),
         date: date
       };
-      days.push(<span key={day.date.toString()} style={phone_style  }
+      days.push(<span key={day.date.toString()}
                       className={"day" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "")}
                       onClick={this.props.select.bind(null, day)}>
                   {day.number}
