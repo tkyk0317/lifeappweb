@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ScheduleModal from './modal.js';
 
 //---------------------------------------------------------.
 // Schedule Card Component.
@@ -102,8 +103,8 @@ var Loading = React.createClass({
 var ScheduleCard = React.createClass({
   getInitialState: function() {
     return {
+      isActive: false,
       scheduleId: this.props.scheduleId,
-      random: Math.random(),
       startdatetime: this.props.startDateTime,
       enddatetime: this.props.endDateTime,
       summary: this.props.summary,
@@ -111,19 +112,15 @@ var ScheduleCard = React.createClass({
     };
   },
 
-  componentDidMount: function() {
-    // regist event after dom is rendered.
-    this.refs.modal.registShowButton();
-  },
-
   render: function() {
-    var modal_id = "modalEdit_" + this.state.random;
     return (
           <div>
             <div className="mdl-card mdl-shadow--2dp schedule_card">
               <div className="mdl-card__title" id="detail_sch">
                 <h3 className="mdl-card__title-text">{this.props.summary}</h3>
-                <button id={this.state.random} className="mdl-button mdl-button--icons mdl-js-button mdl-js-ripple-effect">
+                <button id={this.state.random}
+                        className="mdl-button mdl-button--icons mdl-js-button mdl-js-ripple-effect"
+                        onClick={this.openModal}>
                   <i className="material-icons">description</i>
                 </button>
               </div>
@@ -135,20 +132,25 @@ var ScheduleCard = React.createClass({
               <div className="mdl-card__supporting-text">&nbsp;{this.props.startDateTime} - {this.props.endDateTime}</div>
               <div className="mdl-card__supporting-text">&nbsp;{this.props.memo}</div>
             </div>
-            <Modal ref="modal"
-                   title="Edit Schedule"
-                   modalId={modal_id}
-                   onShowId={this.state.random}
-                   startDateTime={this.props.startDateTime}
-                   endDateTime={this.props.endDateTime}
-                   summary={this.props.summary}
-                   memo={this.props.memo}
-                   confirmButtonTitle="Update"
-                   onSubmit={this.onSubmit}
-                   onChange={this.onChange}
-                   />
-          </div>
-          );
+            <ScheduleModal isActive={this.state.isActive}
+                           onSubmit={this.onSubmit}
+                           onChange={this.onChange}
+                           onClose={this.closeModal}
+                           title="Edit Schedule"
+                           startDateTime={this.props.startDateTime}
+                           endDateTime={this.props.endDateTime}
+                           summary={this.props.summary}
+                           memo={this.props.memo}
+                           confirmButtonTitle="Update" />
+          </div>);
+  },
+
+  openModal: function() {
+    this.setState({isActive: true});
+  },
+
+  closeModal: function() {
+    this.setState({isActive: false});
   },
 
   onSubmit: function() {
@@ -166,8 +168,7 @@ var ScheduleCard = React.createClass({
             })
        .end(function(err, res) {
          // disable dialog.
-         var modal_id = "modalEdit_" + obj.state.random;
-         document.getElementById(modal_id).close();
+         obj.closeModal();
          // after update schedule data, start rendering.
          obj.props.onRegist("Complete Edit");
       });
@@ -193,31 +194,38 @@ var ScheduleCard = React.createClass({
 // Registe Schedule Component.
 //---------------------------------------------------------.
 var RegistSchedule = React.createClass({
-  render: function() {
-    var clearStyle = {
-      clear: "both"
+  getInitialState: function() {
+    return {
+      isActive: false
     };
-
-    // to specify regist schedule event, set modalId(need unique id).
-    return (<div>
-              <div style={clearStyle}></div>
-              <Modal ref="modal"
-                     modalId="modal_regist"
-                     onShowId="schedule_regist"
-                     title="Add Schedule"
-                     startDateTime={new Date()}
-                     endDateTime={new Date()}
-                     summary=""
-                     memo=""
-                     confirmButtonTitle="Regist"
-                     onSubmit={this.onSubmit}
-                     onChange={this.onChange} />
-            </div>);
   },
 
-  componentDidMount: function() {
-    // regist event after dom is rendered.
-    this.refs.modal.registShowButton();
+  render: function() {
+      var obj = this;
+      var regist_button = document.getElementById('schedule_regist');
+      regist_button.addEventListener('click', function() {
+        obj.openModal();
+      });
+
+      return (<ScheduleModal isActive={this.state.isActive}
+                            onSubmit={this.onSubmit}
+                            onChange={this.onChange}
+                            onClose={this.closeModal}
+                            title="Add Schedule"
+                            startDateTime={new Date()}
+                            endDateTime={new Date()}
+                            summary=""
+                            memo=""
+                            confirmButtonTitle="Regist"
+                            />);
+  },
+
+  openModal: function() {
+    this.setState({isActive: true});
+  },
+
+  closeModal: function() {
+    this.setState({isActive: false});
   },
 
   onSubmit: function(event) {
@@ -235,102 +243,14 @@ var RegistSchedule = React.createClass({
               "memo": this.state.memo
             })
        .end(function(err, res) {
-         // disable dialog.
-         document.getElementById('modal_regist').close();
          // after update schedule data, start rendering.
+         obj.closeModal();
          obj.props.onRegist("Complete Regist");
       });
   },
 
   onChange: function(event) {
     this.setState({ [event.target.name]: event.target.value });
-  }
-});
-
-//---------------------------------------------------------.
-// ModalContent Component.
-//---------------------------------------------------------.
-var Modal = React.createClass({
-  render: function() {
-    var summary_label = this.props.summary === "" ? "summary" : "";
-    var memo_label = this.props.memo === "" ? "memo" : "";
-
-    return (
-      <dialog className="mdl-dialog dialog_form" id={this.props.modalId}>
-        <div className="mdl-dialog__title">{this.props.title}</div>
-        <div className="mdl-dialog__content">
-          <div className="mdl-textfield mdl-js-textfield">
-            <input type="datetime-local"
-                   name="startdatetime"
-                   defaultValue={this.props.startDateTime}
-                   onChange={this.onChange} />
-            <label className="mdl-texfiedl__label" htmlFor="startDateTime"></label>
-          </div>
-          <div className="mdl-textfield mdl-js-textfield">
-            <input type="datetime-local"
-                   name="enddatetime"
-                   defaultValue={this.props.endDateTime}
-                   onChange={this.onChange} />
-            <label className="mdl-texfiedl__label" htmlFor="endDateTime"></label>
-          </div>
-          <div className="mdl-textfield mdl-js-textfield">
-            <input className="mdl-textfield__input"
-                   name="summary"
-                   type="text"
-                   defaultValue={this.props.summary}
-                   onChange={this.onChange}/>
-            <label className="mdl-textfield__label" htmlFor="summary">{summary_label}</label>
-          </div>
-          <div className="mdl-textfield mdl-js-textfield">
-            <textarea className="mdl-textfield__input"
-                      name="memo"
-                      type="text"
-                      rows="6"
-                      defaultValue={this.props.memo}
-                      onChange={this.onChange} />
-            <label className="mdl-textfield__label" htmlFor="memo">{memo_label}</label>
-          </div>
-        </div>
-        <div className="mdl-dialog__actions mdl-dialog__actions--full-width">
-          <button type="button" className="mdl-button" onClick={this.props.onSubmit}>{this.props.confirmButtonTitle}</button>
-          <button type="button" className="mdl-button" onClick={this.onCancel}>Cancel</button>
-        </div>
-      </dialog>
-    );
-  },
-
-  registShowButton: function() {
-    var obj = this;
-    var action_button = document.getElementById(this.props.onShowId);
-    if(action_button) {
-      action_button.addEventListener('click', function() {
-        obj.showModal();
-      });
-    }
-  },
-
-  showModal: function() {
-    var dialog = document.getElementById(this.props.modalId);
-    if(dialog) {
-      dialog.showModal();
-    }
-    else {
-      console.log("[Modal] not found dialog");
-    }
-  },
-
-  onCancel: function() {
-    var dialog = document.getElementById(this.props.modalId);
-    if(dialog) {
-      dialog.close();
-    }
-    else {
-      console.log("[Modal] not found dialog");
-    }
-  },
-
-  onChange: function(event) {
-    this.props.onChange(event);
   }
 });
 

@@ -1,6 +1,6 @@
 module.exports = {
   /* ビルドの起点となるファイルの設定 */
-  entry: ['./utility.js', './calendar.js', './schedule_card.js'],
+  entry: ['./utility.js', './calendar.js', './schedule_card.js', './modal.js'],
   /* 出力されるファイルの設定 */
   output: {
     path: './build/', // 出力先のパス
@@ -16,7 +16,7 @@ module.exports = {
         exclude: /node_modules/, // 除外するファイル/ディレクトリ（正規表現可）
         loader: 'babel-loader', // 使用するloader
         query: {
-          presets: ['es2015', 'react'],
+          presets: ['es2015', 'react', 'stage-0'],
         }
       },
       {
