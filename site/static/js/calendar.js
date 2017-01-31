@@ -48,9 +48,14 @@ var Calendar = React.createClass({
   renderWeeks: function() {
     var weeks = [];
     var done = false;
-    var date = this.state.month.clone().startOf("month").add("w", -2).day("Sunday");
+    var date;
     if(utility.isSmartPhone()) {
+      // for smartphone.
       date = this.state.month.clone().startOf("month").add("w", -1).day("Sunday");
+    }
+    else {
+      // for pc.
+      date = this.state.month.clone().startOf("month").add("w", -2).day("Sunday");
     }
     var startMonthIndex = date.month();
     var count = 0;
