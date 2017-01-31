@@ -1,5 +1,5 @@
-<div style="display:none;">
-  <h1 id="page_top">LifeApp
+<div style="display:none">
+  <h1>LifeApp
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
@@ -20,15 +20,14 @@
       <a class="mdl-navigation__link" href="">Link
       <a class="mdl-navigation__link" href="">Config
       <a class="mdl-navigation__link" href="">Signout
-  <main id="content_main" class="mdl-layout__content">
+  <main id="page_top" class="mdl-layout__content">
     <div class="page-content">
       <div class="mdl-grid">
         <div id="calendar" class="mdl-cell mdl-cell--7-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
         <div id="card_area" class="mdl-cell mdl-cell--5-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
-
-  <footer class="mdl-mini-footer">
-    <div class="mdl-mini-footer__left-section">
-      <div class="mdl-logo">LifeApp
-      <ul class="mdl-mini-footer__link-list">
-        <li><a href="#">Help
-        <li><a href="#">Privacy & Terms
+    <footer class="mdl-mini-footer">
+      <div class="mdl-mini-footer__left-section">
+        <div class="mdl-logo">LifeApp
+        <ul class="mdl-mini-footer__link-list">
+          <li><a href="#">Help
+          <li><a href="#">Privacy & Terms

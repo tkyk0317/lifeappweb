@@ -5,7 +5,7 @@ import Import
 -- get scedule data from Schedule Table.
 -- return JSON Format.
 getFilterScheduleR :: ScheduleId -> Handler Html
-getFilterScheduleR schedule_id = error "Not yet implemented: getFileterScheduleR"
+getFilterScheduleR _ = error "Not yet implemented: getFileterScheduleR"
 
 -- update schedule.
 putFilterScheduleR :: ScheduleId -> Handler Value

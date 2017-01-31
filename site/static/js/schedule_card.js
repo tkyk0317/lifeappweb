@@ -80,10 +80,19 @@ var ScheduleList = React.createClass({
                                                    memo={v.memo}
                                                    onRegist={obj.props.onRegist} />);
       });
-      return (<div>{schedule_list}</div>);
+      return (<div id="schedule_list">{schedule_list}</div>);
     }
     // loading icon.
-    return (<div className="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>);
+    return <Loading />;
+  }
+});
+
+//---------------------------------------------------------.
+// Loading Icon Component.
+//---------------------------------------------------------.
+var Loading = React.createClass({
+  render: function() {
+    return (<div id="schedule_list" className="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>);
   }
 });
 
