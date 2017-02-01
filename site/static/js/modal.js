@@ -2,7 +2,7 @@ import React from "react";
 import classNames from "classnames";
 
 //-------------------------------------------------.
-// Modal Component.
+// Schedule Modal Component.
 //-------------------------------------------------.
 export default class ScheduleModal extends React.Component {
   constructor(props) {
@@ -62,7 +62,7 @@ export default class ScheduleModal extends React.Component {
             className="mdl-dialog dialg_form"
             style={{
               display: "block", zIndex: "8888", width: "350px", position: "absolute",
-              top: 5, bottom: 5, left: 5, right: 5,
+              top: 5, bottom: 5, left: 5, right: 5, height: "60vh",
               margin: "auto", background: "white"
             }}
           >

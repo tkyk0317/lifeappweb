@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ScheduleModal from './modal.js';
+import BasicModal from './basic_modal.js';
 
 //---------------------------------------------------------.
 // Schedule Card Component.
@@ -104,6 +105,7 @@ var ScheduleCard = React.createClass({
   getInitialState: function() {
     return {
       isActive: false,
+      isDeleteModalActive: false,
       scheduleId: this.props.scheduleId,
       startdatetime: this.props.startDateTime,
       enddatetime: this.props.endDateTime,
@@ -126,7 +128,7 @@ var ScheduleCard = React.createClass({
               </div>
               <div className="mdl-card__menu">
                 <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                  <i className="material-icons" onClick={this.onDelete} >delete_forever</i>
+                  <i className="material-icons" onClick={this.openDeleteModal} >delete_forever</i>
                 </button>
               </div>
               <div className="mdl-card__supporting-text">&nbsp;{this.props.startDateTime} - {this.props.endDateTime}</div>
@@ -143,6 +145,14 @@ var ScheduleCard = React.createClass({
                            memo={this.props.memo}
                            people=""
                            confirmButtonTitle="Update" />
+            <BasicModal isActive={this.state.isDeleteModalActive}
+                        onClickBtn1={this.onDeleteBtnOK}
+                        onClickBtn2={this.onDeleteBtnCancel}
+                        onClose={this.closeDeleteModal}
+                        title="Delete Schedule"
+                        message="Delete this Schedule ?"
+                        btn1_title="OK"
+                        btn2_title="Cancel" />
           </div>);
   },
 
@@ -179,16 +189,29 @@ var ScheduleCard = React.createClass({
     this.setState({ [event.target.name]: event.target.value });
   },
 
-  onDelete: function(event) {
+  onDeleteBtnOK: function() {
     var obj = this;
     var req = require('superagent');
     req.del("/filter_schedule/" + this.props.scheduleId)
        .set('Accept', 'application/json')
        .set('Content-Type', 'application/json')
        .end(function(err, res) {
+         obj.closeDeleteModal();
          obj.props.onRegist("Complete Delete");
      });
-  }
+  },
+
+  onDeleteBtnCancel: function() {
+    this.closeDeleteModal();
+  },
+
+  openDeleteModal: function() {
+    this.setState({isDeleteModalActive: true})
+  },
+
+  closeDeleteModal: function() {
+    this.setState({isDeleteModalActive: false})
+  },
 });
 
 //---------------------------------------------------------.
