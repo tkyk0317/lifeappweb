@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ScheduleModal from './modal.js';
 import BasicModal from './basic_modal.js';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
+var jsSHA = require('jssha');
 
 //---------------------------------------------------------.
 // Schedule Card Component.
@@ -42,7 +45,6 @@ var ScheduleCardArea = React.createClass({
       this.setState({canCompleteMessage: false});
       this.setState({completeMessage: ""});
     }
-
     return (
       <div>
         <RegistSchedule onRegist={this.onRegist} />
@@ -72,15 +74,24 @@ var ScheduleList = React.createClass({
     if(this.props.schedules) {
       // display my schedules.
       var obj = this;
-      var schedule_list = this.props.schedules.map(function(v) {
-                                          return (<ScheduleCard
-                                                   key={v.id}
-                                                   scheduleId={v.id}
-                                                   startDateTime={v.startdatetime}
-                                                   endDateTime={v.enddatetime}
-                                                   summary={v.summary}
-                                                   memo={v.memo}
-                                                   onRegist={obj.props.onRegist} />);
+      var schedule_list =
+       this.props.schedules.map(function(v) {
+         var sha = new jsSHA('SHA-1', 'TEXT');
+         sha.update(v.id.toString());
+         var hash = sha.getHash('HEX');
+         return (<ReactCSSTransitionGroup transitionName="schedule_card"
+                                          transitionAppear={true}
+                                          transitionAppearTimeout={300}
+                                          transitionEnterTimeout={300}
+                                          transitionLeaveTimeout={300}>
+                  <ScheduleCard key={hash}
+                                scheduleId={v.id}
+                                startDateTime={v.startdatetime}
+                                endDateTime={v.enddatetime}
+                                summary={v.summary}
+                                memo={v.memo}
+                                onRegist={obj.props.onRegist} />
+                </ReactCSSTransitionGroup>);
       });
       return (<div id="schedule_list">{schedule_list}</div>);
     }
@@ -119,7 +130,7 @@ var ScheduleCard = React.createClass({
           <div>
             <div className="mdl-card mdl-shadow--2dp schedule_card">
               <div className="mdl-card__title" id="detail_sch">
-                <h3 className="mdl-card__title-text">{this.props.summary}</h3>
+                <h4 className="mdl-card__title-text">{this.props.summary}</h4>
                 <button id={this.state.random}
                         className="mdl-button mdl-button--icons mdl-js-button mdl-js-ripple-effect"
                         onClick={this.openModal}>

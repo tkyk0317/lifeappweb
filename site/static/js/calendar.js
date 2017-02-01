@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import moment from 'moment';
+
 var utility = require ('./utility.js');
 
 //---------------------------------------------------------.
@@ -36,7 +37,7 @@ var Calendar = React.createClass({
       <div>
         <div className="header">
           <i className="fa fa-angle-left" onClick={this.previous}></i>
-          {this.renderMonthLabel()}
+            {this.renderMonthLabel()}
           <i className="fa fa-angle-right" onClick={this.next}></i>
         </div>
         <DayNames />

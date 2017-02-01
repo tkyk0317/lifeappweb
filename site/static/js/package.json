@@ -21,6 +21,7 @@
     "classnames": "^2.2.5",
     "css-loader": "^0.26.1",
     "input-moment": "^0.3.2",
+    "jssha": "^2.2.0",
     "jsx-loader": "^0.13.2",
     "less": "^2.7.2",
     "moment": "^2.17.1",
