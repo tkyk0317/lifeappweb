@@ -1,13 +1,15 @@
 module Handler.RegistSchedule where
 
 import Import
+import Database.Persist.Sql
+import Data.Text as Text
 
 -- insert schedule date into Schedle Table with JSON.
 postRegistScheduleR :: Handler ()
 postRegistScheduleR = do
-  schedule <- requireJsonBody :: Handler Schedule
-  _ <- runDB $ insertUnique schedule
-  sendResponseStatus status201 ("CREATED" :: Text)
+  s <- requireJsonBody :: Handler Schedule
+  k <- runDB $ insert s
+  sendResponseStatus status201 (Text.pack $ show $ fromSqlKey(k))
 
 -- get schedule data for login's user.
 getRegistScheduleR :: Handler Value

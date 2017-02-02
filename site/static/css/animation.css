@@ -13,23 +13,17 @@
   opacity: 0.1;
   transform:translateX(20%) scale(.95,.95);
 }
-.schedule_card-enter.schedule_card-active {
+.schedule_card-enter.schedule_card-enter-active {
   opacity: 1.0;
   transform:translateX(0) scale(1,1);
+  transition: 300ms;
 }
 .schedule_card-leave {
   opacity: 1.0;
   transform:translateX(0) scale(1,1);
 }
-.schedule_card-leave.schedule_card-active {
+.schedule_card-leave.schedule_card-leave-active {
   opacity: 0.1;
   transform:translateX(30%) scale(.95,.95);
-}
-
-/* Animation Calendar */
-.calendar-appear {
-  opacity: 0.1;
-}
-.calendar-appear.active {
-  opacity: 1.0;
+  transition: 300ms;
 }

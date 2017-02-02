@@ -4,8 +4,6 @@ import ScheduleModal from './modal.js';
 import BasicModal from './basic_modal.js';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-var jsSHA = require('jssha');
-
 //---------------------------------------------------------.
 // Schedule Card Component.
 //---------------------------------------------------------.
@@ -20,10 +18,6 @@ var ScheduleCardArea = React.createClass({
 
   componentDidMount: function() {
     // get my schedule.
-    this.loadSchedule();
-  },
-
-  loadSchedule: function() {
     var obj = this;
     var req = require('superagent');
     req.get('/regist_schedule')
@@ -34,16 +28,20 @@ var ScheduleCardArea = React.createClass({
     });
   },
 
+  componentDidUpdate: function(prevProps, prevState) {
+    // initialize state.
+    if(this.state.canCompleteMessage) {
+      this.setState({canCompleteMessage: false});
+      this.setState({completeMessage: ""});
+    }
+  },
+
   render: function() {
     // display complete messages.
     var complete_message = "";
     if(this.state.canCompleteMessage) {
       var toast = document.querySelector('#complete_action_bar');
       toast.MaterialSnackbar.showSnackbar({message: this.state.completeMessage});
-
-      // initialize state.
-      this.setState({canCompleteMessage: false});
-      this.setState({completeMessage: ""});
     }
     return (
       <div>
@@ -57,12 +55,53 @@ var ScheduleCardArea = React.createClass({
     )
   },
 
-  onRegist: function(msg) {
+  // kind: 0=insert 1=edit 2=delete.
+  onRegist: function(msg, kind, data) {
     // display complete messages.
     this.setState({completeMessage: msg});
     this.setState({canCompleteMessage: true});
-    // reload schedule data.
-    this.loadSchedule();
+
+    // state.schedule is updated.
+    if(0 == kind) {
+      this.addSchedule(data);
+    }
+    else if(1 == kind) {
+      this.updateSchedule(data);
+    }
+    else {
+      // delete data.
+      this.deleteSchedule(data);
+    }
+  },
+
+  addSchedule: function(d) {
+    var v = this.state.schedules;
+    v.push(d);
+    v.sort(this.compare);
+    this.setState({schedules: v});
+  },
+
+  updateSchedule: function(d) {
+    var u = this.state.schedules.map(function(v) {
+      if(v['id'] === d['id']) return d;
+      return v;
+    });
+    u.sort(this.compare);
+    this.setState({schedules: u});
+  },
+
+  deleteSchedule: function(d) {
+    var r = this.state.schedules.filter(function(v, i) {
+      if(v['id'] !== d['id']) return true;
+      return false;
+    });
+    this.setState({schedules: r});
+  },
+
+  compare: function(a, b) {
+    if(a['startdatetime'] < b['startdatetime']) return 1;
+    if(a['startdatetime'] === b['startdatetime']) return 0;
+    return -1;
   }
 });
 
@@ -76,16 +115,11 @@ var ScheduleList = React.createClass({
       var obj = this;
       var schedule_list =
        this.props.schedules.map(function(v) {
-         var sha = new jsSHA('SHA-1', 'TEXT');
-         sha.update(v.id.toString());
-         var hash = sha.getHash('HEX');
-         return (<ReactCSSTransitionGroup transitionName="schedule_card"
+         return (<ReactCSSTransitionGroup key={v.id}
+                                          transitionName="schedule_card"
                                           transitionAppear={true}
-                                          transitionAppearTimeout={300}
-                                          transitionEnterTimeout={300}
-                                          transitionLeaveTimeout={300}>
-                  <ScheduleCard key={hash}
-                                scheduleId={v.id}
+                                          transitionAppearTimeout={300}>
+                  <ScheduleCard scheduleId={v.id}
                                 startDateTime={v.startdatetime}
                                 endDateTime={v.enddatetime}
                                 summary={v.summary}
@@ -93,7 +127,7 @@ var ScheduleList = React.createClass({
                                 onRegist={obj.props.onRegist} />
                 </ReactCSSTransitionGroup>);
       });
-      return (<div id="schedule_list">{schedule_list}</div>);
+      return (<div>{schedule_list}</div>);
     }
     // loading icon.
     return <Loading />;
@@ -138,8 +172,9 @@ var ScheduleCard = React.createClass({
                 </button>
               </div>
               <div className="mdl-card__menu">
-                <button className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                  <i className="material-icons" onClick={this.openDeleteModal} >delete_forever</i>
+                <button onClick={this.openDeleteModal}
+                        className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                  <i className="material-icons">delete_forever</i>
                 </button>
               </div>
               <div className="mdl-card__supporting-text">&nbsp;{this.props.startDateTime} - {this.props.endDateTime}</div>
@@ -192,7 +227,15 @@ var ScheduleCard = React.createClass({
          // disable dialog.
          obj.closeModal();
          // after update schedule data, start rendering.
-         obj.props.onRegist("Complete Edit");
+         obj.props.onRegist("Complete Edit", 1,
+                           {
+                             "id": obj.props.scheduleId,
+                             "memberid": 1,
+                             "startdatetime": obj.state.startdatetime,
+                             "enddatetime": obj.state.enddatetime,
+                             "summary": obj.state.summary,
+                             "memo": obj.state.memo,
+                           });
       });
   },
 
@@ -208,8 +251,16 @@ var ScheduleCard = React.createClass({
        .set('Content-Type', 'application/json')
        .end(function(err, res) {
          obj.closeDeleteModal();
-         obj.props.onRegist("Complete Delete");
-     });
+         obj.props.onRegist("Complete Delete", 2,
+                           {
+                             "id": obj.props.scheduleId,
+                             "memberid": 1,
+                             "startdatetime": obj.state.startdatetime,
+                             "enddatetime": obj.state.enddatetime,
+                             "summary": obj.state.summary,
+                             "memo": obj.state.memo,
+                           });
+        });
   },
 
   onDeleteBtnCancel: function() {
@@ -281,7 +332,15 @@ var RegistSchedule = React.createClass({
        .end(function(err, res) {
          // after update schedule data, start rendering.
          obj.closeModal();
-         obj.props.onRegist("Complete Regist");
+         obj.props.onRegist("Complete Regist", 0,
+                           {
+                             "id": res.text,
+                             "memberid": 1,
+                             "startdatetime": obj.state.startdatetime,
+                             "enddatetime": obj.state.enddatetime,
+                             "summary": obj.state.summary,
+                             "memo": obj.state.memo,
+                           });
       });
   },
 
