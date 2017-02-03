@@ -132,14 +132,16 @@ var ScheduleList = React.createClass({
          return (<ReactCSSTransitionGroup key={v.id}
                                           transitionName="schedule_card"
                                           transitionAppear={true}
-                                          transitionAppearTimeout={300}>
+                                          transitionAppearTimeout={300}
+                                          transitionEnterTimeout={300}
+                                          transitionLeaveTimeout={300}>
                   <ScheduleCard scheduleId={v.id}
                                 startDateTime={v.startdatetime}
                                 endDateTime={v.enddatetime}
                                 summary={v.summary}
                                 memo={v.memo}
                                 onRegist={obj.props.onRegist} />
-                </ReactCSSTransitionGroup>);
+                 </ReactCSSTransitionGroup>);
       });
       return (<div>{schedule_list}</div>);
     }
