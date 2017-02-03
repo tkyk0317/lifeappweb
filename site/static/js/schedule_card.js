@@ -5,6 +5,15 @@ import BasicModal from './basic_modal.js';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 //---------------------------------------------------------.
+// Category Enum.
+//---------------------------------------------------------.
+var ACTION_CATEGORY = {
+    REGIST_SCHEDULE: 0,
+    UPDATE_SCHEDULE: 1,
+    DELETE_SCHEDULE: 2,
+};
+
+//---------------------------------------------------------.
 // Schedule Card Component.
 //---------------------------------------------------------.
 var ScheduleCardArea = React.createClass({
@@ -55,22 +64,27 @@ var ScheduleCardArea = React.createClass({
     )
   },
 
-  // kind: 0=insert 1=edit 2=delete.
-  onRegist: function(msg, kind, data) {
+  onRegist: function(msg, category, data) {
     // display complete messages.
     this.setState({completeMessage: msg});
     this.setState({canCompleteMessage: true});
 
     // state.schedule is updated.
-    if(0 == kind) {
+    switch(category) {
+    case ACTION_CATEGORY.REGIST_SCHEDULE:
       this.addSchedule(data);
-    }
-    else if(1 == kind) {
+      break;
+
+    case ACTION_CATEGORY.UPDATE_SCHEDULE:
       this.updateSchedule(data);
-    }
-    else {
+      break;
+    case ACTION_CATEGORY.DELETE_SCHEDULE:
       // delete data.
       this.deleteSchedule(data);
+      break;
+    default:
+      console.log("[ScheduleCardArea.onRegist] Not found category: " + category);
+      break;
     }
   },
 
@@ -227,7 +241,7 @@ var ScheduleCard = React.createClass({
          // disable dialog.
          obj.closeModal();
          // after update schedule data, start rendering.
-         obj.props.onRegist("Complete Edit", 1,
+         obj.props.onRegist("Complete Edit", ACTION_CATEGORY.UPDATE_SCHEDULE,
                            {
                              "id": obj.props.scheduleId,
                              "memberid": 1,
@@ -251,7 +265,7 @@ var ScheduleCard = React.createClass({
        .set('Content-Type', 'application/json')
        .end(function(err, res) {
          obj.closeDeleteModal();
-         obj.props.onRegist("Complete Delete", 2,
+         obj.props.onRegist("Complete Delete", ACTION_CATEGORY.DELETE_SCHEDULE,
                            {
                              "id": obj.props.scheduleId,
                              "memberid": 1,
@@ -332,7 +346,7 @@ var RegistSchedule = React.createClass({
        .end(function(err, res) {
          // after update schedule data, start rendering.
          obj.closeModal();
-         obj.props.onRegist("Complete Regist", 0,
+         obj.props.onRegist("Complete Regist", ACTION_CATEGORY.REGIST_SCHEDULE,
                            {
                              "id": res.text,
                              "memberid": 1,
