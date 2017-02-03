@@ -44,9 +44,6 @@ export default class ScheduleModal extends React.Component {
 
   render() {
     if (this.state.isActive) {
-      var summary_label = this.state.summary === "" ? "summary" : "";
-      var memo_label = this.state.memo === "" ? "memo" : "";
-      var people_label = this.state.people === "" ? "people" : "";
       return (
         <div>
           <div
@@ -73,40 +70,38 @@ export default class ScheduleModal extends React.Component {
                        name="startdatetime"
                        defaultValue={this.state.startDateTime}
                        onChange={this.state.onChange} />
-                <label className="mdl-texfiedl__label" htmlFor="startDateTime"></label>
               </div>
               <div className="mdl-textfield mdl-js-textfield">
                 <input type="datetime-local"
                        name="enddatetime"
                        defaultValue={this.state.endDateTime}
                        onChange={this.state.onChange} />
-                <label className="mdl-texfiedl__label" htmlFor="endDateTime"></label>
               </div>
               <div className="mdl-textfield mdl-js-textfield">
                 <input className="mdl-textfield__input"
                        name="people"
                        type="text"
+                       placeholder="people"
                        defaultValue={this.state.people}
                        onChange={this.state.onChange} />
-                <label className="mdl-texfiedl__label" htmlFor="people">{people_label}</label>
               </div>
               <div className="mdl-textfield mdl-js-textfield">
                 <input className="mdl-textfield__input"
                        name="summary"
                        type="text"
+                       placeholder="summary"
                        defaultValue={this.state.summary}
                        onChange={this.state.onChange}/>
-                <label className="mdl-textfield__label" htmlFor="summary">{summary_label}</label>
               </div>
               <div className="mdl-textfield mdl-js-textfield">
                 <textarea className="mdl-textfield__input"
                           style={{"resize": "none"}}
                           name="memo"
                           type="text"
+                          placeholder="memo"
                           rows="3"
                           defaultValue={this.props.memo}
                           onChange={this.state.onChange} />
-                <label className="mdl-textfield__label" htmlFor="memo">{memo_label}</label>
               </div>
             </div>
             <div className="mdl-dialog__actions mdl-dialog__actions--full-width">
