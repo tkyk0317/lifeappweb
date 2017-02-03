@@ -3,7 +3,7 @@
 /* Animation Schedule Card */
 .schedule_card-appear {
   opacity: 0.1;
-  transform:translateX(20%) scale(.95,.95);
+  transform:translateX(50%) scale(.95,.95);
 }
 .schedule_card-appear.active {
   opacity: 1.0;
@@ -11,19 +11,19 @@
 }
 .schedule_card-enter {
   opacity: 0.1;
-  transform:translateX(20%) scale(.95,.95);
+  transform:translateX(50%) scale(.95,.95);
+  transition: opacity 700ms ease-in;
 }
 .schedule_card-enter.schedule_card-enter-active {
   opacity: 1.0;
   transform:translateX(0) scale(1,1);
-  transition: 300ms;
 }
 .schedule_card-leave {
   opacity: 1.0;
   transform:translateX(0) scale(1,1);
+  transition: opacity 700ms ease-in;
 }
 .schedule_card-leave.schedule_card-leave-active {
   opacity: 0.1;
-  transform:translateX(30%) scale(.95,.95);
-  transition: 300ms;
+  transform:translateX(50%) scale(.95,.95);
 }

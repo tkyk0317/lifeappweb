@@ -129,21 +129,21 @@ var ScheduleList = React.createClass({
       var obj = this;
       var schedule_list =
        this.props.schedules.map(function(v) {
-         return (<ReactCSSTransitionGroup key={v.id}
-                                          transitionName="schedule_card"
-                                          transitionAppear={true}
-                                          transitionAppearTimeout={300}
-                                          transitionEnterTimeout={300}
-                                          transitionLeaveTimeout={300}>
-                  <ScheduleCard scheduleId={v.id}
-                                startDateTime={v.startdatetime}
-                                endDateTime={v.enddatetime}
-                                summary={v.summary}
-                                memo={v.memo}
-                                onRegist={obj.props.onRegist} />
-                 </ReactCSSTransitionGroup>);
+         return (<ScheduleCard key={v.id}
+                               scheduleId={v.id}
+                               startDateTime={v.startdatetime}
+                               endDateTime={v.enddatetime}
+                               summary={v.summary}
+                               memo={v.memo}
+                               onRegist={obj.props.onRegist} />);
       });
-      return (<div>{schedule_list}</div>);
+      return (<ReactCSSTransitionGroup transitionName="schedule_card"
+                                       transitionAppear={true}
+                                       transitionAppearTimeout={500}
+                                       transitionEnterTimeout={700}
+                                       transitionLeaveTimeout={700}>
+                                       {schedule_list}
+              </ReactCSSTransitionGroup>);
     }
     // loading icon.
     return <Loading />;
