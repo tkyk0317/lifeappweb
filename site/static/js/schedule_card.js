@@ -163,13 +163,15 @@ var Loading = React.createClass({
 // Display ScheduleCard Component.
 //---------------------------------------------------------.
 var ScheduleCard = React.createClass({
-  getInitialState: function() {
+  getInitialState: function()   {
     return {
       isActive: false,
       isDeleteModalActive: false,
       scheduleId: this.props.scheduleId,
-      startdatetime: this.props.startDateTime,
-      enddatetime: this.props.endDateTime,
+      startdate: this.props.startDateTime.substr(0, 10),
+      starttime: this.props.startDateTime.substr(10),
+      enddate: this.props.endDateTime.substr(0, 10),
+      endtime: this.props.endDateTime.substr(10),
       summary: this.props.summary,
       memo: this.props.memo,
     };
@@ -199,10 +201,13 @@ var ScheduleCard = React.createClass({
             <ScheduleModal isActive={this.state.isActive}
                            onSubmit={this.onSubmit}
                            onChange={this.onChange}
+                           onChangeDateTime={this.onChangeDateTime}
                            onClose={this.closeModal}
                            title="Edit Schedule"
-                           startDateTime={this.props.startDateTime}
-                           endDateTime={this.props.endDateTime}
+                           startdate={new Date(this.props.startDateTime)}
+                           starttime={new Date(this.props.startDateTime)}
+                           enddate={new Date(this.props.endDateTime)}
+                           endtime={new Date(this.props.endDateTime)}
                            summary={this.props.summary}
                            memo={this.props.memo}
                            people=""
@@ -227,6 +232,10 @@ var ScheduleCard = React.createClass({
   },
 
   onSubmit: function() {
+    // generate datetime.
+    var s_date = this.state.startdate + " " + this.state.starttime;
+    var e_date = this.state.enddate + " " + this.state.endtime;
+
     var obj = this;
     var req = require('superagent');
     req.put("/filter_schedule/" + this.props.scheduleId)
@@ -234,8 +243,8 @@ var ScheduleCard = React.createClass({
        .set('Content-Type', 'application/json')
        .send({
               "memberid": 1,
-              "startdatetime": this.state.startdatetime,
-              "enddatetime": this.state.enddatetime,
+              "startdatetime": s_date,
+              "enddatetime": e_date,
               "summary": this.state.summary,
               "memo": this.state.memo
             })
@@ -247,8 +256,8 @@ var ScheduleCard = React.createClass({
                            {
                              "id": obj.props.scheduleId,
                              "memberid": 1,
-                             "startdatetime": obj.state.startdatetime,
-                             "enddatetime": obj.state.enddatetime,
+                             "startdatetime": s_date,
+                             "enddatetime": e_date,
                              "summary": obj.state.summary,
                              "memo": obj.state.memo,
                            });
@@ -259,7 +268,15 @@ var ScheduleCard = React.createClass({
     this.setState({ [event.target.name]: event.target.value });
   },
 
+  onChangeDateTime: function(n, v) {
+    this.setState({ [n]: v });
+  },
+
   onDeleteBtnOK: function() {
+    // generate datetime.
+    var s_date = this.state.startdate + " " + this.state.starttime;
+    var e_date = this.state.enddate + " " + this.state.endtime;
+
     var obj = this;
     var req = require('superagent');
     req.del("/filter_schedule/" + this.props.scheduleId)
@@ -271,8 +288,8 @@ var ScheduleCard = React.createClass({
                            {
                              "id": obj.props.scheduleId,
                              "memberid": 1,
-                             "startdatetime": obj.state.startdatetime,
-                             "enddatetime": obj.state.enddatetime,
+                             "startdatetime": s_date,
+                             "enddatetime": e_date,
                              "summary": obj.state.summary,
                              "memo": obj.state.memo,
                            });
@@ -297,9 +314,22 @@ var ScheduleCard = React.createClass({
 //---------------------------------------------------------.
 var RegistSchedule = React.createClass({
   getInitialState: function() {
+    var start_date = new Date();
+    var end_date = new Date();
+    end_date.setMinutes(end_date.getMinutes() + 30);
     return {
-      isActive: false
-    };
+      isActive: false,
+      startdate: start_date.getFullYear() + "-" +
+                 ("0" + (start_date.getMonth() + 1)).slice(-2) + "-" +
+                 ("0" + start_date.getDate()).slice(-2),
+      enddate: end_date.getFullYear() + "-" +
+                 ("0" + (end_date.getMonth() + 1)).slice(-2) + "-" +
+                 ("0" + end_date.getDate()).slice(-2),
+      starttime: ("0" + start_date.getHours()).slice(-2) + ":" +
+                 ("0" + start_date.getMinutes()).slice(-2),
+      endtime: ("0" + end_date.getHours()).slice(-2) + ":" +
+               ("0" + end_date.getMinutes()).slice(-2),
+   };
   },
 
   render: function() {
@@ -309,13 +339,19 @@ var RegistSchedule = React.createClass({
         obj.openModal();
       });
 
+      var start_date = new Date();
+      var end_date = new Date();
+      end_date.setMinutes(end_date.getMinutes() + 30);
       return (<ScheduleModal isActive={this.state.isActive}
                             onSubmit={this.onSubmit}
                             onChange={this.onChange}
+                            onChangeDateTime={this.onChangeDateTime}
                             onClose={this.closeModal}
                             title="Add Schedule"
-                            startDateTime={new Date()}
-                            endDateTime={new Date()}
+                            startdate={start_date}
+                            starttime={start_date}
+                            enddate={end_date}
+                            endtime={end_date}
                             summary=""
                             memo=""
                             people=""
@@ -332,6 +368,10 @@ var RegistSchedule = React.createClass({
   },
 
   onSubmit: function(event) {
+    // generate datetime.
+    var s_date = this.state.startdate + " " + this.state.starttime;
+    var e_date = this.state.enddate + " " + this.state.endtime;
+
     // regist event to table.
     var obj = this;
     var req = require('superagent');
@@ -340,8 +380,8 @@ var RegistSchedule = React.createClass({
        .set('Content-Type', 'application/json')
        .send({
               "memberid": 1,
-              "startdatetime": this.state.startdatetime,
-              "enddatetime": this.state.enddatetime,
+              "startdatetime": s_date,
+              "enddatetime": e_date,
               "summary": this.state.summary,
               "memo": this.state.memo
             })
@@ -352,8 +392,8 @@ var RegistSchedule = React.createClass({
                            {
                              "id": res.text,
                              "memberid": 1,
-                             "startdatetime": obj.state.startdatetime,
-                             "enddatetime": obj.state.enddatetime,
+                             "startdatetime": s_date,
+                             "enddatetime": e_date,
                              "summary": obj.state.summary,
                              "memo": obj.state.memo,
                            });
@@ -362,7 +402,11 @@ var RegistSchedule = React.createClass({
 
   onChange: function(event) {
     this.setState({ [event.target.name]: event.target.value });
-  }
+  },
+
+  onChangeDateTime: function(n, v) {
+    this.setState({ [n]: v });
+  },
 });
 
 //---------------------------------------------------------.
