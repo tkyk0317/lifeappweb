@@ -25,4 +25,5 @@ html, body, .container {
 }
 #center_form h1 {
   text-align:center;
+  color: white;
 }

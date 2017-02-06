@@ -5,7 +5,7 @@ import {GridList, GridTile} from 'material-ui/GridList';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import {orange500, blue500} from 'material-ui/styles/colors';
+import {gray700} from 'material-ui/styles/colors';
 
 // call for touch event.
 injectTapEventPlugin();
@@ -13,8 +13,7 @@ injectTapEventPlugin();
 //-------------------------------------.
 // Form Component.
 //-------------------------------------.
-var FieldComponent = React.createClass({
-  render: function() {
+var FieldComponent = React.createClass({ render: function() {
     var style = {
       width: "500px",
       color: "white",
@@ -24,7 +23,7 @@ var FieldComponent = React.createClass({
         borderColor: "#3f51b5",
       },
       focuslineStyle: {
-        borderColor: "#c71585",
+        borderColor: gray700,
       }
     };
     return (
