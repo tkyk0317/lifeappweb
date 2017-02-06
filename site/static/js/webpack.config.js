@@ -1,15 +1,18 @@
 module.exports = {
   /* ビルドの起点となるファイルの設定 */
-  entry: ['./utility.js',
+  entry: {
+    main: ['./utility.js',
           './calendar.js',
           './schedule_card.js',
           './modal.js',
-          './google_login.js',
           './basic_modal.js'],
+    login: ['./google_login.js'],
+    signup: ['./signup.js'],
+  },
   /* 出力されるファイルの設定 */
   output: {
     path: './build/', // 出力先のパス
-    filename: 'bundle.js' // 出力先のファイル名
+    filename: '[name].bundle.js' // 出力先のファイル名
   },
   /* ソースマップをファイル内に出力させる場合は以下を追加 */
   devtool: 'inline-source-map',

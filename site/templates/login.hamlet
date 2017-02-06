@@ -18,3 +18,5 @@
         <br >
         <a href=@{url} id="google_login">Signin with Google
         <a href="@{SignupR}" id="create_account">Create your Account?
+
+<script src="/static/js/build/main.bundle.js">

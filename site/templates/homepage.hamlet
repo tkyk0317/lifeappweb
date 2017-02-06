@@ -29,3 +29,5 @@
         <ul class="mdl-mini-footer__link-list">
           <li><a href="#">Help
           <li><a href="#">Privacy & Terms
+
+<script src="/static/js/build/main.bundle.js">
