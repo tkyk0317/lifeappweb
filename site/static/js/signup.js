@@ -85,6 +85,8 @@ var SignupForm = React.createClass({
           <br />
           <FieldComponent hint="Password Confirm" name="password_confirm" type="password" onChange={this.onChange} />
           <br />
+          <button style={style}
+                  className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Signup</button>
         </div>
       </MuiThemeProvider>
     );

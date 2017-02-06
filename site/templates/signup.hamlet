@@ -4,6 +4,5 @@
     $maybe error <- signup_error
       <p style="color:red">#{error}
     <div id="signup_form">
-    <button style="width: 400px" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Signup
 
 <script src="/static/js/build/signup.bundle.js">
