@@ -1,6 +1,11 @@
 module.exports = {
   /* ビルドの起点となるファイルの設定 */
-  entry: ['./utility.js', './calendar.js', './schedule_card.js', './modal.js', './basic_modal.js'],
+  entry: ['./utility.js',
+          './calendar.js',
+          './schedule_card.js',
+          './modal.js',
+          './google_login.js',
+          './basic_modal.js'],
   /* 出力されるファイルの設定 */
   output: {
     path: './build/', // 出力先のパス

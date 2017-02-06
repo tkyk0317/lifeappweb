@@ -44,4 +44,4 @@ $newline never
           })();
         }
 
-    <script src="/static/js/build/bundle.js">
+  <script src="/static/js/build/bundle.js">
