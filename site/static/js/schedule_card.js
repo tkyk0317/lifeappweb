@@ -1,6 +1,12 @@
 import React from 'react';
 import ScheduleModal from './modal.js';
 import BasicModal from './basic_modal.js';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import RaisedButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import Avatar from 'material-ui/Avatar';
 
 var variables = require('./variable.js');
 
@@ -22,6 +28,7 @@ export default class ScheduleCard extends React.Component {
       endtime: this.props.endDateTime.substr(10),
       summary: this.props.summary,
       memo: this.props.memo,
+      avatar: this.props.avatar,
     };
 
     //  bind function.
@@ -106,7 +113,8 @@ export default class ScheduleCard extends React.Component {
                              "summary": obj.state.summary,
                              "memo": obj.state.memo,
                            });
-        });  }
+        });
+  }
 
   onDeleteBtnCancel() {
     this.closeDeleteModal();
@@ -121,48 +129,55 @@ export default class ScheduleCard extends React.Component {
   }
 
   render() {
+    var date = this.state.startdate + " " + this.state.starttime + " - " +
+               this.state.enddate + " " + this.state.endtime;
+    var avatar = this.state.avatar;
+    if(!avatar) {
+      // avatar is not uploaded, set default image.
+      avatar = <Avatar icon={<FontIcon className="material-icons">account_circle</FontIcon>}/>;
+    }
+    console.log(avatar);
     return (
-          <div>
-            <div className="mdl-card mdl-shadow--2dp schedule_card">
-              <div className="mdl-card__title" id="detail_sch">
-                <h4 className="mdl-card__title-text">{this.state.summary}</h4>
-                <button id={this.state.random}
-                        className="mdl-button mdl-button--icons mdl-js-button mdl-js-ripple-effect"
-                        onClick={this.openModal}>
-                  <i className="material-icons">description</i>
-                </button>
-              </div>
-              <div className="mdl-card__menu">
-                <button onClick={this.openDeleteModal}
-                        className="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                  <i className="material-icons">delete_forever</i>
-                </button>
-              </div>
-              <div className="mdl-card__supporting-text">&nbsp;{this.state.startDateTime} - {this.state.endDateTime}</div>
-              <div className="mdl-card__supporting-text">&nbsp;{this.state.memo}</div>
-            </div>
-            <ScheduleModal isActive={this.state.isActive}
-                           onSubmit={this.onSubmit}
-                           onChange={this.onChange}
-                           onChangeDateTime={this.onChangeDateTime}
-                           onClose={this.closeModal}
-                           title="Edit Schedule"
-                           startdate={new Date(this.state.startDateTime)}
-                           starttime={new Date(this.state.startDateTime)}
-                           enddate={new Date(this.state.endDateTime)}
-                           endtime={new Date(this.state.endDateTime)}
-                           summary={this.state.summary}
-                           memo={this.state.memo}
-                           people=""
-                           confirmButtonTitle="Update" />
-            <BasicModal isActive={this.state.isDeleteModalActive}
-                        onClickBtn1={this.onDeleteBtnOk}
-                        onClickBtn2={this.onDeleteBtnCancel}
-                        onClose={this.closeDeleteModal}
-                        title="Delete Schedule"
-                        message="Delete this Schedule ?"
-                        btn1_title="OK"
-                        btn2_title="Cancel" />
-          </div>);
+      <div>
+        <MuiThemeProvider muiTheme={getMuiTheme()}>
+          <div id="schedule_card">
+            <Card>
+              <CardHeader title={this.state.summary}
+                          titleStyle={{fontSize: "large"}}
+                          avatar={avatar}
+                          subtitle={date} />
+              <CardText>
+                {this.state.memo}
+              </CardText>
+              <CardActions style={{display: "inline-block", textAligh: "right"}}>
+                  <RaisedButton icon={<FontIcon className="material-icons">description</FontIcon>} label="Detail" primary={true} onTouchTap={this.openModal} />
+                  <RaisedButton icon={<FontIcon className="material-icons">delete_forever</FontIcon>} label="Delete" secondary={true} onTouchTap={this.openDeleteModal} />
+              </CardActions>
+            </Card>
+          </div>
+        </MuiThemeProvider>
+        <ScheduleModal isActive={this.state.isActive}
+                       onSubmit={this.onSubmit}
+                       onChange={this.onChange}
+                       onChangeDateTime={this.onChangeDateTime}
+                       onClose={this.closeModal}
+                       title="Edit Schedule"
+                       startdate={new Date(this.state.startDateTime)}
+                       starttime={new Date(this.state.startDateTime)}
+                       enddate={new Date(this.state.endDateTime)}
+                       endtime={new Date(this.state.endDateTime)}
+                       summary={this.state.summary}
+                       memo={this.state.memo}
+                       people=""
+                       confirmButtonTitle="Update" />
+          <BasicModal isActive={this.state.isDeleteModalActive}
+                      onClickBtn1={this.onDeleteBtnOk}
+                      onClickBtn2={this.onDeleteBtnCancel}
+                      onClose={this.closeDeleteModal}
+                      title="Delete Schedule"
+                      message="Delete this Schedule ?"
+                      btn1_title="OK"
+                      btn2_title="Cancel" />
+        </div>);
   }
 }

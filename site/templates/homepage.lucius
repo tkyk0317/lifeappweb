@@ -136,12 +136,12 @@ body {
   height:85vh;
   overflow-y: scroll;
 }
-#card_area .schedule_card {
+#card_area #schedule_card {
   border-left: 5px solid #3f51b5;
   width: 100%;
   margin-bottom: 5px;
 }
-#card_area .action_button {
+#card_area #action_button {
   float: right;
   margin-left: 3px;
   margin-right: 3px;
