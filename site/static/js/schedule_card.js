@@ -43,6 +43,12 @@ export default class ScheduleCard extends React.Component {
     this.closeDeleteModal = this.closeDeleteModal.bind(this);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+      // when open the modal, not render(card content is not updated).
+      if(this.state.isActive) return false;
+      return true;
+  }
+
   openModal() {
     this.setState({isActive: true});
   }
@@ -162,12 +168,12 @@ export default class ScheduleCard extends React.Component {
                        onChangeDateTime={this.onChangeDateTime}
                        onClose={this.closeModal}
                        title="Edit Schedule"
-                       startdate={new Date(this.state.startDateTime)}
-                       starttime={new Date(this.state.startDateTime)}
-                       enddate={new Date(this.state.endDateTime)}
-                       endtime={new Date(this.state.endDateTime)}
-                       summary={this.state.summary}
-                       memo={this.state.memo}
+                       startdate={new Date(this.props.startDateTime)}
+                       starttime={new Date(this.props.startDateTime)}
+                       enddate={new Date(this.props.endDateTime)}
+                       endtime={new Date(this.props.endDateTime)}
+                       summary={this.props.summary}
+                       memo={this.props.memo}
                        people=""
                        confirmButtonTitle="Update" />
           <BasicModal isActive={this.state.isDeleteModalActive}
