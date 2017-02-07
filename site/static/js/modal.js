@@ -6,6 +6,8 @@ import TextField from 'material-ui/TextField';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 
 // call for touch event.
 injectTapEventPlugin();
@@ -80,76 +82,82 @@ export default class ScheduleModal extends React.Component {
 
   render() {
     if (this.state.isActive) {
+      var actions = [
+          <FlatButton label={this.props.confirmButtonTitle}
+                      primary={true}
+                      onTouchTap={this.state.onSubmit} />,
+          <FlatButton label="Cancel"
+                      onTouchTap={this.state.onClose} />,
+      ];
+      var style = {
+        text_field: { width: "100%", },
+        focuslineStyle: { borderColor: "#3f51b5", },
+        dialog: { width: "400px" },
+      };
       return (
         <div>
-          <div
-            style={{
-              display: "block", zIndex: "8887", position: "absolute",
-              top: "0", bottom: "0", left: "0", right: "0", background: "gray",
-              opacity: "0.7"
-            }}
-            onClick={this.state.onClose}
-          >
-          </div>
-          <div
-            className="mdl-dialog dialog_form"
-            style={{
-              display: "block", zIndex: "8888", width: "350px", position: "absolute",
-              top: 5, bottom: 5, left: 5, right: 5, height: "60vh",
-              margin: "auto", background: "white"
-            }}
-          >
-            <div className="mdl-dialog__title">{this.state.title}</div>
-            <div className="mdl-dialog__content">
-              <MuiThemeProvider muiTheme={getMuiTheme()}>
-                <div>
-                  <DatePicker hintText="Start Date"
-                              autoOk={true}
-                              name="startdate"
-                              defaultDate={this.state.startdate}
-                              onChange={this.onChangeStartDate} />
-                  <TimePicker hintText="Start Time"
-                              format="24hr"
-                              autoOk={true}
-                              name="starttime"
-                              defaultTime={this.state.starttime}
-                              value={this.state.starttime}
-                              onChange={this.onChangeStartTime}/>
-                  <DatePicker hintText="End Date"
-                              autoOk={true}
-                              name="enddate"
-                              defaultDate={this.state.enddate}
-                              onChange={this.onChangeEndDate} />
-                  <TimePicker hintText="End Time"
-                              format="24hr"
-                              autoOk={true}
-                              name="endtime"
-                              defaultTime={this.state.endtime}
-                              value={this.state.endtime}
-                              onChange={this.onChangeEndTime}/>
-                  <TextField name="people"
-                              hintText="people"
-                              defaultValue={this.state.people}
-                              onChange={this.state.onChange} />
-                  <TextField name="summary"
-                              hintText="summary"
-                              defaultValue={this.state.summary}
-                              onChange={this.state.onChange}/>
-                  <TextField name="memo"
-                              hintText="memo"
-                              multiLine={true}
-                              rows={2}
-                              rowsMax={4}
-                              defaultValue={this.props.memo}
-                              onChange={this.state.onChange} />
-                </div>
-              </MuiThemeProvider>
+          <MuiThemeProvider muiTheme={getMuiTheme()}>
+            <div>
+              <Dialog title={this.state.title}
+                      actions={actions}
+                      autoScrollBodyContent={true}
+                      contentStyle={style.dialog}
+                      open={this.state.isActive}>
+                <DatePicker hintText="Start Date"
+                            autoOk={true}
+                            name="startdate"
+                            textFieldStyle={style.text_field}
+                            defaultDate={this.props.startdate}
+                            onChange={this.onChangeStartDate} />
+                <TimePicker hintText="Start Time"
+                            format="24hr"
+                            textFieldStyle={style.text_field}
+                            autoOk={true}
+                            name="starttime"
+                            defaultTime={this.props.starttime}
+                            value={this.props.starttime}
+                            onChange={this.onChangeStartTime} />
+                <DatePicker hintText="End Date"
+                            autoOk={true}
+                            textFieldStyle={style.text_field}
+                            name="enddate"
+                            defaultDate={this.props.enddate}
+                            onChange={this.onChangeEndDate} />
+                <TimePicker hintText="End Time"
+                            format="24hr"
+                            autoOk={true}
+                            textFieldStyle={style.text_field}
+                            name="endtime"
+                            defaultTime={this.props.endtime}
+                            value={this.props.endtime}
+                            onChange={this.onChangeEndTime} />
+                <TextField name="people"
+                            hintText="people"
+                            style={style.text_field}
+                            underlineFocusStyle={style.focuslineStyle}
+                            defaultValue={this.props.people}
+                            onChange={this.props.onChange} />
+                <br />
+                <TextField name="summary"
+                            hintText="summary"
+                            style={style.text_field}
+                            underlineFocusStyle={style.focuslineStyle}
+                            defaultValue={this.props.summary}
+                            onChange={this.props.onChange} />
+                <br />
+                <TextField name="memo"
+                            hintText="memo"
+                            style={style.text_field}
+                            underlineFocusStyle={style.focuslineStyle}
+                            multiLine={true}
+                            rows={2}
+                            rowsMax={4}
+                            defaultValue={this.props.memo}
+                            onChange={this.props.onChange} />
+              </Dialog>
             </div>
-            <div className="mdl-dialog__actions mdl-dialog__actions--full-width">
-              <button type="button" className="mdl-button" onClick={this.state.onSubmit}>{this.props.confirmButtonTitle}</button>
-              <button type="button" className="mdl-button" onClick={this.state.onClose}>Cancel</button>
-            </div>
-          </div>
+          </MuiThemeProvider>
+
         </div>
       );
     } else {

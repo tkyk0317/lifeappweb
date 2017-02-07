@@ -1,6 +1,9 @@
 
 import React from "react";
-import classNames from "classnames";
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 //-------------------------------------------------.
 // Basic Modal Component.
@@ -42,35 +45,24 @@ export default class BasicModal extends React.Component {
 
     render() {
       if(this.state.isActive) {
+        var actions = [
+          <FlatButton label={this.props.btn1_title} primary={true} onTouchTap={this.state.onClickBtn1} />,
+          <FlatButton label={this.props.btn2_title} onTouchTap={this.state.onClickBtn2} />,
+        ];
+        var style = {
+          dialog: { width: "400px", }
+        };
         return (
-          <div>
-            <div
-              style={{
-                display: "block", zIndex: "8887", position: "absolute",
-                top: "0", bottom: "0", left: "0", right: "0", background: "gray",
-                opacity: "0.7"
-              }}
-              onClick={this.state.onClose}>
-            </div>
-            <div
-              className="mdl-dialog dialg_form"
-              style={{
-                display: "block", zIndex: "8888", width: "350px", position: "absolute",
-                top: 5, bottom: 5, left: 5, right: 5, height: "25vh",
-                margin: "auto", background: "white"
-              }}>
-              <div className="mdl-dialog__title">{this.state.title}</div>
-              <div className="mdl-dialog__content">
-                <p>{this.props.message}</p>
-              </div>
-              <div className="mdl-dialog__actions mdl-dialog__actions--full-width">
-                <button type="button" className="mdl-button"
-                        onClick={this.state.onClickBtn1}>{this.props.btn1_title}</button>
-                <button type="button" className="mdl-button"
-                        onClick={this.state.onClickBtn2}>{this.props.btn2_title}</button>
-              </div>
-            </div>
-          </div>
+              <MuiThemeProvider muiTheme={getMuiTheme()}>
+                <div>
+                  <Dialog title={this.state.title}
+                          actions={actions}
+                          contentStyle={style.dialog}
+                          open={this.state.isActive}>
+                    <p>{this.props.message}</p>
+                  </Dialog>
+                </div>
+              </MuiThemeProvider>
         );
     } else {
       return false;
