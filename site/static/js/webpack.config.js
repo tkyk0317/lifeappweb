@@ -1,11 +1,10 @@
 module.exports = {
   /* ビルドの起点となるファイルの設定 */
   entry: {
-    main: ['./utility.js',
-          './calendar.js',
-          './schedule_card.js',
-          './modal.js',
-          './basic_modal.js'],
+    main: ['./calendar.js',
+           './schedule_card.js',
+           './modal.js',
+           './basic_modal.js'],
     login: ['./google_login.js'],
     signup: ['./signup.js'],
   },

@@ -4,6 +4,8 @@ import ScheduleModal from './modal.js';
 import BasicModal from './basic_modal.js';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
+var utility = require ('./utility.js');
+
 //---------------------------------------------------------.
 // Category Enum.
 //---------------------------------------------------------.
@@ -319,16 +321,10 @@ var RegistSchedule = React.createClass({
     end_date.setMinutes(end_date.getMinutes() + 30);
     return {
       isActive: false,
-      startdate: start_date.getFullYear() + "-" +
-                 ("0" + (start_date.getMonth() + 1)).slice(-2) + "-" +
-                 ("0" + start_date.getDate()).slice(-2),
-      enddate: end_date.getFullYear() + "-" +
-                 ("0" + (end_date.getMonth() + 1)).slice(-2) + "-" +
-                 ("0" + end_date.getDate()).slice(-2),
-      starttime: ("0" + start_date.getHours()).slice(-2) + ":" +
-                 ("0" + start_date.getMinutes()).slice(-2),
-      endtime: ("0" + end_date.getHours()).slice(-2) + ":" +
-               ("0" + end_date.getMinutes()).slice(-2),
+      startdate: utility.toDateString(start_date),
+      enddate: utility.toDateString(end_date),
+      starttime: utility.toTimeString(start_date),
+      endtime: utility.toTimeString(end_date),
    };
   },
 

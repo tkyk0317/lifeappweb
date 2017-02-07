@@ -10,6 +10,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 // call for touch event.
 injectTapEventPlugin();
 
+var utility = require ('./utility.js');
+
 //-------------------------------------------------.
 // Schedule Modal Component.
 //-------------------------------------------------.
@@ -49,27 +51,19 @@ export default class ScheduleModal extends React.Component {
   }
 
   onChangeStartDate(e, v) {
-    var date = v.getFullYear() +
-              "-" + ("0" + (v.getMonth() + 1)).slice(-2) +
-              "-" + ("0" + (v.getDate())).slice(-2);
-    this.state.onChangeDateTime("startdate", date);
+    this.state.onChangeDateTime("startdate", utility.toDateString(v));
   }
 
   onChangeEndDate(e, v) {
-    var date = v.getFullYear() +
-              "-" + ("0" + (v.getMonth() + 1)).slice(-2) +
-              "-" + ("0" + (v.getDate())).slice(-2);
-    this.state.onChangeDateTime("enddate", date);
+    this.state.onChangeDateTime("enddate", utility.toDateString(v));
   }
 
   onChangeStartTime(e, v) {
-    var time = ("0" + (v.getHours())).slice(-2) + ":" + ("0" + (v.getMinutes())).slice(-2);
-    this.state.onChangeDateTime("starttime", time);
+    this.state.onChangeDateTime("starttime", utility.toTimeString(v));
   }
 
   onChangeEndTime(e, v) {
-    var time = ("0" + (v.getHours())).slice(-2) + ":" + ("0" + (v.getMinutes())).slice(-2);
-    this.state.onChangeDateTime("endtime", time);
+    this.state.onChangeDateTime("endtime", utility.toTimeString(v));
   }
 
   onChange(e) {
