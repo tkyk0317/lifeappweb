@@ -30,6 +30,7 @@ var FieldComponent = React.createClass({ render: function() {
       <TextField style={style}
                  id="text-field-controlled"
                  hintText={this.props.hint}
+                 errorText={this.props.error}
                  name={this.props.name}
                  type={this.props.type}
                  defaultValue=""
@@ -56,41 +57,171 @@ var SignupForm = React.createClass({
       email: "",
       password: "",
       password_confirm: "",
+      firstname_empty: "",
+      lastname_empty: "",
+      email_empty: "",
+      password_empty: "",
+      password_confirm_empty: "",
     };
   },
 
   onChange: function(e) {
     this.setState({[e.target.name]: e.target.value});
+
+    if("firstname" === e.target.name) {
+      if("" !== this.state.firstname_empty) this.setState({firstname_empty: ""});
+    }
+    if("lastname" === e.target.name) {
+      if("" !== this.state.lastname_empty) this.setState({lastname_empty: ""});
+    }
+    if("email" === e.target.name) {
+      if("" !== this.state.email_empty) this.setState({email_empty: ""});
+    }
+    if("password" === e.target.name) {
+      if("" !== this.state.password_empty) this.setState({password_empty: ""});
+    }
+    if("password_confirm" === e.target.name) {
+      if("" !== this.state.password_confirm_empty) this.setState({password_confirm_empty: ""});
+    }
   },
 
   onSubmit: function() {
-    var form = document.getElementById('_form');
-    form.submit();
+    // check empty.
+    var is_empty = false;
+    if(this.isEmpty(this.state.email)) {
+      this.setState({email_empty: "this field is required"});
+      is_empty = true;
+    }
+    if(this.isEmpty(this.state.password)) {
+      this.setState({password_empty: "this field is required"});
+      is_empty = true;
+    }
+    if(this.isEmpty(this.state.password_confirm)) {
+      this.setState({password_confirm_empty: "this field is required"});
+      is_empty = true;
+    }
+    if(this.isEmpty(this.state.firstname)) {
+      this.setState({firstname_empty: "this field is required"});
+      is_empty = true;
+    }
+    if(this.isEmpty(this.state.lastname)) {
+      this.setState({lastname_empty: "this field is required"});
+      is_empty = true;
+    }
+
+    if(is_empty) return;
+
+    // validation.
+    if(!this.checkEmailValidation(this.state.email)) return;
+    if(!this.checkPasswordValidation(this.state.password)) return;
+    if(!this.checkPasswordConfirm(this.state.password, this.state.password_confirm)) return;
+
+    // send form.
+    document.getElementById('_form').submit();
   },
 
   render: function() {
-    var style={
-      width: "500px",
+    var style = {
+      disable_button: {
+        width: "500px",
+        cursor: "not-allowed",
+        pointerEvents: "none",
+      },
+      enable_button: {
+        width: "500px",
+      },
     };
+
+    // email validation.
+    var button_style = style.enable_button;
+    var email_validation = "";
+    if("" !== this.state.email_empty) {
+      email_validation = this.state.email_empty;
+    }
+    else if(false === this.checkEmailValidation(this.state.email)) {
+      button_style = style.disable_button;
+      email_validation = "Please enter the correct email";
+    }
+
+    // password validation.
+    var password_validation = "";
+    if("" !== this.state.password_empty) {
+      button_style = style.disable_button;
+      password_validation = this.state.password_empty;
+    }
+    else if(false === this.checkPasswordValidation(this.state.password)) {
+      button_style = style.disable_button;
+      password_validation = "Please enter the password between 8 and 12 characters(numbers and captal letters for minimum one letter)";
+    }
+
+    // password confirm validation.
+    var password_confirm = "";
+    if("" !== this.state.password_confirm_empty) {
+      button_style = style.disable_button;
+      password_confirm = this.state.password_confirm_empty;
+    }
+    else if(false === this.checkPasswordConfirm(this.state.password, this.state.password_confirm)) {
+      button_style = style.disable_button;
+      password_confirm = "Password and Confirm-password do not match";
+    }
+
+    // firstname validation.
+    var firstname_empty = "";
+    if("" !== this.state.firstname_empty) {
+      button_style = style.disable_button;
+      firstname_empty = this.state.firstname_empty;
+    }
+
+    // lastname validation.
+    var lastname_empty = "";
+    if("" !== this.state.lastname_empty) {
+      button_style = style.disable_button;
+      lastname_empty = this.state.lastname_empty;
+    }
+
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
         <div>
-          <FieldComponent hint="First Name" name="firstname" onChange={this.onChange} />
+          <FieldComponent hint="First Name" error={firstname_empty} name="firstname" onChange={this.onChange} />
           <br />
-          <FieldComponent hint="Last Name" name="lastname" onChange={this.onChange} />
+          <FieldComponent hint="Last Name" error={lastname_empty} name="lastname" onChange={this.onChange} />
           <br />
-          <FieldComponent hint="Email Address" name="email" type="email" onChange={this.onChange} />
+          <FieldComponent hint="Email Address" error={email_validation} name="email" type="email" onChange={this.onChange} />
           <br />
-          <FieldComponent hint="Password" name="password" type="password" onChange={this.onChange} />
+          <FieldComponent hint="Password" error={password_validation} name="password" type="password" onChange={this.onChange} />
           <br />
-          <FieldComponent hint="Password Confirm" name="password_confirm" type="password" onChange={this.onChange} />
+          <FieldComponent hint="Confirm Password" error={password_confirm} name="password_confirm" type="password" onChange={this.onChange} />
           <br />
-          <button style={style}
+          <button style={button_style} onClick={this.onSubmit} type="button"
                   className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Signup</button>
         </div>
       </MuiThemeProvider>
     );
-  }
+  },
+
+  isEmpty: function(v) {
+    if("" === v) return true;
+    return false;
+  },
+
+  checkEmailValidation: function(email) {
+    if(this.isEmpty(email)) return true;
+    if(email.match(/^[A-Za-z0-9]+[\w-]+@[\w\.-]+\.\w{2,}$/)) return true;
+    return false;
+  },
+
+  checkPasswordConfirm: function(password, password_confirm) {
+    if(this.isEmpty(password)) return true;
+    if(password === password_confirm) return true;
+    return false;
+  },
+
+  checkPasswordValidation: function(password) {
+    if(this.isEmpty(password)) return true;
+    if(password.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]{8,12}$/)) return true;
+    return false;
+  },
+
 });
 
 //-------------------------------------.
