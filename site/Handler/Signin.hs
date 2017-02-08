@@ -20,8 +20,14 @@ postSigninR = do
                                   where
                                     shaPassword p = toString $ generateSha512 p
                                     correctPassword = do
+                                      -- save login key.
+                                      case (memberEmail $ entityVal info) of
+                                        Just email -> do
+                                          setSession "login_key" email
+
                                       deleteSession "login_error"
                                       redirect HomeR
+
                                     notCorrectPassword = do
                                       setSession "login_error" "Please input corrcet password"
                                       redirect $ AuthR LoginR

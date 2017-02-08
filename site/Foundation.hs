@@ -163,9 +163,11 @@ instance YesodAuth App where
 
     -- custom loginhandler.
     loginHandler = do
-      ma <- lift maybeAuthId
-      when (isJust ma) $
+      -- check login session.
+      login_key <- lookupSession "login_key"
+      when (isJust login_key) $
         lift $ redirect HomeR
+
       let url = AuthR Yesod.Auth.GoogleEmail2.forwardUrl
       login_error <- lookupSession "login_error"
       lift $ defaultLayout $(widgetFile "login")

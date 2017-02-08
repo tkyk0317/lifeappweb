@@ -12,6 +12,10 @@ import Import
 -- inclined, or create a single monolithic file.
 getHomeR :: Handler Html
 getHomeR = do
-    defaultLayout $ do
-      setTitle "TopPage of Lifeapp"
-      $(widgetFile "homepage")
+  login_key <- lookupSession "login_key"
+  case login_key of
+    Just _ -> do
+            defaultLayout $ do
+              setTitle "TopPage of Lifeapp"
+              $(widgetFile "homepage")
+    _ -> redirect $ AuthR LoginR
