@@ -10,3 +10,4 @@
 /signup_complete SignupCompleteR GET
 /regist_schedule RegistScheduleR POST GET
 /filter_schedule/#ScheduleId FilterScheduleR GET PUT DELETE
+/signout SignoutR GET
