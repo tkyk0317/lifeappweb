@@ -195,6 +195,7 @@ body {
     -moz-box-sizing: border-box;
     height: 55vh;
     overflow-y: scroll;
+    overflow-x: hidden;
   }
   #calendar div.week span.day {
     float: left;
