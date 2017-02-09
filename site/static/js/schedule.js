@@ -13,6 +13,7 @@ var variables = require('./variable.js');
 var ScheduleCardArea = React.createClass({
   getInitialState: function() {
     return {
+            memberid: 0,
             schedules: null,
             canCompleteMessage: false,
             completeMessage: "",
@@ -28,6 +29,7 @@ var ScheduleCardArea = React.createClass({
        .set('Content-Type', 'application/json')
        .end(function(err, res) {
          obj.setState({schedules: res.body.schedule});
+         obj.setState({memberid: res.body.memberid});
     });
   },
 
@@ -48,7 +50,7 @@ var ScheduleCardArea = React.createClass({
     }
     return (
       <div>
-        <RegistSchedule onRegist={this.onRegist} />
+        <RegistSchedule onRegist={this.onRegist} memberId={this.state.memberid} />
         <ScheduleList schedules={this.state.schedules}  onRegist={this.onRegist}/>
         <div id="complete_action_bar" className="mdl-js-snackbar mdl-snackbar">
           <div className="mdl-snackbar__text"></div>
@@ -125,6 +127,7 @@ var ScheduleList = React.createClass({
        this.props.schedules.map(function(v) {
          return (<ScheduleCard key={v.id}
                                scheduleId={v.id}
+                               memberId={v.memberid}
                                startDateTime={v.startdatetime}
                                endDateTime={v.enddatetime}
                                summary={v.summary}
@@ -217,7 +220,7 @@ var RegistSchedule = React.createClass({
        .set('Accept', 'application/json')
        .set('Content-Type', 'application/json')
        .send({
-              "memberid": 1,
+              "memberid": this.props.memberId,
               "startdatetime": s_date,
               "enddatetime": e_date,
               "summary": this.state.summary,
@@ -229,7 +232,7 @@ var RegistSchedule = React.createClass({
          obj.props.onRegist("Complete Regist", variables.ACTION_CATEGORY.REGIST_SCHEDULE,
                            {
                              "id": res.text,
-                             "memberid": 1,
+                             "memberid": obj.props.memberId,
                              "startdatetime": s_date,
                              "enddatetime": e_date,
                              "summary": obj.state.summary,

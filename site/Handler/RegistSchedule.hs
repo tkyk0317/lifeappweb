@@ -14,6 +14,16 @@ postRegistScheduleR = do
 -- get schedule data for login's user.
 getRegistScheduleR :: Handler Value
 getRegistScheduleR = do
-  -- memberid must be changed login user id.
-  schedules <- runDB $ selectList [ScheduleMemberid ==. 1] [Desc ScheduleStartdatetime] :: Handler [Entity Schedule]
-  return $ object ["schedule" .= schedules]
+  -- get login-id,
+  ident <- lookupSession "login_key"
+  case ident of
+    Just i -> do
+      record <- runDB $ selectFirst [MemberIdent ==. i] []
+      case record of
+        Just (Entity uid _) -> do
+          -- memberid must be changed login user id.
+          let _id = fromSqlKey(uid)
+          schedules <- runDB $ selectList [ScheduleMemberid ==. fromIntegral(_id)] [Desc ScheduleStartdatetime] :: Handler [Entity Schedule]
+          return $ object [ "memberid" .= _id
+                           ,"schedule" .= schedules
+                          ]

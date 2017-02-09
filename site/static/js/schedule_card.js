@@ -21,7 +21,7 @@ export default class ScheduleCard extends React.Component {
       isActive: false,
       isModal: false,
       isDeleteModalActive: false,
-      scheduleId: this.props.scheduleId,
+      scheduleIi: this.props.scheduleId,
       startDateTime: this.props.startDateTime,
       endDateTime: this.props.endDateTime,
       startdate: this.props.startDateTime.substr(0, 10),
@@ -81,7 +81,7 @@ export default class ScheduleCard extends React.Component {
        .set('Accept', 'application/json')
        .set('Content-Type', 'application/json')
        .send({
-              "memberid": 1,
+              "memberid": this.props.memberId,
               "startdatetime": s_date,
               "enddatetime": e_date,
               "summary": this.state.summary,
@@ -94,7 +94,7 @@ export default class ScheduleCard extends React.Component {
          obj.props.onRegist("Complete Edit", variables.ACTION_CATEGORY.UPDATE_SCHEDULE,
                            {
                              "id": obj.props.scheduleId,
-                             "memberid": 1,
+                             "memberid": obj.props.memberId,
                              "startdatetime": s_date,
                              "enddatetime": e_date,
                              "summary": obj.state.summary,
@@ -118,7 +118,7 @@ export default class ScheduleCard extends React.Component {
          obj.props.onRegist("Complete Delete", variables.ACTION_CATEGORY.DELETE_SCHEDULE,
                            {
                              "id": obj.props.scheduleId,
-                             "memberid": 1,
+                             "memberid": obj.props.memberId,
                              "startdatetime": s_date,
                              "enddatetime": e_date,
                              "summary": obj.state.summary,
