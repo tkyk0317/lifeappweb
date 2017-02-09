@@ -15,19 +15,28 @@ var utility = require('./utility.js');
 //-------------------------------------.
 // Form Component.
 //-------------------------------------.
-var FieldComponent = React.createClass({ render: function() {
-    var style = {
-      width: "500px",
-      color: "white",
-    };
+var FieldComponent = React.createClass({
+  render: function() {
+    if(utility.isSmartPhone()) {
+      var style = {
+        width: "400px",
+        color: "white",
+      };
+    }
+    else {
+      var style = {
+        width: "500px",
+        color: "white",
+      };
+    }
     var line_style = {
-      underlineStyle: {
-        borderColor: "#3f51b5",
-      },
-      focuslineStyle: {
-        borderColor: gray700,
-      }
-    };
+        underlineStyle: {
+          borderColor: "#3f51b5",
+        },
+        focuslineStyle: {
+          borderColor: gray700,
+        }
+      };
     return (
       <TextField style={style}
                  id="text-field-controlled"
@@ -123,16 +132,30 @@ var SignupForm = React.createClass({
   },
 
   render: function() {
-    var style = {
-      disable_button: {
-        width: "500px",
-        cursor: "not-allowed",
-        pointerEvents: "none",
-      },
-      enable_button: {
-        width: "500px",
-      },
-    };
+    if(utility.isSmartPhone()) {
+      var style = {
+        disable_button: {
+          width: "400px",
+          cursor: "not-allowed",
+          pointerEvents: "none",
+        },
+        enable_button: {
+          width: "400px",
+        },
+      };
+    }
+    else {
+      var style = {
+        disable_button: {
+          width: "500px",
+          cursor: "not-allowed",
+          pointerEvents: "none",
+        },
+        enable_button: {
+          width: "500px",
+        },
+      };
+    }
 
     // email validation.
     var button_style = style.enable_button;
