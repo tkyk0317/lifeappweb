@@ -9,6 +9,7 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import Avatar from 'material-ui/Avatar';
 
 var variables = require('./variable.js');
+var utility = require('./utility.js');
 
 //-------------------------------------.
 // Card Component.
@@ -142,7 +143,6 @@ export default class ScheduleCard extends React.Component {
       // avatar is not uploaded, set default image.
       avatar = <Avatar icon={<FontIcon className="material-icons">account_circle</FontIcon>}/>;
     }
-    console.log(avatar);
     return (
       <div>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -168,10 +168,10 @@ export default class ScheduleCard extends React.Component {
                        onChangeDateTime={this.onChangeDateTime}
                        onClose={this.closeModal}
                        title="Edit Schedule"
-                       startdate={new Date(this.props.startDateTime)}
-                       starttime={new Date(this.props.startDateTime)}
-                       enddate={new Date(this.props.endDateTime)}
-                       endtime={new Date(this.props.endDateTime)}
+                       startdate={utility.fromDateTimeString(this.props.startDateTime)}
+                       starttime={utility.fromDateTimeString(this.props.startDateTime)}
+                       enddate={utility.fromDateTimeString(this.props.endDateTime)}
+                       endtime={utility.fromDateTimeString(this.props.endDateTime)}
                        summary={this.props.summary}
                        memo={this.props.memo}
                        people=""
