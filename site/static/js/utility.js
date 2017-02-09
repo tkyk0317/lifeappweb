@@ -37,7 +37,7 @@ export function isEmpty(v) {
 }
 export function checkEmailValidation(email) {
   if(isEmpty(email)) return true;
-  if(email.match(/^[A-Za-z0-9]+[\w-]+@[\w\.-]+\.\w{2,}$/)) return true;
+  if(email.match(/^[\w.\-]+@[\w\.-]+\.\w{2,}$/)) return true;
   return false;
 }
 export function checkPasswordValidation(password) {
