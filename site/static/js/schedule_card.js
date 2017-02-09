@@ -19,14 +19,15 @@ export default class ScheduleCard extends React.Component {
     super(props);
     this.state = {
       isActive: false,
+      isModal: false,
       isDeleteModalActive: false,
       scheduleId: this.props.scheduleId,
       startDateTime: this.props.startDateTime,
       endDateTime: this.props.endDateTime,
       startdate: this.props.startDateTime.substr(0, 10),
-      starttime: this.props.startDateTime.substr(10),
+      starttime: this.props.startDateTime.substr(11),
       enddate: this.props.endDateTime.substr(0, 10),
-      endtime: this.props.endDateTime.substr(10),
+      endtime: this.props.endDateTime.substr(11),
       summary: this.props.summary,
       memo: this.props.memo,
       avatar: this.props.avatar,
@@ -45,6 +46,9 @@ export default class ScheduleCard extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+      // when modal will close, must render.
+      if(!nextState.isActive && this.state.isActive) return true;
+
       // when open the modal, not render(card content is not updated).
       if(this.state.isActive) return false;
       return true;
@@ -136,9 +140,12 @@ export default class ScheduleCard extends React.Component {
   }
 
   render() {
-    var date = this.state.startdate + " " + this.state.starttime + " - " +
-               this.state.enddate + " " + this.state.endtime;
-    var avatar = this.state.avatar;
+    var start_date = utility.fromDateTimeString(this.props.startDateTime);
+    var end_date = utility.fromDateTimeString(this.props.endDateTime);
+    var date = utility.toDateString(start_date) + " " + utility.toTimeString(start_date) + " \/ " +
+               utility.toDateString(end_date) + " " + utility.toTimeString(end_date);
+
+    var avatar = this.props.avatar;
     if(!avatar) {
       // avatar is not uploaded, set default image.
       avatar = <Avatar icon={<FontIcon className="material-icons">account_circle</FontIcon>}/>;
@@ -148,12 +155,12 @@ export default class ScheduleCard extends React.Component {
         <MuiThemeProvider muiTheme={getMuiTheme()}>
           <div id="schedule_card">
             <Card>
-              <CardHeader title={this.state.summary}
+              <CardHeader title={this.props.summary}
                           titleStyle={{fontSize: "large"}}
                           avatar={avatar}
                           subtitle={date} />
               <CardText>
-                {this.state.memo}
+                {this.props.memo}
               </CardText>
               <CardActions style={{display: "inline-block", textAligh: "right"}}>
                   <RaisedButton icon={<FontIcon className="material-icons">description</FontIcon>} label="Detail" primary={true} onTouchTap={this.openModal} />

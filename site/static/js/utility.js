@@ -33,7 +33,7 @@ export function fromDateTimeString(d) {
   var day = d.substr(8, 2);
   var hour = d.substr(11, 2);
   var minute = d.substr(14, 2);
-  return new Date(year, month, day, hour, minute);
+  return new Date(year, month - 1, day, hour, minute);
 }
 
 //----------------------------------------.
