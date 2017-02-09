@@ -28,5 +28,23 @@ function toTimeString(d) {
   return ("0" + (d.getHours())).slice(-2) + ":" + ("0" + (d.getMinutes())).slice(-2);
 }
 
+//----------------------------------------.
+// Validation Function.
+//----------------------------------------.
+export function isEmpty(v) {
+  if("" === v) return true;
+  return false;
+}
+export function checkEmailValidation(email) {
+  if(isEmpty(email)) return true;
+  if(email.match(/^[A-Za-z0-9]+[\w-]+@[\w\.-]+\.\w{2,}$/)) return true;
+  return false;
+}
+export function checkPasswordValidation(password) {
+  if(isEmpty(password)) return true;
+  if(password.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]{8,12}$/)) return true;
+  return false;
+}
+
 // export.
 export { toDateString, toTimeString, isSmartPhone, isTablet, isPc };

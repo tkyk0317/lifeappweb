@@ -10,6 +10,8 @@ import {gray700} from 'material-ui/styles/colors';
 // call for touch event.
 injectTapEventPlugin();
 
+var utility = require('./utility.js');
+
 //-------------------------------------.
 // Form Component.
 //-------------------------------------.
@@ -88,23 +90,23 @@ var SignupForm = React.createClass({
   onSubmit: function() {
     // check empty.
     var is_empty = false;
-    if(this.isEmpty(this.state.email)) {
+    if(utility.isEmpty(this.state.email)) {
       this.setState({email_empty: "this field is required"});
       is_empty = true;
     }
-    if(this.isEmpty(this.state.password)) {
+    if(utility.isEmpty(this.state.password)) {
       this.setState({password_empty: "this field is required"});
       is_empty = true;
     }
-    if(this.isEmpty(this.state.password_confirm)) {
+    if(utility.isEmpty(this.state.password_confirm)) {
       this.setState({password_confirm_empty: "this field is required"});
       is_empty = true;
     }
-    if(this.isEmpty(this.state.firstname)) {
+    if(utility.isEmpty(this.state.firstname)) {
       this.setState({firstname_empty: "this field is required"});
       is_empty = true;
     }
-    if(this.isEmpty(this.state.lastname)) {
+    if(utility.isEmpty(this.state.lastname)) {
       this.setState({lastname_empty: "this field is required"});
       is_empty = true;
     }
@@ -112,8 +114,8 @@ var SignupForm = React.createClass({
     if(is_empty) return;
 
     // validation.
-    if(!this.checkEmailValidation(this.state.email)) return;
-    if(!this.checkPasswordValidation(this.state.password)) return;
+    if(!utility.checkEmailValidation(this.state.email)) return;
+    if(!utility.checkPasswordValidation(this.state.password)) return;
     if(!this.checkPasswordConfirm(this.state.password, this.state.password_confirm)) return;
 
     // send form.
@@ -138,7 +140,7 @@ var SignupForm = React.createClass({
     if("" !== this.state.email_empty) {
       email_validation = this.state.email_empty;
     }
-    else if(false === this.checkEmailValidation(this.state.email)) {
+    else if(false === utility.checkEmailValidation(this.state.email)) {
       button_style = style.disable_button;
       email_validation = "Please enter the correct email";
     }
@@ -149,7 +151,7 @@ var SignupForm = React.createClass({
       button_style = style.disable_button;
       password_validation = this.state.password_empty;
     }
-    else if(false === this.checkPasswordValidation(this.state.password)) {
+    else if(false === utility.checkPasswordValidation(this.state.password)) {
       button_style = style.disable_button;
       password_validation = "Please enter the password between 8 and 12 characters(numbers and captal letters for minimum one letter)";
     }
@@ -199,26 +201,9 @@ var SignupForm = React.createClass({
     );
   },
 
-  isEmpty: function(v) {
-    if("" === v) return true;
-    return false;
-  },
-
-  checkEmailValidation: function(email) {
-    if(this.isEmpty(email)) return true;
-    if(email.match(/^[A-Za-z0-9]+[\w-]+@[\w\.-]+\.\w{2,}$/)) return true;
-    return false;
-  },
-
   checkPasswordConfirm: function(password, password_confirm) {
-    if(this.isEmpty(password)) return true;
+    if(utility.isEmpty(password)) return true;
     if(password === password_confirm) return true;
-    return false;
-  },
-
-  checkPasswordValidation: function(password) {
-    if(this.isEmpty(password)) return true;
-    if(password.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]{8,12}$/)) return true;
     return false;
   },
 
