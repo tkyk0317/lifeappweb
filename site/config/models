@@ -13,6 +13,7 @@ Schedule json
   memberid Int
   startdatetime Text
   enddatetime Text
+  guest Text Maybe
   summary Text
   memo Text Maybe
   deriving Typeable Show

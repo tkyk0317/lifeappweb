@@ -34,7 +34,7 @@ export default class ScheduleModal extends React.Component {
       title: this.props.title,
       summary: this.props.summary,
       memo: this.props.memo,
-      people: this.props.people,
+      guest: this.props.guest,
     };
 
     // bind function.
@@ -131,11 +131,11 @@ export default class ScheduleModal extends React.Component {
                             defaultTime={this.props.endtime}
                             value={this.props.endtime}
                             onChange={this.onChangeEndTime} />
-                <TextField name="people"
-                            hintText="people"
+                          <TextField name="guest"
+                            hintText="guest"
                             style={style.text_field}
                             underlineFocusStyle={style.focuslineStyle}
-                            defaultValue={this.props.people}
+                            defaultValue={this.props.guest}
                             onChange={this.props.onChange} />
                 <br />
                 <TextField name="summary"

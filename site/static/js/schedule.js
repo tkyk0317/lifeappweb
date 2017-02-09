@@ -132,6 +132,7 @@ var ScheduleList = React.createClass({
                                endDateTime={v.enddatetime}
                                summary={v.summary}
                                memo={v.memo}
+                               guest={v.guest}
                                onRegist={obj.props.onRegist} />);
       });
       return (<ReactCSSTransitionGroup transitionName="schedule_card"
@@ -195,7 +196,7 @@ var RegistSchedule = React.createClass({
                             endtime={end_date}
                             summary=""
                             memo=""
-                            people=""
+                            guest=""
                             confirmButtonTitle="Regist"
                             />);
   },
@@ -224,7 +225,8 @@ var RegistSchedule = React.createClass({
               "startdatetime": s_date,
               "enddatetime": e_date,
               "summary": this.state.summary,
-              "memo": this.state.memo
+              "memo": this.state.memo,
+              "guest": this.state.guest,
             })
        .end(function(err, res) {
          // after update schedule data, start rendering.

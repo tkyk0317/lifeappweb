@@ -30,6 +30,7 @@ export default class ScheduleCard extends React.Component {
       endtime: this.props.endDateTime.substr(11),
       summary: this.props.summary,
       memo: this.props.memo,
+      guest: this.props.guest,
       avatar: this.props.avatar,
     };
 
@@ -85,7 +86,8 @@ export default class ScheduleCard extends React.Component {
               "startdatetime": s_date,
               "enddatetime": e_date,
               "summary": this.state.summary,
-              "memo": this.state.memo
+              "memo": this.state.memo,
+              "guest": this.state.guest,
             })
        .end(function(err, res) {
          // disable dialog.
@@ -99,6 +101,7 @@ export default class ScheduleCard extends React.Component {
                              "enddatetime": e_date,
                              "summary": obj.state.summary,
                              "memo": obj.state.memo,
+                             "guest": obj.state.guest,
                            });
       });
   }
@@ -123,6 +126,7 @@ export default class ScheduleCard extends React.Component {
                              "enddatetime": e_date,
                              "summary": obj.state.summary,
                              "memo": obj.state.memo,
+                             "guest": obj.state.guest,
                            });
         });
   }
@@ -181,7 +185,7 @@ export default class ScheduleCard extends React.Component {
                        endtime={utility.fromDateTimeString(this.props.endDateTime)}
                        summary={this.props.summary}
                        memo={this.props.memo}
-                       people=""
+                       guest={this.props.guest}
                        confirmButtonTitle="Update" />
           <BasicModal isActive={this.state.isDeleteModalActive}
                       onClickBtn1={this.onDeleteBtnOk}
