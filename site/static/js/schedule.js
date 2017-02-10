@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import ScheduleModal from './modal.js';
 import ScheduleCard from './schedule_card.js';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
@@ -10,17 +9,24 @@ var variables = require('./variable.js');
 //---------------------------------------------------------.
 // Schedule Card Component.
 //---------------------------------------------------------.
-var ScheduleCardArea = React.createClass({
-  getInitialState: function() {
-    return {
-            memberid: 0,
-            schedules: null,
-            canCompleteMessage: false,
-            completeMessage: "",
-           };
-  },
+export default class ScheduleCardArea extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      memberid: 0,
+      schedules: null,
+      canCompleteMessage: false,
+      completeMessage: "",
+    };
+    // bind function.
+    this.onRegist = this.onRegist.bind(this);
+    this.addSchedule = this.addSchedule.bind(this);
+    this.updateSchedule = this.updateSchedule.bind(this);
+    this.deleteSchedule = this.deleteSchedule.bind(this);
+    this.compare = this.compare.bind(this);
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     // get my schedule.
     var obj = this;
     var req = require('superagent');
@@ -31,17 +37,17 @@ var ScheduleCardArea = React.createClass({
          obj.setState({schedules: res.body.schedule});
          obj.setState({memberid: res.body.memberid});
     });
-  },
+  }
 
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     // initialize state.
     if(this.state.canCompleteMessage) {
       this.setState({canCompleteMessage: false});
       this.setState({completeMessage: ""});
     }
-  },
+  }
 
-  render: function() {
+  render() {
     // display complete messages.
     var complete_message = "";
     if(this.state.canCompleteMessage) {
@@ -49,7 +55,8 @@ var ScheduleCardArea = React.createClass({
       toast.MaterialSnackbar.showSnackbar({message: this.state.completeMessage});
     }
     return (
-      <div>
+      <div id="card_area"
+           className="mdl-cell mdl-cell--7-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
         <RegistSchedule onRegist={this.onRegist} memberId={this.state.memberid} />
         <ScheduleList schedules={this.state.schedules}  onRegist={this.onRegist}/>
         <div id="complete_action_bar" className="mdl-js-snackbar mdl-snackbar">
@@ -58,9 +65,9 @@ var ScheduleCardArea = React.createClass({
         </div>
       </div>
     )
-  },
+  }
 
-  onRegist: function(msg, category, data) {
+  onRegist(msg, category, data) {
     // display complete messages.
     this.setState({completeMessage: msg});
     this.setState({canCompleteMessage: true});
@@ -82,44 +89,44 @@ var ScheduleCardArea = React.createClass({
       console.log("[ScheduleCardArea.onRegist] Not found category: " + category);
       break;
     }
-  },
+  }
 
-  addSchedule: function(d) {
+  addSchedule(d) {
     var v = this.state.schedules;
     v.push(d);
     v.sort(this.compare);
     this.setState({schedules: v});
-  },
+  }
 
-  updateSchedule: function(d) {
+  updateSchedule(d) {
     var u = this.state.schedules.map(function(v) {
       if(v['id'] === d['id']) return d;
       return v;
     });
     u.sort(this.compare);
     this.setState({schedules: u});
-  },
+  }
 
-  deleteSchedule: function(d) {
+  deleteSchedule(d) {
     var r = this.state.schedules.filter(function(v, i) {
       if(v['id'] !== d['id']) return true;
       return false;
     });
     this.setState({schedules: r});
-  },
+  }
 
-  compare: function(a, b) {
+  compare(a, b) {
     if(a['startdatetime'] < b['startdatetime']) return 1;
     if(a['startdatetime'] === b['startdatetime']) return 0;
     return -1;
   }
-});
+}
 
 //---------------------------------------------------------.
 // Display ScheduleList Component.
 //---------------------------------------------------------.
-var ScheduleList = React.createClass({
-  render: function() {
+class ScheduleList extends React.Component {
+  render() {
     if(this.props.schedules) {
       // display my schedules.
       var obj = this;
@@ -146,35 +153,43 @@ var ScheduleList = React.createClass({
     // loading icon.
     return <Loading />;
   }
-});
+}
 
 //---------------------------------------------------------.
 // Loading Icon Component.
 //---------------------------------------------------------.
-var Loading = React.createClass({
-  render: function() {
+class Loading extends React.Component {
+  render() {
     return (<div id="schedule_list" className="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>);
   }
-});
+}
 
 //---------------------------------------------------------.
 // Registe Schedule Component.
 //---------------------------------------------------------.
-var RegistSchedule = React.createClass({
-  getInitialState: function() {
+class RegistSchedule extends React.Component {
+  constructor(props) {
+    super(props);
+
     var start_date = new Date();
     var end_date = new Date();
     end_date.setMinutes(end_date.getMinutes() + 30);
-    return {
+    this.state = {
       isActive: false,
       startdate: utility.toDateString(start_date),
       enddate: utility.toDateString(end_date),
       starttime: utility.toTimeString(start_date),
       endtime: utility.toTimeString(end_date),
-   };
-  },
+    };
+    // bind function.
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onChangeDateTime = this.onChangeDateTime.bind(this);
+  }
 
-  render: function() {
+  render() {
       var obj = this;
       var regist_button = document.getElementById('schedule_regist');
       regist_button.addEventListener('click', function() {
@@ -196,17 +211,17 @@ var RegistSchedule = React.createClass({
                             guest=""
                             confirmButtonTitle="Regist"
                             />);
-  },
+  }
 
-  openModal: function() {
+  openModal() {
     this.setState({isActive: true});
-  },
+  }
 
-  closeModal: function() {
+  closeModal() {
     this.setState({isActive: false});
-  },
+  }
 
-  onSubmit: function(event) {
+  onSubmit(event) {
     // generate datetime.
     var s_date = this.state.startdate + " " + this.state.starttime;
     var e_date = this.state.enddate + " " + this.state.endtime;
@@ -238,21 +253,13 @@ var RegistSchedule = React.createClass({
                              "memo": obj.state.memo,
                            });
       });
-  },
+  }
 
-  onChange: function(event) {
+  onChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-  },
+  }
 
-  onChangeDateTime: function(n, v) {
+  onChangeDateTime(n, v) {
     this.setState({ [n]: v });
-  },
-});
-
-//---------------------------------------------------------.
-// Render Component.
-//---------------------------------------------------------.
-ReactDOM.render(
-  <ScheduleCardArea />,
-  document.getElementById('card_area')
-);
+  }
+}

@@ -1,40 +1,46 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import moment from 'moment';
 
 var utility = require ('./utility.js');
 
 //---------------------------------------------------------.
 // Calendar Component.
 //---------------------------------------------------------.
-var Calendar = React.createClass({
-  getInitialState: function() {
-    return {
+export default class Calendar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       month: this.props.selected.clone(),
-      selected: this.props.selected
+      selected: this.props.selected,
     };
-  },
+    // bind function.
+    this.previous = this.previous.bind(this);
+    this.next = this.next.bind(this);
+    this.select = this.select.bind(this);
+    this.renderWeeks = this.renderWeeks.bind(this);
+    this.renderMonthLabel = this.renderMonthLabel.bind(this);
+  }
 
-  previous: function() {
+  previous() {
     var month = this.state.month;
     month.add(-1, "M");
     this.setState({month: month});
-  },
+  }
 
-  next: function() {
+  next() {
     var month = this.state.month;
     month.add(1, "M");
     this.setState({month: month});
-  },
+  }
 
-  select: function(d) {
+  select(d) {
     this.setState({selected: d.date});
     this.forceUpdate();
-  },
+  }
 
-  render: function() {
+  render() {
     return (
-      <div>
+      <div id="calendar"
+           className="mdl-cell mdl-cell--5-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
         <div className="header">
           <i className="fa fa-angle-left" onClick={this.previous}></i>
             {this.renderMonthLabel()}
@@ -44,9 +50,9 @@ var Calendar = React.createClass({
         {this.renderWeeks()}
       </div>
     );
-  },
+  }
 
-  renderWeeks: function() {
+  renderWeeks() {
     var weeks = [];
     var done = false;
     var date;
@@ -74,18 +80,22 @@ var Calendar = React.createClass({
       }
     }
     return weeks;
-  },
+  }
 
-  renderMonthLabel: function() {
+  renderMonthLabel() {
     return <span>{this.state.month.format("MMMM, YYYY")}</span>;
   }
-});
+}
 
 //---------------------------------------------------------.
 // DayNames Component.
 //---------------------------------------------------------.
-var DayNames = React.createClass({
-  render: function() {
+class DayNames extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     return (
       <div className="week names">
         <span className="day">Sun</span>
@@ -98,13 +108,17 @@ var DayNames = React.createClass({
       </div>
     );
   }
-});
+}
 
 //---------------------------------------------------------.
 // Week Component.
 //---------------------------------------------------------.
-var Week = React.createClass({
-  render: function() {
+class Week extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     var days = [];
     var date = this.props.date;
     var month = this.props.month;
@@ -127,12 +141,4 @@ var Week = React.createClass({
     }
     return (<div className="week" key={days[0].toString()}>{days}</div>);
   }
-});
-
-//---------------------------------------------------------.
-// Render Component.
-//---------------------------------------------------------.
-ReactDOM.render(
-  <Calendar selected={moment().startOf("day")} />,
-  document.getElementById('calendar')
-);
+}
