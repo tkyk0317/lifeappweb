@@ -181,19 +181,16 @@ var RegistSchedule = React.createClass({
         obj.openModal();
       });
 
-      var start_date = new Date();
-      var end_date = new Date();
-      end_date.setMinutes(end_date.getMinutes() + 30);
       return (<ScheduleModal isActive={this.state.isActive}
                             onSubmit={this.onSubmit}
                             onChange={this.onChange}
                             onChangeDateTime={this.onChangeDateTime}
                             onClose={this.closeModal}
                             title="Add Schedule"
-                            startdate={start_date}
-                            starttime={start_date}
-                            enddate={end_date}
-                            endtime={end_date}
+                            startdate={utility.fromDateTimeString(this.state.startdate + " " + this.state.starttime)}
+                            starttime={utility.fromDateTimeString(this.state.startdate + " " + this.state.starttime)}
+                            enddate={utility.fromDateTimeString(this.state.enddate + " " + this.state.endtime)}
+                            endtime={utility.fromDateTimeString(this.state.enddate + " " + this.state.endtime)}
                             summary=""
                             memo=""
                             guest=""
