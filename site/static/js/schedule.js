@@ -2,6 +2,9 @@ import React from 'react';
 import ScheduleModal from './modal.js';
 import ScheduleCard from './schedule_card.js';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import Snackbar from 'material-ui/Snackbar';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 var utility = require ('./utility.js');
 var variables = require('./variable.js');
@@ -13,32 +16,13 @@ export default class ScheduleCardArea extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      memberid: 0,
-      schedules: null,
       canCompleteMessage: false,
       completeMessage: "",
     };
     // bind function.
     this.onRegist = this.onRegist.bind(this);
-    this.addSchedule = this.addSchedule.bind(this);
-    this.updateSchedule = this.updateSchedule.bind(this);
-    this.deleteSchedule = this.deleteSchedule.bind(this);
-    this.compare = this.compare.bind(this);
   }
-
-  componentDidMount() {
-    // get my schedule.
-    var obj = this;
-    var req = require('superagent');
-    req.get('/regist_schedule')
-       .set('Accept', 'application/json')
-       .set('Content-Type', 'application/json')
-       .end(function(err, res) {
-         obj.setState({schedules: res.body.schedule});
-         obj.setState({memberid: res.body.memberid});
-    });
-  }
-
+/*
   componentDidUpdate(prevProps, prevState) {
     // initialize state.
     if(this.state.canCompleteMessage) {
@@ -46,23 +30,21 @@ export default class ScheduleCardArea extends React.Component {
       this.setState({completeMessage: ""});
     }
   }
-
+*/
   render() {
-    // display complete messages.
-    var complete_message = "";
-    if(this.state.canCompleteMessage) {
-      var toast = document.querySelector('#complete_action_bar');
-      toast.MaterialSnackbar.showSnackbar({message: this.state.completeMessage});
+    var obj = this;
+    var onCloseToast = function() {
+      obj.setState({canCompleteMessage: false});
+      obj.setState({completeMessage: ""});
     }
     return (
       <div id="card_area"
            className="mdl-cell mdl-cell--7-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
-        <RegistSchedule onRegist={this.onRegist} memberId={this.state.memberid} />
-        <ScheduleList schedules={this.state.schedules}  onRegist={this.onRegist}/>
-        <div id="complete_action_bar" className="mdl-js-snackbar mdl-snackbar">
-          <div className="mdl-snackbar__text"></div>
-          <button className="mdl-snackbar__action" type="button"></button>
-        </div>
+        <RegistSchedule onRegist={this.onRegist} memberId={this.props.memberId} />
+        <ScheduleList schedules={this.props.schedules}  onRegist={this.onRegist}/>
+        <ToastBar open={this.state.canCompleteMessage}
+                  message={this.state.completeMessage}
+                  onClose={onCloseToast} />
       </div>
     )
   }
@@ -72,54 +54,30 @@ export default class ScheduleCardArea extends React.Component {
     this.setState({completeMessage: msg});
     this.setState({canCompleteMessage: true});
 
-    // state.schedule is updated.
-    switch(category) {
-    case variables.ACTION_CATEGORY.REGIST_SCHEDULE:
-      this.addSchedule(data);
-      break;
+    // call parent callback function.
+    this.props.onComplete(msg, category, data);
+  }
+}
 
-    case variables.ACTION_CATEGORY.UPDATE_SCHEDULE:
-      this.updateSchedule(data);
-      break;
-    case variables.ACTION_CATEGORY.DELETE_SCHEDULE:
-      // delete data.
-      this.deleteSchedule(data);
-      break;
-    default:
-      console.log("[ScheduleCardArea.onRegist] Not found category: " + category);
-      break;
+//---------------------------------------------------------.
+// Snackbar Component.
+//---------------------------------------------------------.
+class ToastBar extends React.Component {
+    constructor(props) {
+      super(props);
     }
-  }
 
-  addSchedule(d) {
-    var v = this.state.schedules;
-    v.push(d);
-    v.sort(this.compare);
-    this.setState({schedules: v});
-  }
-
-  updateSchedule(d) {
-    var u = this.state.schedules.map(function(v) {
-      if(v['id'] === d['id']) return d;
-      return v;
-    });
-    u.sort(this.compare);
-    this.setState({schedules: u});
-  }
-
-  deleteSchedule(d) {
-    var r = this.state.schedules.filter(function(v, i) {
-      if(v['id'] !== d['id']) return true;
-      return false;
-    });
-    this.setState({schedules: r});
-  }
-
-  compare(a, b) {
-    if(a['startdatetime'] < b['startdatetime']) return 1;
-    if(a['startdatetime'] === b['startdatetime']) return 0;
-    return -1;
-  }
+    render() {
+      return (
+        <MuiThemeProvider muiTheme={getMuiTheme()}>
+          <Snackbar
+            open={this.props.open}
+            message={this.props.message}
+            autoHideDuration={1000}
+            onRequestClose={this.props.onClose} />
+        </MuiThemeProvider>
+      );
+    }
 }
 
 //---------------------------------------------------------.
@@ -150,17 +108,7 @@ class ScheduleList extends React.Component {
                                        {schedule_list}
               </ReactCSSTransitionGroup>);
     }
-    // loading icon.
-    return <Loading />;
-  }
-}
-
-//---------------------------------------------------------.
-// Loading Icon Component.
-//---------------------------------------------------------.
-class Loading extends React.Component {
-  render() {
-    return (<div id="schedule_list" className="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>);
+    return <span />;
   }
 }
 
