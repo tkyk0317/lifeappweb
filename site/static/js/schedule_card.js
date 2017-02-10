@@ -144,10 +144,9 @@ export default class ScheduleCard extends React.Component {
   }
 
   render() {
-    var start_date = utility.fromDateTimeString(this.props.startDateTime);
-    var end_date = utility.fromDateTimeString(this.props.endDateTime);
-    var date = utility.toDateString(start_date) + " " + utility.toTimeString(start_date) + " \/ " +
-               utility.toDateString(end_date) + " " + utility.toTimeString(end_date);
+    var s_date = this.state.startdate + " " + this.state.starttime;
+    var e_date = this.state.enddate + " " + this.state.endtime;
+    var date = s_date + "/" + e_date;
 
     var avatar = this.props.avatar;
     if(!avatar) {
