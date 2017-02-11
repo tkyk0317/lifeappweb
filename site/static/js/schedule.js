@@ -8,6 +8,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 var utility = require ('./utility.js');
 var variables = require('./variable.js');
+var ajax = require('./ajax_action.js');
 
 //---------------------------------------------------------.
 // Schedule Card Component.
@@ -22,15 +23,7 @@ export default class ScheduleCardArea extends React.Component {
     // bind function.
     this.onRegist = this.onRegist.bind(this);
   }
-/*
-  componentDidUpdate(prevProps, prevState) {
-    // initialize state.
-    if(this.state.canCompleteMessage) {
-      this.setState({canCompleteMessage: false});
-      this.setState({completeMessage: ""});
-    }
-  }
-*/
+
   render() {
     var obj = this;
     var onCloseToast = function() {
@@ -176,31 +169,20 @@ class RegistSchedule extends React.Component {
 
     // regist event to table.
     var obj = this;
-    var req = require('superagent');
-    req.post('/regist_schedule')
-       .set('Accept', 'application/json')
-       .set('Content-Type', 'application/json')
-       .send({
-              "memberid": this.props.memberId,
-              "startdatetime": s_date,
-              "enddatetime": e_date,
-              "summary": this.state.summary,
-              "memo": this.state.memo,
-              "guest": this.state.guest,
-            })
-       .end(function(err, res) {
-         // after update schedule data, start rendering.
-         obj.closeModal();
-         obj.props.onRegist("Complete Regist", variables.ACTION_CATEGORY.REGIST_SCHEDULE,
-                           {
-                             "id": res.text,
-                             "memberid": obj.props.memberId,
-                             "startdatetime": s_date,
-                             "enddatetime": e_date,
-                             "summary": obj.state.summary,
-                             "memo": obj.state.memo,
-                           });
-      });
+    var params = {
+          "memberid": this.props.memberId,
+          "startdatetime": s_date,
+          "enddatetime": e_date,
+          "summary": this.state.summary,
+          "memo": this.state.memo,
+          "guest": this.state.guest,
+    };
+    ajax.post('/regist_schedule', params,
+              function(err, res) {
+                  // after update schedule data, start rendering.
+                  obj.closeModal();
+                  obj.props.onRegist("Complete Regist", variables.ACTION_CATEGORY.REGIST_SCHEDULE, params);
+              });
   }
 
   onChange(event) {

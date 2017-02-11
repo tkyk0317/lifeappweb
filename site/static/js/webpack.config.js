@@ -6,6 +6,7 @@ module.exports = {
            './modal.js',
            './basic_modal.js',
            './main_content.js',
+           './ajax_action.js',
           ],
     login: ['./google_login.js'],
     signup: ['./signup.js'],

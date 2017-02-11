@@ -10,6 +10,7 @@ import Avatar from 'material-ui/Avatar';
 
 var variables = require('./variable.js');
 var utility = require('./utility.js');
+var ajax = require('./ajax_action.js');
 
 //-------------------------------------.
 // Card Component.
@@ -77,33 +78,21 @@ export default class ScheduleCard extends React.Component {
     var e_date = this.state.enddate + " " + this.state.endtime;
 
     var obj = this;
-    var req = require('superagent');
-    req.put("/filter_schedule/" + this.props.scheduleId)
-       .set('Accept', 'application/json')
-       .set('Content-Type', 'application/json')
-       .send({
-              "memberid": this.props.memberId,
-              "startdatetime": s_date,
-              "enddatetime": e_date,
-              "summary": this.state.summary,
-              "memo": this.state.memo,
-              "guest": this.state.guest,
-            })
-       .end(function(err, res) {
-         // disable dialog.
-         obj.closeModal();
-         // after update schedule data, start rendering.
-         obj.props.onRegist("Complete Edit", variables.ACTION_CATEGORY.UPDATE_SCHEDULE,
-                           {
-                             "id": obj.props.scheduleId,
-                             "memberid": obj.props.memberId,
-                             "startdatetime": s_date,
-                             "enddatetime": e_date,
-                             "summary": obj.state.summary,
-                             "memo": obj.state.memo,
-                             "guest": obj.state.guest,
-                           });
-      });
+    var params = {
+            "memberid": this.props.memberId,
+            "startdatetime": s_date,
+            "enddatetime": e_date,
+            "summary": this.state.summary,
+            "memo": this.state.memo,
+            "guest": this.state.guest,
+    };
+    ajax.put('/filter_schedule/' + this.props.scheduleId, params,
+             function(err, res) {
+                    // disable dialog.
+                    obj.closeModal();
+                    // after update schedule data, start rendering.
+                    obj.props.onRegist("Complete Edit", variables.ACTION_CATEGORY.UPDATE_SCHEDULE, params);
+             });
   }
 
   onDeleteBtnOk() {
@@ -112,23 +101,20 @@ export default class ScheduleCard extends React.Component {
     var e_date = this.state.enddate + " " + this.state.endtime;
 
     var obj = this;
-    var req = require('superagent');
-    req.del("/filter_schedule/" + this.props.scheduleId)
-       .set('Accept', 'application/json')
-       .set('Content-Type', 'application/json')
-       .end(function(err, res) {
-         obj.closeDeleteModal();
-         obj.props.onRegist("Complete Delete", variables.ACTION_CATEGORY.DELETE_SCHEDULE,
-                           {
-                             "id": obj.props.scheduleId,
-                             "memberid": obj.props.memberId,
-                             "startdatetime": s_date,
-                             "enddatetime": e_date,
-                             "summary": obj.state.summary,
-                             "memo": obj.state.memo,
-                             "guest": obj.state.guest,
-                           });
-        });
+    var params = {
+          "id": obj.props.scheduleId,
+          "memberid": obj.props.memberId,
+          "startdatetime": s_date,
+          "enddatetime": e_date,
+          "summary": obj.state.summary,
+          "memo": obj.state.memo,
+          "guest": obj.state.guest,
+    };
+    ajax.del('/filter_schedule/' + this.props.scheduleId,
+             function(err, res) {
+                     obj.closeDeleteModal();
+                     obj.props.onRegist("Complete Delete", variables.ACTION_CATEGORY.DELETE_SCHEDULE, params);
+             });
   }
 
   onDeleteBtnCancel() {
