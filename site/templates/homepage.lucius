@@ -218,13 +218,14 @@ body {
     display: block;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
+    height: auto;
   }
   #card_area {
     display: block;
     padding-right: 0.6em;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
-    height: 55vh;
+    height: 60vh;
     overflow-y: scroll;
     overflow-x: hidden;
   }
@@ -253,6 +254,12 @@ body {
     height: 25px;
     color: white;
     font-size: 0.8em;
+    /* align vertical middle */
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
   }
   #calendar div.header * {
     height: 20px;
@@ -270,5 +277,25 @@ body {
     -moz-box-sizing: border-box;
     padding: 0 10px;
     cursor: pointer;
+  }
+  #calendar div.header i.fa-angle-left {
+    text-align: left;
+    /* align vertical middle */
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+  #calendar div.header i.fa-angle-right {
+    text-align: right;
+    margin-left: -40px;
+    display: -webkit-flex;
+    /* align vertical middle */
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
   }
 }
