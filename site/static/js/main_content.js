@@ -3,6 +3,9 @@ import ReactDOM from "react-dom";
 import moment from 'moment';
 import Calendar from './calendar.js';
 import ScheduleCardArea from './schedule.js';
+import LinearProgress from 'material-ui/LinearProgress';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 var variables = require('./variable.js');
 
@@ -102,7 +105,20 @@ var MainContent = React.createClass({
 //---------------------------------------------------------.
 var Loading = React.createClass({
   render: function() {
-    return (<div id="schedule_list" className="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>);
+    var style = {
+      width: '90%',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      margin: 'auto',
+    };
+    return (<MuiThemeProvider muiTheme={getMuiTheme()}>
+              <div style={style}>
+                <LinearProgress style={style} color="#3f51b5" />
+              </div>
+            </MuiThemeProvider>);
   }
 });
 
