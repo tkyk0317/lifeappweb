@@ -55,15 +55,7 @@ export default class Calendar extends React.Component {
   renderWeeks() {
     var weeks = [];
     var done = false;
-    var date;
-    if(true/*utility.isSmartPhone()*/) {
-      // for smartphone.
-      date = this.state.month.clone().startOf("month").add("w", -1).day("Sunday");
-    }
-    else {
-      // for pc.
-      date = this.state.month.clone().startOf("month").add("w", -2).day("Sunday");
-    }
+    var date = this.state.month.clone().startOf("month").add("w", -1).day("Sunday");
     var startMonthIndex = date.month();
     var count = 0;
 
@@ -72,12 +64,7 @@ export default class Calendar extends React.Component {
                        month={this.state.month} select={this.select}
                        selected={this.state.selected} />);
       date.add(1, "w");
-      if(true /*utility.isSmartPhone()*/) {
-        done = (startMonthIndex + 2) === date.month();
-      }
-      else {
-        done = count++ > 6 && startMonthIndex !== date.month();
-      }
+      done = (startMonthIndex + 2) === date.month();
     }
     return weeks;
   }
