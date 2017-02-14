@@ -129,21 +129,8 @@ class Week extends React.Component {
       var exist_schedule = "";
       var count = this.searchSchedule(utility.toDateString(date.toDate()));
       if(count > 0 && !utility.isSmartPhone()) {
-        var style = {
-          display: "table-cell",
-          width: "14%",
-          height: "10vh",
-          textAlign:"center",
-          verticalAlign:"bottom",
-        };
         // insert schedules's icon.
-        exist_schedule = <div>
-                            <MuiThemeProvider muiTheme={getMuiTheme()}>
-                              <FontIcon className="material-icons" style={style}>
-                                event
-                              </FontIcon>
-                            </MuiThemeProvider>
-                          </div>;
+        exist_schedule = <ScheduleIcon />;
       }
       // change font-size and color, where access from smart-phone.
       var font_style = {};
@@ -174,5 +161,30 @@ class Week extends React.Component {
       if(date === d.startdatetime.substr(0, 10)) count++;
     });
     return count;
+  }
+}
+
+//---------------------------------------------------------.
+// ScheduleIcon Component.
+//---------------------------------------------------------.
+class ScheduleIcon extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    var style = {
+      display: "table-cell",
+      width: "14%",
+      height: "10vh",
+      textAlign:"center",
+      verticalAlign:"bottom",
+    };
+    // insert schedules's icon.
+    return (<div>
+              <MuiThemeProvider muiTheme={getMuiTheme()}>
+                <FontIcon className="material-icons" style={style}>event</FontIcon>
+              </MuiThemeProvider>
+            </div>);
   }
 }
