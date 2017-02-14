@@ -1,4 +1,7 @@
 import React from "react";
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import FontIcon from 'material-ui/FontIcon';
 
 var utility = require ('./utility.js');
 
@@ -11,6 +14,7 @@ export default class Calendar extends React.Component {
     this.state = {
       month: this.props.selected.clone(),
       selected: this.props.selected,
+      schedules: this.props.schedules,
     };
     // bind function.
     this.previous = this.previous.bind(this);
@@ -60,8 +64,10 @@ export default class Calendar extends React.Component {
     var count = 0;
 
     while(!done) {
+
       weeks.push(<Week key={date.toString()} date={date.clone()}
                        month={this.state.month} select={this.select}
+                       schedules={this.props.schedules}
                        selected={this.state.selected} />);
       date.add(1, "w");
       done = (startMonthIndex + 2) === date.month();
@@ -118,14 +124,55 @@ class Week extends React.Component {
         isToday: date.isSame(new Date(), "day"),
         date: date
       };
+
+      // check exist schedule.
+      var exist_schedule = "";
+      var count = this.searchSchedule(utility.toDateString(date.toDate()));
+      if(count > 0 && !utility.isSmartPhone()) {
+        var style = {
+          display: "table-cell",
+          width: "14%",
+          height: "10vh",
+          textAlign:"center",
+          verticalAlign:"bottom",
+        };
+        // insert schedules's icon.
+        exist_schedule = <div>
+                            <MuiThemeProvider muiTheme={getMuiTheme()}>
+                              <FontIcon className="material-icons" style={style}>
+                                event
+                              </FontIcon>
+                            </MuiThemeProvider>
+                          </div>;
+      }
+      // change font-size and color, where access from smart-phone.
+      var font_style = {};
+      if(count > 0 && utility.isSmartPhone()) {
+        font_style = {
+          color: "#ff4081",
+          fontWeight: "bold",
+        };
+      }
+
+      // render day.
       days.push(<span key={day.date.toString()}
+                      style={font_style}
                       className={"day" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "")}
                       onClick={this.props.select.bind(null, day)}>
                   {day.number}
+                  {exist_schedule}
                 </span>);
       date = date.clone();
       date.add(1, "d");
     }
     return (<div className="week" key={days[0].toString()}>{days}</div>);
+  }
+
+  searchSchedule(date) {
+    var count = 0;
+    this.props.schedules.forEach(function(d) {
+      if(date === d.startdatetime.substr(0, 10)) count++;
+    });
+    return count;
   }
 }
