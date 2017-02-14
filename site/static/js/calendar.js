@@ -127,14 +127,14 @@ class Week extends React.Component {
 
       // check exist schedule.
       var exist_schedule = "";
-      var count = this.searchSchedule(utility.toDateString(date.toDate()));
-      if(count > 0 && !utility.isSmartPhone()) {
+      var s = this.searchSchedules(utility.toDateString(date.toDate()));
+      if(0 !== s.length && !utility.isSmartPhone()) {
         // insert schedules's icon.
-        exist_schedule = <ScheduleIcon />;
+        exist_schedule = <ScheduleItem schedules={s}/>;
       }
       // change font-size and color, where access from smart-phone.
       var font_style = {};
-      if(count > 0 && utility.isSmartPhone()) {
+      if(0 !== s.length && utility.isSmartPhone()) {
         font_style = {
           color: "#ff4081",
           fontWeight: "bold",
@@ -155,36 +155,40 @@ class Week extends React.Component {
     return (<div className="week" key={days[0].toString()}>{days}</div>);
   }
 
-  searchSchedule(date) {
-    var count = 0;
+  searchSchedules(date) {
+    var a = [];
     this.props.schedules.forEach(function(d) {
-      if(date === d.startdatetime.substr(0, 10)) count++;
+      if(date === d.startdatetime.substr(0, 10)) a.push(d);
     });
-    return count;
+    return a;
   }
 }
 
 //---------------------------------------------------------.
 // ScheduleIcon Component.
 //---------------------------------------------------------.
-class ScheduleIcon extends React.Component {
+class ScheduleItem extends React.Component {
   constructor(props) {
     super(props);
   }
 
   render() {
     var style = {
-      display: "table-cell",
-      width: "14%",
-      height: "10vh",
-      textAlign:"center",
-      verticalAlign:"bottom",
+      textAlign:"left",
+      paddingLeft: "2px",
+      paddingRight: "2px",
+      fontSize: "small",
+      color: "#ff4081",
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      textOverflow: "ellipsis",
+      margin: 0,
     };
+    var schedules = this.props.schedules.map(s => {
+      // max summary's length is five.
+      return <p key={s.id} style={style}>{utility.substrTime(s.startdatetime) + " " + s.summary}</p>;
+    });
     // insert schedules's icon.
-    return (<div>
-              <MuiThemeProvider muiTheme={getMuiTheme()}>
-                <FontIcon className="material-icons" style={style}>event</FontIcon>
-              </MuiThemeProvider>
-            </div>);
+    return (<div>{schedules}</div>);
   }
 }

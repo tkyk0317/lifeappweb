@@ -35,6 +35,8 @@ export function fromDateTimeString(d) {
   var minute = d.substr(14, 2);
   return new Date(year, month - 1, day, hour, minute);
 }
+export function substrDate(d) { return substr(0, 10); }
+export function substrTime(d) { return d.substr(10); }
 
 //----------------------------------------.
 // Validation Function.
