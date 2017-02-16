@@ -64,7 +64,6 @@ export default class Calendar extends React.Component {
     var count = 0;
 
     while(!done) {
-
       weeks.push(<Week key={date.toString()} date={date.clone()}
                        month={this.state.month} select={this.select}
                        schedules={this.props.schedules}
