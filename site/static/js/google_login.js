@@ -5,6 +5,19 @@ import ReactDOM from "react-dom";
 // Google Login Component.
 //----------------------------------------.
 var GoogleLogin = React.createClass({
+    getInitialState: function() {
+        return {
+            googleCalendarParams: {
+                'calendarId': 'primary',
+                'timeMin': (new Date()).toISOString(),
+                'showDeleted': false,
+                'singleEvents': true,
+                'maxResults': 10,
+                'orderBy': 'startTime',
+            },
+        }
+    },
+
     componentDidMount: function() {
         var obj = this;
         gapi.load('client:auth2', function() {
@@ -18,16 +31,8 @@ var GoogleLogin = React.createClass({
 
     render: function() {
         // get calendar data.
-        var params = {
-            'calendarId': 'primary',
-            'timeMin': (new Date()).toISOString(),
-            'showDeleted': false,
-            'singleEvents': true,
-            'maxResults': 10,
-            'orderBy': 'startTime',
-        };
         var getCalendar = () => {
-            gapi.client.calendar.events.list(params)
+            gapi.client.calendar.events.list(this.state.googleCalendarParams)
             .then(function(response) {
                 console.log(response.result.items);
             });
