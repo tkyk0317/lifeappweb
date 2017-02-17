@@ -16,7 +16,7 @@
             <label class="mdl-textfield__label" for="userpass">Password</label>
           <button style="width:100%" class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--colored">Signin
         <br >
-        <a href=@{url} id="google_login">Signin with Google
-        <a href="@{SignupR}" id="create_account">Create your Account?
+        <div id="google_with_signin" url=@{url}>
+        <a href="@{SignupR}"><div id="create_account">Create your Account?
 
-<script src="/static/js/build/main.bundle.js">
+<script src="/static/js/build/login.bundle.js">
