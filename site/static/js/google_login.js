@@ -2,34 +2,32 @@ import React from "react";
 import ReactDOM from "react-dom";
 import GoogleAPI from "./google_api.js";
 
-var google_api = new GoogleAPI();
-
 //----------------------------------------.
 // Google Login Component.
 //----------------------------------------.
 var GoogleLogin = React.createClass({
 
     componentDidMount: function() {
-        google_api.init(() => {});
+        GoogleAPI.init(() => {});
     },
 
     render: function() {
         // get calendar data.
         var getCalendar = () => {
-            google_api.getEvents((res) => {
+            GoogleAPI.getEvents((res) => {
                 console.log(res.result.items);
             });
         };
 
         // sighin google function.
         var signin = () => {
-            if(google_api.isLogined()) {
+            if(GoogleAPI.isLogined()) {
                 // signed in.
                 getCalendar();
             }
             else {
                 // yet not signin.
-                google_api.login(() => {
+                GoogleAPI.login(() => {
                     getCalendar();
                 });
             }

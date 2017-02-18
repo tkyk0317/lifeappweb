@@ -2,17 +2,7 @@
 // Google API Functions.
 //---------------------------------------------.
 export default class GooglAPI {
-    constructor() {
-        this.googleParams = {
-            'calendarId': 'primary',
-            'timeMin': (new Date()).toISOString(),
-            'showDeleted': false,
-            'singleEvents': true,
-            'orderBy': 'startTime',
-        };
-    }
-
-    init(f) {
+    static init(f) {
         gapi.load('client:auth2', function() {
             gapi.client.init({
                 discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
@@ -23,19 +13,26 @@ export default class GooglAPI {
         });
     }
 
-    login(f) {
+    static login(f) {
         gapi.auth2.getAuthInstance().signIn()
             .then(() => {
                 f();
             });
     }
 
-    isLogined() {
+    static isLogined() {
         return gapi.auth2.getAuthInstance().isSignedIn.get();
     }
 
-    getEvents(f) {
-        gapi.client.calendar.events.list(this.googleParams)
+    static getEvents(f) {
+        var googleParams = {
+            'calendarId': 'primary',
+            'timeMin': (new Date()).toISOString(),
+            'showDeleted': false,
+            'singleEvents': true,
+            'orderBy': 'startTime',
+        };
+        gapi.client.calendar.events.list(googleParams)
         .then((res) => {
             f(res);
         });
