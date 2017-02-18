@@ -29,7 +29,7 @@ var MainContent = React.createClass({
          .set('Content-Type', 'application/json')
          .end(function(err, res) {
            obj.setState({schedules: res.body.schedule});
-           obj.setState({memberId: res.body.memberid})
+           obj.setState({memberId: res.body.memberid});
          });
   },
 
