@@ -55,7 +55,6 @@ var MainContent = React.createClass({
     case variables.ACTION_CATEGORY.REGIST_SCHEDULE:
       this.addSchedule(data);
       break;
-
     case variables.ACTION_CATEGORY.UPDATE_SCHEDULE:
       this.updateSchedule(data);
       break;

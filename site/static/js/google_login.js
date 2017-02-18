@@ -1,53 +1,35 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import GoogleAPI from "./google_api.js";
+
+var google_api = new GoogleAPI();
 
 //----------------------------------------.
 // Google Login Component.
 //----------------------------------------.
 var GoogleLogin = React.createClass({
-    getInitialState: function() {
-        return {
-            googleCalendarParams: {
-                'calendarId': 'primary',
-                'timeMin': (new Date()).toISOString(),
-                'showDeleted': false,
-                'singleEvents': true,
-                'maxResults': 10,
-                'orderBy': 'startTime',
-            },
-        }
-    },
 
     componentDidMount: function() {
-        var obj = this;
-        gapi.load('client:auth2', function() {
-            gapi.client.init({
-                discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
-                clientId: "546592957711-hcj7ou2imh6f3f4f13eh5j0619p4i7u5.apps.googleusercontent.com",
-                scope: "https://www.googleapis.com/auth/calendar.readonly",
-            });
-        });
+        google_api.init(() => {});
     },
 
     render: function() {
         // get calendar data.
         var getCalendar = () => {
-            gapi.client.calendar.events.list(this.state.googleCalendarParams)
-            .then(function(response) {
-                console.log(response.result.items);
+            google_api.getEvents((res) => {
+                console.log(res.result.items);
             });
         };
 
         // sighin google function.
         var signin = () => {
-            if(gapi.auth2.getAuthInstance().isSignedIn.get()) {
+            if(google_api.isLogined()) {
                 // signed in.
                 getCalendar();
             }
             else {
                 // yet not signin.
-                gapi.auth2.getAuthInstance().signIn()
-                .then(() => {
+                google_api.login(() => {
                     getCalendar();
                 });
             }
