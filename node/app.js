@@ -32,23 +32,31 @@ app.use(session({
     }
 }));
 
-// check session before index page.
-var beforeIndex = (req, res, next) => {
-    if(req.session.user) next();
-    else res.redirect('signin');
-};
-
-// check session before redirect login.
-var beforeSignin = (req, res, next) => {
-    if(req.session.user) res.redirect('index');
-    else next();
-};
+// check authentication.
+app.use((req, res, next) => {
+    if(req.session.user !== undefined && req.session.user !== null) {
+        // already logined.
+        next();
+    }
+    else {
+        switch(req.url) {
+        case '/':
+            // need logined.
+            res.redirect('signin');
+            break;
+        default:
+            // not need logined.
+            next();
+            break;
+        }
+    }
+});
 
 //-----------------------------------.
 // routing.
 //-----------------------------------.
-app.use('/index', beforeIndex, require('./routes/index'));
-app.use('/signin', beforeSignin, require('./routes/signin'));
+app.use('/', require('./routes/index'));
+app.use('/signin', require('./routes/signin'));
 app.use('/signup', require('./routes/signup'));
 app.use('/signout', require('./routes/signout'));
 app.use('/schedules', require('./routes/schedules'));
