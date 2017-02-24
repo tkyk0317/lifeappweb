@@ -1,5 +1,0 @@
-<div class="center_box">
-  <div class="message_box">
-    <p>Account create complete
-    <p>Please signin to this service
-  <button onclick="location.href='@{AuthR LoginR}'" style="width: 200px" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Signin

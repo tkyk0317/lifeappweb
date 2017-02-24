@@ -1,0 +1,23 @@
+.mdl-layout {
+	align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+}
+.mdl-layout__content {
+	padding: 24px;
+	flex: none;
+}
+#create_account {
+  width: 100%;
+  text-align: center;
+  font-size: small;
+  margin-left: 10px;
+  margin-top: 10px;
+  color: #3f51b5;
+  text-decoration: none;
+}
+#google_with_signin_button {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}

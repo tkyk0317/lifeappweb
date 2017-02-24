@@ -1,8 +1,0 @@
-<div id="center_form">
-  <h1>Signup
-  <form method="POST" action="@{SignupR}" id="_form">
-    $maybe error <- signup_error
-      <p style="color:red; font-size: large;">#{error}
-    <div id="signup_form">
-
-<script src="/static/js/build/signup.bundle.js">

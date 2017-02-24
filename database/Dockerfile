@@ -1,1 +1,5 @@
-FROM postgres:9.4
+FROM mysql:8.0
+
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev less vim git
+
+ADD ./charset.cnf /etc/mysql/conf.d/

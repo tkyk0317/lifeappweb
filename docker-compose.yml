@@ -1,26 +1,25 @@
 database:
   build: database
   volumes:
-    - ./database/data:/var/lib/postgresql/data
-  container_name: lifeapp_db
-site:
-  build: site
-  command: yesod devel # dev setting
-  # command: /opt/server/dist/build/YourSiteName/YourSiteName # production
+    - ./database/data:/var/lib/mysql
   environment:
-    - PGHOST=database
-    - PGPORT=5432
-    - PGUSER=postgres
-    - PGPASS
-    - PGDATABASE=postgres
+      MYSQL_ROOT_PASSWORD: takayuki
+      MYSQL_DATABASE: lifeapp
+      MYSQL_USER: albio
+      MYSQL_PASSWORD: albio
+  container_name: lifeapp_node_db
+
+node:
+  build: node
+  command: /opt/server/node_modules/forever/bin/forever /opt/server/app.js
   links:
     - database
   tty:
-    true # dev setting
-# tty:
-#   false # production
+    true
   ports:
-    - "3000:3000" # dev setting
+    - "3000:3000"
   volumes:
-    - ./site:/opt/server/
-  container_name: lifeapp_site
+    - ./node:/opt/server/
+  #environment:
+    #DEBUG: "express:*"
+  container_name: lifeapp_node

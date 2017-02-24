@@ -1,0 +1,33 @@
+body {
+  position: relative;
+}
+#center_form {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 500px;
+  height: 50vh;
+  text-align: center;
+}
+#center_form h1 {
+  text-align:center;
+  color: white;
+}
+
+/* for smartphone layout */
+@media screen and (max-width:640px) {
+  #center_form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 400px;
+    height: 50vh;
+    text-align: center;
+  }
+}
