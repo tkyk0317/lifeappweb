@@ -51,7 +51,7 @@ router.post('/', (req, res, next) => {
             (id) => {
                 // save login info into session.
                 req.session.user = {id: id};
-                res.redirect(302, 'index');
+                res.redirect(302, '/');
             },
             (e) => {
                 res.render('signin', {title: 'Signin', error: e, email: req.body.email});
