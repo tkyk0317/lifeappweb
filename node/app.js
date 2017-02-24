@@ -50,6 +50,7 @@ var beforeSignin = (req, res, next) => {
 app.use('/index', beforeIndex, require('./routes/index'));
 app.use('/signin', beforeSignin, require('./routes/signin'));
 app.use('/signup', require('./routes/signup'));
+app.use('/signout', require('./routes/signout'));
 app.use('/schedules', require('./routes/schedules'));
 
 // catch 404 and forward to error handler
