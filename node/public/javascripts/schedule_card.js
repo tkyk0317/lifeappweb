@@ -87,7 +87,7 @@ export default class ScheduleCard extends React.Component {
             "memo": this.state.memo,
             "guest": this.state.guest,
         };
-        ajax.put('/schedule/' + this.props.scheduleId, params,
+        ajax.put('/schedules/' + this.props.scheduleId, params,
                  function(err, res) {
                      // disable dialog.
                      obj.closeModal();
@@ -111,7 +111,7 @@ export default class ScheduleCard extends React.Component {
             "memo": obj.state.memo,
             "guest": obj.state.guest,
         };
-        ajax.del('/schedule/' + this.props.scheduleId,
+        ajax.del('/schedules/' + this.props.scheduleId,
                  function(err, res) {
                      obj.closeDeleteModal();
                      obj.props.onRegist("Complete Delete", variables.ACTION_CATEGORY.DELETE_SCHEDULE, params);

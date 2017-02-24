@@ -28,6 +28,16 @@ export default class ScheduleCardArea extends React.Component {
         this.onRegist = this.onRegist.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.schedules) {
+            this.setState({
+                schedules: nextProps.schedules.filter((d) => {
+                    return d.startdatetime >= (utility.toDateString(new Date) + " 00:00");
+                })
+            });
+        }
+    }
+
     render() {
         var obj = this;
         var onCloseToast = function() {
@@ -181,7 +191,7 @@ class RegistSchedule extends React.Component {
             "memo": this.state.memo,
             "guest": this.state.guest,
         };
-        ajax.post('/schedule', params,
+        ajax.post('/schedules', params,
                   function(err, res) {
                       // push schdule id.
                       params.id = res.body.id;
