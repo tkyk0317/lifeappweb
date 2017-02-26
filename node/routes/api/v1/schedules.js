@@ -53,7 +53,7 @@ router.post('/', (req, res, next) => {
         return new Promise((resolve, reject) => {
             connection.query({
                 sql: 'insert into schedule values(null, ?, ?, ?, ?, ?, ?, ?, ?)',
-                values: [req.session.user.id, d.startdatetime, d.enddatetime, d.guest, d.summary, d.memo, getCurDate(), getCurDate()]
+                values: [req.session.user.id, d.summary, d.guest, d.memo, d.startdatetime, d.enddatetime, getCurDate(), getCurDate()]
             }, (e, r) => {
                 if(e) reject(e);
                 else resolve(r.insertId);
