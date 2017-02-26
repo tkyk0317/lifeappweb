@@ -191,7 +191,7 @@ class RegistSchedule extends React.Component {
             "memo": this.state.memo,
             "guest": this.state.guest,
         };
-        ajax.post('/schedules', params,
+        ajax.post('/v1/schedules', params,
                   function(err, res) {
                       // push schdule id.
                       params.id = res.body.id;

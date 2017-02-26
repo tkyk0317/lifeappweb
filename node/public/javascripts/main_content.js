@@ -25,7 +25,7 @@ var MainContent = React.createClass({
         var self = this;
         var req = require('superagent');
         const now = new Date();
-        req.get('/schedules')
+        req.get('/v1/schedules')
            .set('Accept', 'application/json')
            .set('Content-Type', 'application/json')
            .end(function(err, res) {

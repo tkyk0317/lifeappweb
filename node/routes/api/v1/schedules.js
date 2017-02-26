@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
-var utility = require(__dirname + '/../public/javascripts/utility');
+var utility = require(__dirname + '/../../../public/javascripts/utility');
 
 const connection = mysql.createConnection({
     host: 'database',
