@@ -26,6 +26,7 @@
     "babel-preset-stage-0": "^6.22.0",
     "body-parser": "^1.16.1",
     "classnames": "^2.2.5",
+    "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
     "css-loader": "^0.26.1",
     "express": "^4.14.1",
@@ -47,6 +48,8 @@
     "moment-range": "^3.0.0",
     "morgan": "^1.7.0",
     "mysql": "^2.13.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
     "promise": "^7.1.1",
     "react": "^15.4.2",
     "react-addons-css-transition-group": "^15.4.2",
@@ -54,6 +57,7 @@
     "react-tap-event-plugin": "^2.0.1",
     "serve-favicon": "^2.3.2",
     "superagent": "^3.4.4",
+    "supervisor": "^0.12.0",
     "webpack": "^2.2.1"
   }
 }

@@ -11,7 +11,7 @@ database:
 
 node:
   build: node
-  command: /opt/server/node_modules/forever/bin/forever /opt/server/app.js
+  command: /opt/server/node_modules/.bin/supervisor -e node,js,json /opt/server/app.js
   links:
     - database
   tty:
