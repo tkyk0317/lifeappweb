@@ -17,23 +17,71 @@ const getCurDate = () => {
 };
 
 //-------------------------------------.
-// Get Schedule API.
+// Schedule Class.
 //-------------------------------------.
-router.get('/', (req, res, next) => {
-    const getSchedule = (user_id) => {
+class Schedule {
+    constructor() {
+    }
+
+    // get schedule data.
+    getSchedule(user) {
         return new Promise((resolve, reject) => {
             connection.query({
                 sql: 'select * from schedule where memberid = ?  order by startdatetime asc',
-                values: [user_id],
+                values: [user.id],
             }, (e, r, f) => {
                 if(e || !r) reject("Database error");
                 else resolve(r);
             });
         });
-    };
+    }
 
+    // add schedule.
+    addSchedule(user, data) {
+        return new Promise((resolve, reject) => {
+            connection.query({
+                sql: 'insert into schedule values(null, ?, ?, ?, ?, ?, ?, ?, ?)',
+                values: [user.id, data.summary, data.guest, data.memo, data.startdatetime, data.enddatetime, getCurDate(), getCurDate()]
+            }, (e, r) => {
+                if(e) reject(e);
+                else resolve(r.insertId);
+            });
+        });
+    }
+
+    // update schedule.
+    updateSchedule(id, data) {
+        connection.query({
+            sql: 'update schedule set startdatetime = ?, enddatetime = ?, guest = ?, summary = ?, memo = ?, updated = ? where id = ?',
+            values: [data.startdatetime, data.enddatetime, data.guest, data.summary, data.memo, getCurDate(), id]
+        }, (e, r) => {
+            if(e) reject("Datebase error: " + e);
+            else resolve();
+        });
+    }
+
+    // delete schedule.
+    deleteSchedule(id) {
+        return new Promise((resolve, reject) => {
+            connection.query({
+                sql: 'delete from schedule where id = ?',
+                values: [id]
+            }, (e, f) => {
+                if(e) reject("Database error: " + e);
+                else resolve();
+            });
+        });
+
+    }
+}
+
+//-------------------------------------.
+// Get Schedule API.
+//-------------------------------------.
+router.get('/', (req, res, next) => {
     // get schedule.
-    getSchedule(req.user.id)
+    let schedule = new Schedule();
+    schedule.getSchedule(req.user)
         .then(
             (d) => {
                 let s = {memberid: req.user, schedule: []};
@@ -49,20 +97,9 @@ router.get('/', (req, res, next) => {
 // Post Schedule API.
 //-------------------------------------.
 router.post('/', (req, res, next) => {
-    const addSchedule = (d) => {
-        return new Promise((resolve, reject) => {
-            connection.query({
-                sql: 'insert into schedule values(null, ?, ?, ?, ?, ?, ?, ?, ?)',
-                values: [req.user, d.summary, d.guest, d.memo, d.startdatetime, d.enddatetime, getCurDate(), getCurDate()]
-            }, (e, r) => {
-                if(e) reject(e);
-                else resolve(r.insertId);
-            });
-        });
-    };
-
     // insert schedule.
-    addSchedule(req.body)
+    let schedule = new Schedule();
+    schedule.addSchedule(req.user, req.body)
         .then((id) => {res.json({result: 'success', id: id});},
               (e) => {
                   console.log("error: " + e);
@@ -75,20 +112,9 @@ router.post('/', (req, res, next) => {
 // Put Schedule API.
 //-------------------------------------.
 router.put('/:id', (req, res) => {
-    const updateSchedule = (id, p) => {
-        return new Promise((resolve, reject) => {
-            connection.query({
-                sql: 'update schedule set startdatetime = ?, enddatetime = ?, guest = ?, summary = ?, memo = ?, updated = ? where id = ?',
-                values: [p.startdatetime, p.enddatetime, p.guest, p.summary, p.memo, getCurDate(), id]
-            }, (e, r) => {
-                if(e) reject("Datebase error: " + e);
-                else resolve();
-            });
-        });
-    };
-
     // update schedule.
-    updateSchedule(req.params.id, req.body)
+    let schedule = new Schedule();
+    schedule.updateSchedule(req.params.id, req.body)
         .then(() => {res.json({result: 'sucess'});},
               (e) => { console.log(e); res.json({error: 'error: ' + e});}
              );
@@ -98,20 +124,9 @@ router.put('/:id', (req, res) => {
 // Delete Schedule API.
 //-------------------------------------.
 router.delete('/:id', (req, res) => {
-    const deleteSchedule = (id) => {
-        return new Promise((resolve, reject) => {
-            connection.query({
-                sql: 'delete from schedule where id = ?',
-                values: [id]
-            }, (e, f) => {
-                if(e) reject("Database error: " + e);
-                else resolve();
-            });
-        });
-    };
-
     // delete schedule.
-    deleteSchedule(req.params.id)
+    let schedule = new Schedule();
+    schedule.deleteSchedule(req.params.id)
         .then(() => {res.json({result: "success"});},
               (e) => {res.json({error: e});}
              );
