@@ -33,7 +33,7 @@ router.get('/', (req, res, next) => {
     };
 
     // get schedule.
-    getSchedule(req.user)
+    getSchedule(req.user.id)
         .then(
             (d) => {
                 let s = {memberid: req.user, schedule: []};

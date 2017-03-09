@@ -51,19 +51,19 @@ passport.use(new LocalStrategy(
                     req.flash('email', email);
                     done(null, false);
                 }
-                else done(null, r[0].id);
+                else done(null, r[0]);
             });
         });
     }));
 
 // save session.
-passport.serializeUser(function(id, done) {
-    done(null, id);
+passport.serializeUser(function(user, done) {
+    done(null, user);
 });
 
 // delete session.
-passport.deserializeUser(function(id, done) {
-    done(null, id);
+passport.deserializeUser(function(user, done) {
+    done(null, user);
 });
 
 //-------------------------------------.
