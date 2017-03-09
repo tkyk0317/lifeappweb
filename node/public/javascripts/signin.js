@@ -6,6 +6,19 @@ import GoogleAPI from "./google_api.js";
 // Signin Component.
 //----------------------------------------.
 var Signin = React.createClass({
+    getInitialState: function() {
+        return ({email: ''});
+    },
+
+    onChangeEmail: function(e) {
+        this.setState({email: e.target.value});
+    },
+
+    componentWillMount: function() {
+        var email = document.getElementById('email').value;
+        this.setState({email: email});
+    },
+
     render: function() {
         var title = document.getElementById('title').value;
         var error = document.getElementById('error').value;
@@ -20,7 +33,7 @@ var Signin = React.createClass({
                         <div className="mdl-card__supporting-text">
                             <form name="login_action" method="POST" action="/signin">
                                 <div className="mdl-textfield mdl-js-textfield">
-                                    <input className="mdl-textfield__input" type="text" name="email" />
+                                    <input className="mdl-textfield__input" type="text" name="email" value={this.state.email} onChange={this.onChangeEmail} />
                                     <label className="mdl-textfield__label" htmlFor="username">Email Address</label>
                                 </div>
                                 <div className="mdl-textfield mdl-js-textfield">

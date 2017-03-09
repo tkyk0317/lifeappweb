@@ -11,6 +11,7 @@ var Login = React.createClass({
         <div id="signin" />
         <input type="hidden" value={this.props.title} id="title" />
         <input type="hidden" value={this.props.error} id="error" />
+        <input type="hidden" value={this.props.email} id="email" />
         <link type="text/css" rel="stylesheet" href="/stylesheets/signin.css" />
         <script src="/javascripts/build/signin.bundle.js" />
       </DefaultLayout>

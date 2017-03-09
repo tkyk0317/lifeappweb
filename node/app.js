@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var app = express();
+var passport = require('passport');
+var flash = require('connect-flash');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -31,10 +33,13 @@ app.use(session({
         maxAge: 1000 * 60 * 60, // mill-seconds.
     }
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
 // check authentication.
 app.use((req, res, next) => {
-    if(req.session.user !== undefined && req.session.user !== null) {
+    if(req.user) {
         // already logined.
         next();
     }

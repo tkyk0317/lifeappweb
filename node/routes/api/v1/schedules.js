@@ -33,10 +33,10 @@ router.get('/', (req, res, next) => {
     };
 
     // get schedule.
-    getSchedule(req.session.user.id)
+    getSchedule(req.user)
         .then(
             (d) => {
-                let s = {memberid: req.session.user.id, schedule: []};
+                let s = {memberid: req.user, schedule: []};
                 s.schedule = d.map((r) => { return r; });
                 res.json(s);
             },
@@ -53,7 +53,7 @@ router.post('/', (req, res, next) => {
         return new Promise((resolve, reject) => {
             connection.query({
                 sql: 'insert into schedule values(null, ?, ?, ?, ?, ?, ?, ?, ?)',
-                values: [req.session.user.id, d.summary, d.guest, d.memo, d.startdatetime, d.enddatetime, getCurDate(), getCurDate()]
+                values: [req.user, d.summary, d.guest, d.memo, d.startdatetime, d.enddatetime, getCurDate(), getCurDate()]
             }, (e, r) => {
                 if(e) reject(e);
                 else resolve(r.insertId);
