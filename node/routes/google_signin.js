@@ -25,6 +25,7 @@ passport.use(
             passReqToCallback: true,
         },
         (req, accessToken, refreshToken, profile, done) => {
+            profile.accessToken = accessToken;
             if(profile) return done(null, profile);
             return done(null, null);
         })

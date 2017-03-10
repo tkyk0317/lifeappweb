@@ -17,10 +17,20 @@ const getCurDate = () => {
 };
 
 //-------------------------------------.
+// Schedule Factory Class.
+//-------------------------------------.
+class ScheduleFactory {
+    static create(user) {
+        if(user.provider) return new GoogleSchedule(user);
+        return new Schedule(user);
+    }
+}
+
+//-------------------------------------.
 // Schedule Class.
 //-------------------------------------.
 class Schedule {
-    constructor() {
+    constructor(user) {
     }
 
     // get schedule data.
@@ -75,22 +85,134 @@ class Schedule {
     }
 }
 
+// google calendar schedule class.
+class GoogleSchedule extends Schedule {
+    constructor(user) {
+        super(user);
+        var google = require('google-calendar');
+        this.googleCalendar = new google.GoogleCalendar(user.accessToken);
+        this.calendarDatas = [];
+    }
+
+    // check get all calendar.
+    // argment: Map Instance.
+    _isAllCalendar(targets) {
+        var get_count = 0;
+        targets.forEach((t) => {
+            if(t) get_count++;
+        });
+        return get_count === targets.size;
+    }
+
+    _parseCalendar(cal) {
+        var cals = [];
+        cal.items.forEach((i) => {
+            // parse calendar.
+            var attendees = i.attendees ? i.attendees.map((guest) => {return guest.email;}) : null;
+            cals.push({
+                    summary: i.summary || '',
+                    guest: attendees || '',
+                    memo: i.description || '',
+                    startdatetime: i.start.dateTime.replace('T', ' ').substr(0, 16) || '',
+                    enddatetime: i.end.dateTime.replace('T', ' ').substr(0, 16) || '',
+                });
+        });
+        return cals;
+    }
+
+    getSchedule(user) {
+        // get calendarlist.
+        var self = this;
+        return new Promise((resolve, reject) => {
+            let calendar_list = () => {
+                return new Promise((cb) => {
+                    self.googleCalendar.calendarList.list((err, data) => {
+                        cb(data.items);
+                    });
+                });
+            };
+            calendar_list()
+                .then((list) => {
+                    // get all calendar data.
+                    var target_calendar = new Map();
+                    list.forEach((d) => {
+                        // except holidays.
+                        const id = d.id;
+                        if(id === 'ja.japanese#holiday@group.v.calendar.google.com') return;
+
+                        // insert target id.
+                        target_calendar.set(id, false);
+
+                        // get calendar lists.
+                        const getGoogleCalendar = (id) => {
+                            return new Promise((cb) => {
+                                self.googleCalendar.events.list(id, (err, cal) => {
+                                    cb(cal);
+                                });
+                            });
+                        };
+
+                        // parse calendar datas.
+                        getGoogleCalendar(id)
+                            .then((cal) => {
+                                // parse calendar.
+                                self.calendarDatas = self.calendarDatas.concat(self._parseCalendar(cal));
+                                target_calendar.set(id, true);
+                                // nofity.
+                                if(self._isAllCalendar(target_calendar)) resolve(self.calendarDatas);
+                            })
+                            .catch((e) => {
+                                console.log(e);
+                            });
+                    });
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+        });
+    }
+
+    // add schedule.
+    addSchedule(user, data) {
+        console.log("GoogleSchedule.addSchedule: Not Support");
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
+
+    // update schedule.
+    updateSchedule(id, data) {
+        console.log("GoogleSchedule.updateSchedule: Not Support");
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
+
+    // delete schedule.
+    deleteSchedule(id) {
+        console.log("GoogleSchedule.deleteSchedule: Not Support");
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
+}
+
 //-------------------------------------.
 // Get Schedule API.
 //-------------------------------------.
 router.get('/', (req, res, next) => {
     // get schedule.
-    let schedule = new Schedule();
+    let schedule = ScheduleFactory.create(req.user);
     schedule.getSchedule(req.user)
         .then(
             (d) => {
                 let s = {memberid: req.user, schedule: []};
                 s.schedule = d.map((r) => { return r; });
                 res.json(s);
-            },
-            (e) => {
-            }
-        );
+            })
+        .catch((e) => {
+            console.log(e);
+        });
 });
 
 //-------------------------------------.
