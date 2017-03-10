@@ -108,14 +108,19 @@ class GoogleSchedule extends Schedule {
         var cals = [];
         cal.items.forEach((i) => {
             // parse calendar.
-            var attendees = i.attendees ? i.attendees.map((guest) => {return guest.email;}) : null;
-            cals.push({
+            try {
+                var attendees = i.attendees ? i.attendees.map((guest) => {return guest.email;}) : null;
+                cals.push({
                     summary: i.summary || '',
                     guest: attendees || '',
                     memo: i.description || '',
                     startdatetime: i.start.dateTime.replace('T', ' ').substr(0, 16) || '',
                     enddatetime: i.end.dateTime.replace('T', ' ').substr(0, 16) || '',
                 });
+            }
+            catch(e) {
+                console.log(e);
+            }
         });
         return cals;
     }
