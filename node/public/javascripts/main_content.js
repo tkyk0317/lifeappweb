@@ -29,8 +29,9 @@ var MainContent = React.createClass({
            .set('Accept', 'application/json')
            .set('Content-Type', 'application/json')
            .end(function(err, res) {
-               self.setState({schedules: res.body.schedule});
-               self.setState({memberId: res.body.memberid});
+               self.setState({list: res.body.list || []});
+               self.setState({schedules: res.body.schedule || []});
+               self.setState({memberId: res.body.memberid || null});
            });
     },
 
@@ -43,6 +44,7 @@ var MainContent = React.createClass({
                               selected={moment().startOf("day")} />
                     <ScheduleCardArea memberId={this.state.memberId}
                                       schedules={this.state.schedules}
+                                      calendarlist={this.state.list}
                                       onComplete={this.onComplete}/>
                 </div>
             );

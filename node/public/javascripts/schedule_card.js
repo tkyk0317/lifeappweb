@@ -80,6 +80,7 @@ export default class ScheduleCard extends React.Component {
         var obj = this;
         var params = {
             "id": this.props.scheduleId,
+            "calendarid": this.props.calendarid,
             "memberid": this.props.memberId,
             "startdatetime": s_date,
             "enddatetime": e_date,
@@ -100,21 +101,21 @@ export default class ScheduleCard extends React.Component {
         // generate datetime.
         var s_date = this.state.startdate + " " + this.state.starttime;
         var e_date = this.state.enddate + " " + this.state.endtime;
-
-        var obj = this;
         var params = {
-            "id": obj.props.scheduleId,
-            "memberid": obj.props.memberId,
+            "id": this.props.scheduleId,
+            "calendarid": this.props.calendarid,
+            "memberid": this.props.memberId,
             "startdatetime": s_date,
             "enddatetime": e_date,
-            "summary": obj.state.summary,
-            "memo": obj.state.memo,
-            "guest": obj.state.guest,
+            "summary": this.state.summary,
+            "memo": this.state.memo,
+            "guest": this.state.guest,
         };
-        ajax.del('/v1/schedules/' + this.props.scheduleId,
+        var self = this;
+        ajax.del('/v1/schedules/' + this.props.scheduleId, params,
                  function(err, res) {
-                     obj.closeDeleteModal();
-                     obj.props.onRegist("Complete Delete", variables.ACTION_CATEGORY.DELETE_SCHEDULE, params);
+                     self.closeDeleteModal();
+                     self.props.onRegist("Complete Delete", variables.ACTION_CATEGORY.DELETE_SCHEDULE, params);
                  });
     }
 
@@ -140,6 +141,7 @@ export default class ScheduleCard extends React.Component {
             // avatar is not uploaded, set default image.
             avatar = <Avatar icon={<FontIcon className="material-icons">account_circle</FontIcon>}/>;
         }
+        const delete_title = this.props.calendartitle ? "Delete Schedule" + "\n(" + this.props.calendartitle + ")" : "Delete Schedule";
         return (
             <div>
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -165,6 +167,8 @@ export default class ScheduleCard extends React.Component {
                                onChangeDateTime={this.onChangeDateTime}
                                onClose={this.closeModal}
                                title="Edit Schedule"
+                               targetcal={this.props.calendarid}
+                               calendarlist={this.props.calendarlist}
                                startdate={utility.fromDateTimeString(this.props.startDateTime)}
                                starttime={utility.fromDateTimeString(this.props.startDateTime)}
                                enddate={utility.fromDateTimeString(this.props.endDateTime)}
@@ -177,7 +181,7 @@ export default class ScheduleCard extends React.Component {
                             onClickBtn1={this.onDeleteBtnOk}
                             onClickBtn2={this.onDeleteBtnCancel}
                             onClose={this.closeDeleteModal}
-                            title="Delete Schedule"
+                            title={delete_title}
                             message="Delete this Schedule ?"
                             btn1_title="OK"
                             btn2_title="Cancel" />

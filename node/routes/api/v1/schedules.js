@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
+var moment = require('moment');
 var utility = require(__dirname + '/../../../public/javascripts/utility');
 
 const connection = mysql.createConnection({
@@ -14,6 +15,12 @@ const connection = mysql.createConnection({
 const getCurDate = () => {
     const now = new Date();
     return utility.toDateString(now) + " " + utility.toTimeString(now);
+};
+
+// check google login.
+const isGoogle = (user) => {
+    if(!user.provider) return false;
+    return user.provider === 'google';
 };
 
 //-------------------------------------.
@@ -92,6 +99,7 @@ class GoogleSchedule extends Schedule {
         var google = require('google-calendar');
         this.googleCalendar = new google.GoogleCalendar(user.accessToken);
         this.calendarDatas = [];
+        this.calendarLists = [];
     }
 
     // check get all calendar.
@@ -104,13 +112,15 @@ class GoogleSchedule extends Schedule {
         return get_count === targets.size;
     }
 
-    _parseCalendar(cal) {
+    _parseCalendar(id, cal) {
         var cals = [];
         cal.items.forEach((i) => {
             // parse calendar.
             try {
                 var attendees = i.attendees ? i.attendees.map((guest) => {return guest.email;}) : null;
                 cals.push({
+                    id: i.id, // event id.
+                    calendarid: id, // calendarid.
                     summary: i.summary || '',
                     guest: attendees || '',
                     memo: i.description || '',
@@ -143,10 +153,12 @@ class GoogleSchedule extends Schedule {
                     list.forEach((d) => {
                         // except holidays.
                         const id = d.id;
+                        const calendar_title = d.summaryOverride || d.summary;
                         if(id === 'ja.japanese#holiday@group.v.calendar.google.com') return;
 
                         // insert target id.
                         target_calendar.set(id, false);
+                        self.calendarLists = self.calendarLists.concat({id: id, name: calendar_title});
 
                         // get calendar lists.
                         const getGoogleCalendar = (id) => {
@@ -161,8 +173,9 @@ class GoogleSchedule extends Schedule {
                         getGoogleCalendar(id)
                             .then((cal) => {
                                 // parse calendar.
-                                self.calendarDatas = self.calendarDatas.concat(self._parseCalendar(cal));
+                                self.calendarDatas = self.calendarDatas.concat(self._parseCalendar(id, cal));
                                 target_calendar.set(id, true);
+
                                 // nofity.
                                 if(self._isAllCalendar(target_calendar)) resolve(self.calendarDatas);
                             })
@@ -179,25 +192,53 @@ class GoogleSchedule extends Schedule {
 
     // add schedule.
     addSchedule(user, data) {
-        console.log("GoogleSchedule.addSchedule: Not Support");
+        var self = this;
         return new Promise((resolve, reject) => {
-            resolve();
+            self.googleCalendar.events.quickAdd(data.calendarid, data.summary, (err, res) => {
+                // consider about the response, return the response by first.
+                resolve(res.id);
+
+                // update schedule.
+                self.updateSchedule(res.id, data)
+                    .then(() => {
+                        console.log("added: Success");
+                    })
+                    .catch((e) => {
+                        console.log(e);
+                    });
+            });
         });
     }
 
     // update schedule.
     updateSchedule(id, data) {
-        console.log("GoogleSchedule.updateSchedule: Not Support");
+        var self = this;
         return new Promise((resolve, reject) => {
-            resolve();
+            // convert UTC Date.
+            const startdatetime = moment.utc(utility.fromDateTimeString(data.startdatetime).toISOString()).toDate();
+            const enddatetime = moment.utc(utility.fromDateTimeString(data.startdatetime).toISOString()).toDate();
+
+            // update other parameters.
+            self.googleCalendar.events.update(data.calendarid, id,
+                                              {
+                                                  start: {dateTime: startdatetime}, end: {dateTime: enddatetime},
+                                                  summary: data.summary || '', description: data.memo || '',
+                                              },
+                                              (err, res) => {
+                                                  if(err) reject(err);
+                                                  else resolve();
+                                              });
         });
     }
 
     // delete schedule.
-    deleteSchedule(id) {
-        console.log("GoogleSchedule.deleteSchedule: Not Support");
+    deleteSchedule(id, data) {
+        var self = this;
         return new Promise((resolve, reject) => {
-            resolve();
+            self.googleCalendar.events.delete(data.calendarid, id, (err, res) => {
+                if(err) reject(err);
+                else resolve();
+            });
         });
     }
 }
@@ -211,8 +252,8 @@ router.get('/', (req, res, next) => {
     schedule.getSchedule(req.user)
         .then(
             (d) => {
-                let s = {memberid: req.user, schedule: []};
-                s.schedule = d.map((r) => { return r; });
+                const memberid = isGoogle(req.user) ? req.user.id : req.user;
+                let s = {memberid: memberid, schedule: d.map((r) => { return r; }), list: schedule.calendarLists || null};
                 res.json(s);
             })
         .catch((e) => {
@@ -225,7 +266,7 @@ router.get('/', (req, res, next) => {
 //-------------------------------------.
 router.post('/', (req, res, next) => {
     // insert schedule.
-    let schedule = new Schedule();
+    let schedule = ScheduleFactory.create(req.user);
     schedule.addSchedule(req.user, req.body)
         .then((id) => {res.json({result: 'success', id: id});},
               (e) => {
@@ -240,7 +281,7 @@ router.post('/', (req, res, next) => {
 //-------------------------------------.
 router.put('/:id', (req, res) => {
     // update schedule.
-    let schedule = new Schedule();
+    let schedule = ScheduleFactory.create(req.user);
     schedule.updateSchedule(req.params.id, req.body)
         .then(() => {res.json({result: 'sucess'});},
               (e) => { console.log(e); res.json({error: 'error: ' + e});}
@@ -252,8 +293,8 @@ router.put('/:id', (req, res) => {
 //-------------------------------------.
 router.delete('/:id', (req, res) => {
     // delete schedule.
-    let schedule = new Schedule();
-    schedule.deleteSchedule(req.params.id)
+    let schedule = ScheduleFactory.create(req.user);
+    schedule.deleteSchedule(req.params.id, req.body)
         .then(() => {res.json({result: "success"});},
               (e) => {res.json({error: e});}
              );

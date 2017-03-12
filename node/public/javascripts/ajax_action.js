@@ -20,9 +20,10 @@ export function put(u, p, f) {
         .end(function(err, res) { f(err, res); });
 }
 // del action.
-export function del(u, f) {
+export function del(u, p, f) {
     req.del(u)
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
+        .send(p)
         .end(function(err, res) { f(err, res); });
 }

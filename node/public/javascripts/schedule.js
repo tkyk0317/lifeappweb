@@ -47,8 +47,12 @@ export default class ScheduleCardArea extends React.Component {
         return (
             <div id="card_area"
                  className="mdl-cell mdl-cell--7-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
-                <RegistSchedule onRegist={this.onRegist} memberId={this.props.memberId} />
-                <ScheduleList schedules={this.state.schedules}  onRegist={this.onRegist}/>
+                <RegistSchedule onRegist={this.onRegist}
+                                memberId={this.props.memberId}
+                                calendarlist={this.props.calendarlist} />
+                <ScheduleList schedules={this.state.schedules}
+                              calendarlist={this.props.calendarlist}
+                              onRegist={this.onRegist}/>
                 <ToastBar open={this.state.canCompleteMessage}
                           message={this.state.completeMessage}
                           onClose={onCloseToast} />
@@ -94,18 +98,21 @@ class ScheduleList extends React.Component {
     render() {
         if(this.props.schedules) {
             // display my schedules.
-            var obj = this;
+            var self = this;
             var schedule_list =
                 this.props.schedules.map(function(v) {
                     return (<ScheduleCard key={v.id}
                                           scheduleId={v.id}
+                                          calendarid={v.calendarid}
+                                          calendartitle={v.calendartitle}
+                                          calendarlist={self.props.calendarlist}
                                           memberId={v.memberid}
                                           startDateTime={v.startdatetime}
                                           endDateTime={v.enddatetime}
                                           summary={v.summary}
                                           memo={v.memo}
                                           guest={v.guest}
-                                          onRegist={obj.props.onRegist} />);
+                                          onRegist={self.props.onRegist} />);
                 });
             return (<ReactCSSTransitionGroup transitionName="schedule_card"
                                              transitionAppear={true}
@@ -126,6 +133,15 @@ class RegistSchedule extends React.Component {
     constructor(props) {
         super(props);
 
+        // check already selected target calendar.
+        let target_cal = null;
+        if(this.props.currentcal) {
+            target_cal = this.props.currentcal;
+        }
+        else if(this.props.calendarlist && 0 < this.props.calendarlist.length) {
+            target_cal = this.props.calendarlist[0].id;
+        }
+        console.log(target_cal);
         var start_date = new Date();
         var end_date = new Date();
         end_date.setMinutes(end_date.getMinutes() + 30);
@@ -135,13 +151,17 @@ class RegistSchedule extends React.Component {
             enddate: utility.toDateString(end_date),
             starttime: utility.toTimeString(start_date),
             endtime: utility.toTimeString(end_date),
+            targetcalid: target_cal,
         };
+
+
         // bind function.
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onChangeDateTime = this.onChangeDateTime.bind(this);
+        this.onChangeCalList = this.onChangeCalList.bind(this);
     }
 
     render() {
@@ -150,13 +170,22 @@ class RegistSchedule extends React.Component {
         regist_button.addEventListener('click', function() {
             obj.openModal();
         });
+        // set targetcal.
+        let targetcal = '';
+        if(this.props.calendarlist && 0 < this.props.calendarlist.length) {
+            targetcal = this.props.calendarlist.find((elem) => {
+                if(this.state.targetcalid === elem.id) return true;
+            }).name;
+        }
 
         return (<ScheduleModal isActive={this.state.isActive}
                                onSubmit={this.onSubmit}
                                onChange={this.onChange}
                                onChangeDateTime={this.onChangeDateTime}
+                               onChangeCalList={this.onChangeCalList}
                                onClose={this.closeModal}
                                title="Add Schedule"
+                               calendarlist={this.props.calendarlist}
                                startdate={utility.fromDateTimeString(this.state.startdate + " " + this.state.starttime)}
                                starttime={utility.fromDateTimeString(this.state.startdate + " " + this.state.starttime)}
                                enddate={utility.fromDateTimeString(this.state.enddate + " " + this.state.endtime)}
@@ -164,6 +193,7 @@ class RegistSchedule extends React.Component {
                                summary=""
                                memo=""
                                guest=""
+                               targetcal={targetcal}
                                confirmButtonTitle="Regist"
                 />);
     }
@@ -184,6 +214,7 @@ class RegistSchedule extends React.Component {
         // regist event to table.
         var obj = this;
         var params = {
+            "calendarid": this.state.targetcalid,
             "memberid": this.props.memberId,
             "startdatetime": s_date,
             "enddatetime": e_date,
@@ -208,5 +239,9 @@ class RegistSchedule extends React.Component {
 
     onChangeDateTime(n, v) {
         this.setState({ [n]: v });
+    }
+
+    onChangeCalList(e, i, v) {
+        this.setState({ targetcalid: v });
     }
 }
