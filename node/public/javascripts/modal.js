@@ -55,6 +55,7 @@ export default class ScheduleModal extends React.Component {
         } else {
             this.setState({willClose: true, isActive: false});
         }
+        this.setState({targetcal: nextProps.targetcal});
     }
 
     onChangeStartDate(e, v) {

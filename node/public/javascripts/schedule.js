@@ -133,14 +133,6 @@ class RegistSchedule extends React.Component {
     constructor(props) {
         super(props);
 
-        // check already selected target calendar.
-        let target_cal = null;
-        if(this.props.currentcal) {
-            target_cal = this.props.currentcal;
-        }
-        else if(this.props.calendarlist && 0 < this.props.calendarlist.length) {
-            target_cal = this.props.calendarlist[0].id;
-        }
         var start_date = new Date();
         var end_date = new Date();
         end_date.setMinutes(end_date.getMinutes() + 30);
@@ -150,9 +142,8 @@ class RegistSchedule extends React.Component {
             enddate: utility.toDateString(end_date),
             starttime: utility.toTimeString(start_date),
             endtime: utility.toTimeString(end_date),
-            targetcalid: target_cal,
+            calendarlist: this.props.calendarlist,
         };
-
         // bind function.
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -162,12 +153,23 @@ class RegistSchedule extends React.Component {
         this.onChangeCalList = this.onChangeCalList.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({calendarlist: nextProps.calendarlist});
+    }
+
     render() {
         var obj = this;
         var regist_button = document.getElementById('schedule_regist');
         regist_button.addEventListener('click', function() {
             obj.openModal();
         });
+
+        // check already selected target calendar.
+        let target_cal = null;
+        if(this.state.calendarlist && 0 < this.state.calendarlist.length) {
+            target_cal = this.state.calendarlist[0].id;
+        }
+
         return (<ScheduleModal isActive={this.state.isActive}
                                onSubmit={this.onSubmit}
                                onChange={this.onChange}
@@ -183,7 +185,7 @@ class RegistSchedule extends React.Component {
                                summary=""
                                memo=""
                                guest=""
-                               targetcal={this.state.targetcalid}
+                               targetcal={target_cal}
                                confirmButtonTitle="Regist"
                 />);
     }
