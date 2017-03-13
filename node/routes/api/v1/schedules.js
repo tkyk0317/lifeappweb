@@ -3,6 +3,7 @@ var router = express.Router();
 var mysql = require('mysql');
 var moment = require('moment');
 var utility = require(__dirname + '/../../../public/javascripts/utility');
+var google = require('./google');
 
 const connection = mysql.createConnection({
     host: 'database',
@@ -15,12 +16,6 @@ const connection = mysql.createConnection({
 const getCurDate = () => {
     const now = new Date();
     return utility.toDateString(now) + " " + utility.toTimeString(now);
-};
-
-// check google login.
-const isGoogle = (user) => {
-    if(!user.provider) return false;
-    return user.provider === 'google';
 };
 
 //-------------------------------------.
@@ -252,9 +247,8 @@ router.get('/', (req, res, next) => {
     schedule.getSchedule(req.user)
         .then(
             (d) => {
-                const memberid = isGoogle(req.user) ? req.user.id : req.user;
                 res.json({
-                    memberid: memberid,
+                    memberid: req.user.id,
                     schedule: d.map((r) => { return r; }),
                     list: schedule.calendarLists || null,
                 });

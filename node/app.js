@@ -65,6 +65,7 @@ app.use('/signin', require('./routes/signin'));
 app.use('/signup', require('./routes/signup'));
 app.use('/signout', require('./routes/signout'));
 app.use('/v1/schedules', require('./routes/api/v1/schedules'));
+app.use('/v1/profile', require('./routes/api/v1/profile'));
 app.use('/auth/google', require('./routes/google_signin'));
 
 // catch 404 and forward to error handler

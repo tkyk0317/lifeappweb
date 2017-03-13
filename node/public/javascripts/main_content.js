@@ -17,28 +17,73 @@ var MainContent = React.createClass({
         return {
             memberId: null,
             schedules: [],
-            list: []
+            list: [],
+            profile: {},
         };
     },
 
     componentDidMount: function() {
-        // to get schedule data.
+        // to get schedule data and profile data.
         var self = this;
         var req = require('superagent');
         const now = new Date();
-        req.get('/v1/schedules')
-           .set('Accept', 'application/json')
-           .set('Content-Type', 'application/json')
-           .end(function(err, res) {
-               if(res.body) {
-                   self.setState({list: res.body.list || []});
-                   self.setState({schedules: res.body.schedule || []});
-                   self.setState({memberId: res.body.memberid || null});
-               }
-           });
+
+        // get schedules.
+        let member_id = 0;
+        const getSchedule = () => {
+            return new Promise((resolve, reject) => {
+                req.get('/v1/schedules')
+                   .set('Accept', 'application/json')
+                   .set('Content-Type', 'application/json')
+                   .end(function(err, res) {
+                       if(res.body) {
+                           member_id = res.body.memberid;
+                           self.setState({list: res.body.list || []});
+                           self.setState({schedules: res.body.schedule || []});
+                           self.setState({memberId: res.body.memberid || null});
+                           resolve();
+                       }
+                   });
+            });
+        };
+        // get profile.
+        const getProfile = () => {
+            return new Promise((resolve, reject) => {
+                req.get('/v1/profile/' + member_id)
+                   .set('Accept', 'application/json')
+                   .set('Content-Type', 'application/json')
+                   .end(function(err, res) {
+                       if(res.body) {
+                           resolve(res.body);
+                       }
+                   });
+            });
+        };
+
+        // get schedule and profile.
+        getSchedule()
+            .then(getProfile)
+            .then((d) => {
+                if(d) {
+                    self.setState(
+                        {profile:
+                                 {
+                                     id: d.id,
+                                     email: d.email,
+                                     firstname: d.firstname,
+                                     lastname: d.lastname,
+                                     avator: d.avator,
+                                 }
+                        });
+                }
+            })
+            .catch((e) => {
+                console.log(e);
+            });
     },
 
     render: function() {
+        console.log(this.state.profile);
         if(this.state.schedules) {
             return (
                 <div className="mdl-grid">

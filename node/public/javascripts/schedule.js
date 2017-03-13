@@ -141,7 +141,6 @@ class RegistSchedule extends React.Component {
         else if(this.props.calendarlist && 0 < this.props.calendarlist.length) {
             target_cal = this.props.calendarlist[0].id;
         }
-        console.log(target_cal);
         var start_date = new Date();
         var end_date = new Date();
         end_date.setMinutes(end_date.getMinutes() + 30);
