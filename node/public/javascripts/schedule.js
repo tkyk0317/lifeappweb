@@ -154,7 +154,6 @@ class RegistSchedule extends React.Component {
             targetcalid: target_cal,
         };
 
-
         // bind function.
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -170,14 +169,6 @@ class RegistSchedule extends React.Component {
         regist_button.addEventListener('click', function() {
             obj.openModal();
         });
-        // set targetcal.
-        let targetcal = '';
-        if(this.props.calendarlist && 0 < this.props.calendarlist.length) {
-            targetcal = this.props.calendarlist.find((elem) => {
-                if(this.state.targetcalid === elem.id) return true;
-            }).name;
-        }
-
         return (<ScheduleModal isActive={this.state.isActive}
                                onSubmit={this.onSubmit}
                                onChange={this.onChange}
@@ -193,7 +184,7 @@ class RegistSchedule extends React.Component {
                                summary=""
                                memo=""
                                guest=""
-                               targetcal={targetcal}
+                               targetcal={this.state.targetcalid}
                                confirmButtonTitle="Regist"
                 />);
     }
