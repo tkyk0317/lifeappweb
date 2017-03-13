@@ -218,7 +218,7 @@ class GoogleSchedule extends Schedule {
                                               {
                                                   summary: data.summary || '',
                                                   description: data.memo || '',
-                                                  attendees: [{email: data.guest}] || '',
+                                                  attendees: data.guest ? [{email: data.guest}] : '',
                                                   start: {dateTime: startdatetime},
                                                   end: {dateTime: enddatetime},
                                               },
