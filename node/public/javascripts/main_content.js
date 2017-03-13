@@ -83,7 +83,6 @@ var MainContent = React.createClass({
     },
 
     render: function() {
-        console.log(this.state.profile);
         if(this.state.schedules) {
             return (
                 <div className="mdl-grid">
