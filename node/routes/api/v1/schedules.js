@@ -216,8 +216,11 @@ class GoogleSchedule extends Schedule {
             // update other parameters.
             self.googleCalendar.events.update(data.calendarid, id,
                                               {
-                                                  start: {dateTime: startdatetime}, end: {dateTime: enddatetime},
-                                                  summary: data.summary || '', description: data.memo || '',
+                                                  summary: data.summary || '',
+                                                  description: data.memo || '',
+                                                  attendees: [{email: data.guest}] || '',
+                                                  start: {dateTime: startdatetime},
+                                                  end: {dateTime: enddatetime},
                                               },
                                               (err, res) => {
                                                   if(err) reject(err);

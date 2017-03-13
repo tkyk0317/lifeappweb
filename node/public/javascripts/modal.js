@@ -22,6 +22,7 @@ var utility = require ('./utility.js');
 export default class ScheduleModal extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             isAcive: false,
             willClose: false,
@@ -38,7 +39,7 @@ export default class ScheduleModal extends React.Component {
             summary: this.props.summary,
             memo: this.props.memo,
             guest: this.props.guest,
-            targetcal: this.props.targetcal, // not render DropDownMenu, unless save this.state.targetcal and save when onChange Event.
+            targetcalid: this.props.targetcalid, // not render DropDownMenu, unless save this.state.targetcalid and save when onChange Event.
         };
 
         // bind function.
@@ -55,7 +56,7 @@ export default class ScheduleModal extends React.Component {
         } else {
             this.setState({willClose: true, isActive: false});
         }
-        this.setState({targetcal: nextProps.targetcal});
+        this.setState({targetcalid: nextProps.targetcalid});
     }
 
     onChangeStartDate(e, v) {
@@ -79,9 +80,9 @@ export default class ScheduleModal extends React.Component {
     }
 
     onChangeCalList(e, i, v) {
-        this.setState({targetcal: v});
+        this.setState({targetcalid: v});
         this.state.onChangeCalList(e, i, v);
-    }
+   }
 
     onSubmit() {
         this.state.onSubmit();
@@ -111,12 +112,13 @@ export default class ScheduleModal extends React.Component {
 
             // generate calendarlist.
             var calendar_lists = '';
-            if(this.state.targetcal) {
+            if(this.state.targetcalid) {
                 // create calendar lists.
                 calendar_lists = this.props.calendarlist.map((v) => {
                     return <MenuItem key={v.id} value={v.id} primaryText={v.name} />;
                 });
             }
+            console.log("render: " + this.state.calendar_title);
             return (
                 <div>
                     <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -127,9 +129,9 @@ export default class ScheduleModal extends React.Component {
                                     contentStyle={style.dialog}
                                     open={this.state.isActive}>
                                 {(() => {
-                                     if(this.state.targetcal) {
+                                     if(this.state.targetcalid) {
                                          return (
-                                             <DropDownMenu value={this.state.targetcal}
+                                             <DropDownMenu value={this.state.targetcalid}
                                                            autoWidth={false}
                                                            style={style.menu_field}
                                                            listStyle={style.menu_field}

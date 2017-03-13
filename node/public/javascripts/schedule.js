@@ -143,6 +143,7 @@ class RegistSchedule extends React.Component {
             starttime: utility.toTimeString(start_date),
             endtime: utility.toTimeString(end_date),
             calendarlist: this.props.calendarlist,
+            targetcalid: this.searchCalId(this.props.calendarlist),
         };
         // bind function.
         this.openModal = this.openModal.bind(this);
@@ -155,6 +156,12 @@ class RegistSchedule extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({calendarlist: nextProps.calendarlist});
+        this.setState({targetcalid: this.searchCalId(nextProps.calendarlist)});
+    }
+
+    searchCalId(lists) {
+        if(lists && 0 < lists.length) return lists[0].id;
+        return null;
     }
 
     render() {
@@ -163,13 +170,6 @@ class RegistSchedule extends React.Component {
         regist_button.addEventListener('click', function() {
             obj.openModal();
         });
-
-        // check already selected target calendar.
-        let target_cal = null;
-        if(this.state.calendarlist && 0 < this.state.calendarlist.length) {
-            target_cal = this.state.calendarlist[0].id;
-        }
-
         return (<ScheduleModal isActive={this.state.isActive}
                                onSubmit={this.onSubmit}
                                onChange={this.onChange}
@@ -185,7 +185,7 @@ class RegistSchedule extends React.Component {
                                summary=""
                                memo=""
                                guest=""
-                               targetcal={target_cal}
+                               targetcalid={this.state.targetcalid}
                                confirmButtonTitle="Regist"
                 />);
     }
@@ -234,6 +234,6 @@ class RegistSchedule extends React.Component {
     }
 
     onChangeCalList(e, i, v) {
-        this.setState({ targetcalid: v });
+        this.setState({targetcalid: v });
     }
 }

@@ -33,6 +33,7 @@ export default class ScheduleCard extends React.Component {
             memo: this.props.memo,
             guest: this.props.guest,
             avatar: this.props.avatar,
+            calendarid: this.props.calendarid,
         };
 
         //  bind function.
@@ -41,6 +42,7 @@ export default class ScheduleCard extends React.Component {
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onChangeDateTime = this.onChangeDateTime.bind(this);
+        this.onChangeCalList = this.onChangeCalList.bind(this);
         this.onDeleteBtnOk = this.onDeleteBtnOk.bind(this);
         this.onDeleteBtnCancel = this.onDeleteBtnCancel.bind(this);
         this.openDeleteModal = this.openDeleteModal.bind(this);
@@ -72,6 +74,10 @@ export default class ScheduleCard extends React.Component {
         this.setState({ [n]: v });
     }
 
+    onChangeCalList(e, i, v) {
+        this.setState({calendarid: v });
+    }
+
     onSubmit() {
         // generate datetime.
         var s_date = this.state.startdate + " " + this.state.starttime;
@@ -80,7 +86,7 @@ export default class ScheduleCard extends React.Component {
         var obj = this;
         var params = {
             "id": this.props.scheduleId,
-            "calendarid": this.props.calendarid,
+            "calendarid": this.state.calendarid,
             "memberid": this.props.memberId,
             "startdatetime": s_date,
             "enddatetime": e_date,
@@ -103,7 +109,7 @@ export default class ScheduleCard extends React.Component {
         var e_date = this.state.enddate + " " + this.state.endtime;
         var params = {
             "id": this.props.scheduleId,
-            "calendarid": this.props.calendarid,
+            "calendarid": this.state.calendarid,
             "memberid": this.props.memberId,
             "startdatetime": s_date,
             "enddatetime": e_date,
@@ -166,8 +172,9 @@ export default class ScheduleCard extends React.Component {
                                onChange={this.onChange}
                                onChangeDateTime={this.onChangeDateTime}
                                onClose={this.closeModal}
+                               onChangeCalList={this.onChangeCalList}
                                title="Edit Schedule"
-                               targetcal={this.props.calendarid}
+                               targetcalid={this.state.calendarid}
                                calendarlist={this.props.calendarlist}
                                startdate={utility.fromDateTimeString(this.props.startDateTime)}
                                starttime={utility.fromDateTimeString(this.props.startDateTime)}
