@@ -102,6 +102,7 @@ export default class ScheduleCard extends React.Component {
                      self.closeModal();
                      // after update schedule data, start rendering.
                      if(params.orgcalendarid !== params.calendarid) {
+                         // event move to other calendar.
                          self.setState({orgcalendarid: params.calendarid});
                          params.orgcalendarid = params.calendarid;
                      }
