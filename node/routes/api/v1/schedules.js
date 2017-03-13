@@ -166,7 +166,7 @@ class GoogleSchedule extends Schedule {
                         // get calendar lists.
                         const getGoogleCalendar = (id) => {
                             return new Promise((cb) => {
-                                self.googleCalendar.events.list(id, (err, cal) => {
+                                self.googleCalendar.events.list(id, {orderBy: 'startTime', singleEvents: true}, (err, cal) => {
                                     cb(cal);
                                 });
                             });
