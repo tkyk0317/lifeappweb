@@ -219,7 +219,7 @@ class GoogleSchedule extends Schedule {
         return new Promise((resolve, reject) => {
             // convert UTC Date.
             const startdatetime = moment.utc(utility.fromDateTimeString(data.startdatetime).toISOString()).toDate();
-            const enddatetime = moment.utc(utility.fromDateTimeString(data.startdatetime).toISOString()).toDate();
+            const enddatetime = moment.utc(utility.fromDateTimeString(data.enddatetime).toISOString()).toDate();
 
             // update other parameters.
             self.googleCalendar.events.update(data.calendarid, id,
@@ -227,8 +227,8 @@ class GoogleSchedule extends Schedule {
                                                   summary: data.summary || '',
                                                   description: data.memo || '',
                                                   attendees: data.guest ? [{email: data.guest}] : '',
-                                                  start: {dateTime: startdatetime},
-                                                  end: {dateTime: enddatetime},
+                                                  start: {dateTime: startdatetime, timeZone: 'Asia/Tokyo',},
+                                                  end: {dateTime: enddatetime, timeZone: 'Asia/Tokyo',},
                                               },
                                               (err, res) => {
                                                   if(err) reject(err);
