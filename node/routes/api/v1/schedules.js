@@ -253,8 +253,11 @@ router.get('/', (req, res, next) => {
         .then(
             (d) => {
                 const memberid = isGoogle(req.user) ? req.user.id : req.user;
-                let s = {memberid: memberid, schedule: d.map((r) => { return r; }), list: schedule.calendarLists || null};
-                res.json(s);
+                res.json({
+                    memberid: memberid,
+                    schedule: d.map((r) => { return r; }),
+                    list: schedule.calendarLists || null,
+                });
             })
         .catch((e) => {
             console.log(e);

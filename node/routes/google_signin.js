@@ -33,7 +33,6 @@ passport.use(
 
 // save session.
 passport.serializeUser((user, done) => {
-    console.log("serializeUser");
     done(null, user);
 });
 
