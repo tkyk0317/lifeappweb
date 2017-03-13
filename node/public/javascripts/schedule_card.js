@@ -33,6 +33,7 @@ export default class ScheduleCard extends React.Component {
             memo: this.props.memo,
             guest: this.props.guest,
             avatar: this.props.avatar,
+            orgcalendarid: this.props.calendarid,
             calendarid: this.props.calendarid,
         };
 
@@ -83,9 +84,10 @@ export default class ScheduleCard extends React.Component {
         var s_date = this.state.startdate + " " + this.state.starttime;
         var e_date = this.state.enddate + " " + this.state.endtime;
 
-        var obj = this;
+        var self = this;
         var params = {
             "id": this.props.scheduleId,
+            "orgcalendarid": this.state.orgcalendarid,
             "calendarid": this.state.calendarid,
             "memberid": this.props.memberId,
             "startdatetime": s_date,
@@ -97,10 +99,14 @@ export default class ScheduleCard extends React.Component {
         ajax.put('/v1/schedules/' + this.props.scheduleId, params,
                  function(err, res) {
                      // disable dialog.
-                     obj.closeModal();
+                     self.closeModal();
                      // after update schedule data, start rendering.
-                     obj.props.onRegist("Complete Edit", variables.ACTION_CATEGORY.UPDATE_SCHEDULE, params);
-                 });
+                     if(params.orgcalendarid !== params.calendarid) {
+                         self.setState({orgcalendarid: params.calendarid});
+                         params.orgcalendarid = params.calendarid;
+                     }
+                     self.props.onRegist("Complete Edit", variables.ACTION_CATEGORY.UPDATE_SCHEDULE, params);
+        });
     }
 
     onDeleteBtnOk() {

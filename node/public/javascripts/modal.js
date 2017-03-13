@@ -118,7 +118,6 @@ export default class ScheduleModal extends React.Component {
                     return <MenuItem key={v.id} value={v.id} primaryText={v.name} />;
                 });
             }
-            console.log("render: " + this.state.calendar_title);
             return (
                 <div>
                     <MuiThemeProvider muiTheme={getMuiTheme()}>

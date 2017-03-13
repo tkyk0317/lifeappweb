@@ -72,6 +72,14 @@ class Schedule {
         });
     }
 
+    // move events to other calendar.
+    moveSchedule() {
+        return new Promise((resolve, reject) => {
+            console.log("Schedule.moveSchedule is not supportted");
+            resolve();
+        });
+    }
+
     // delete schedule.
     deleteSchedule(id) {
         return new Promise((resolve, reject) => {
@@ -229,6 +237,21 @@ class GoogleSchedule extends Schedule {
         });
     }
 
+    // move events to other calendar.
+    moveSchedule(req) {
+        var self = this;
+        return new Promise((resolve, reject) => {
+            self.googleCalendar.events.move(req.body.orgcalendarid, req.body.id,
+                                            {destination: req.body.calendarid},
+                                            (err, res) => {
+                                                // consider about the response, return the response by first.
+                                                resolve();
+                                                // update other parameters.
+                                                self.updateSchedule(res.id, req.body);
+                                            });
+        });
+    }
+
     // delete schedule.
     deleteSchedule(id, data) {
         var self = this;
@@ -282,10 +305,20 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res) => {
     // update schedule.
     let schedule = ScheduleFactory.create(req.user);
-    schedule.updateSchedule(req.params.id, req.body)
-        .then(() => {res.json({result: 'sucess'});},
-              (e) => { console.log(e); res.json({error: 'error: ' + e});}
-             );
+
+    // check update or move.
+    if(req.body.orgcalendarid !== req.body.calendarid) {
+        schedule.moveSchedule(req)
+            .then(() => {res.json({result: 'sucess'});},
+                  (e) => { console.log(e); res.json({error: 'error: ' + e});}
+            );
+    }
+    else {
+        schedule.updateSchedule(req.params.id, req.body)
+            .then(() => {res.json({result: 'sucess'});},
+                  (e) => { console.log(e); res.json({error: 'error: ' + e});}
+            );
+    }
 });
 
 //-------------------------------------.
