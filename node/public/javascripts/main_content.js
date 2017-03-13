@@ -16,7 +16,8 @@ var MainContent = React.createClass({
     getInitialState: function() {
         return {
             memberId: null,
-            schedules: null,
+            schedules: [],
+            list: []
         };
     },
 
@@ -29,9 +30,11 @@ var MainContent = React.createClass({
            .set('Accept', 'application/json')
            .set('Content-Type', 'application/json')
            .end(function(err, res) {
-               self.setState({list: res.body.list || []});
-               self.setState({schedules: res.body.schedule || []});
-               self.setState({memberId: res.body.memberid || null});
+               if(res.body) {
+                   self.setState({list: res.body.list || []});
+                   self.setState({schedules: res.body.schedule || []});
+                   self.setState({memberId: res.body.memberid || null});
+               }
            });
     },
 
