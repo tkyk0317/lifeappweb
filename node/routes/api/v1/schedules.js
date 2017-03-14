@@ -234,8 +234,8 @@ class GoogleSchedule extends Schedule {
         var self = this;
         return new Promise((resolve, reject) => {
             // convert UTC Date.
-            const startdatetime = moment.utc(utility.fromDateTimeString(data.startdatetime).toISOString()).toDate();
-            const enddatetime = moment.utc(utility.fromDateTimeString(data.enddatetime).toISOString()).toDate();
+            const startdatetime = utility.fromDateTimeString(data.startdatetime);
+            const enddatetime = utility.fromDateTimeString(data.enddatetime);
 
             // update other parameters.
             self.googleCalendar.events.update(data.calendarid, id,
