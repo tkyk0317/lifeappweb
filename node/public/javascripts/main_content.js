@@ -31,10 +31,6 @@ class HeaderComponent extends React.Component {
                 <div className="mdl-layout__header-row">
                     <span className="mdl-layout-title">LifeApp</span>
                     <div className="mdl-layout-spacer"></div>
-                    <button id="schedule_regist"
-                            className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
-                        <i className="material-icons">add</i>
-                    </button>
                     <div className="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
                         <label className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
                                htmlFor="fixed-header-drawer-exp">
@@ -48,6 +44,10 @@ class HeaderComponent extends React.Component {
                                    id="fixed-header-drawer-exp" />
                         </div>
                     </div>
+                    <button id="schedule_regist"
+                            className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
+                        <i className="material-icons">add</i>
+                    </button>
                 </div>
             </header>
         );
