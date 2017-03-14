@@ -19,10 +19,20 @@ class HeaderComponent extends React.Component {
             searchText: '',
         };
         this.onChange = this.onChange.bind(this);
+        this.onSortAsc = this.onSortAsc.bind(this);
+        this.onSortDes = this.onSortDes.bind(this);
     }
 
     onChange(e) {
         this.props.onChange(e);
+    }
+
+    onSortAsc(e) {
+        this.props.onSortAsc(e.target.value);
+    }
+
+    onSortDes(e) {
+        this.props.onSortDes(e.target.value);
     }
 
     render() {
@@ -48,6 +58,24 @@ class HeaderComponent extends React.Component {
                             className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
                         <i className="material-icons">add</i>
                     </button>
+
+                    <button id="sort-asc" className="mdl-button mdl-js-button mdl-button--icon">
+                        <i className="material-icons">arrow_drop_up</i>
+                    </button>
+                    <ul className="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" htmlFor="sort-asc">
+                        <li value="1" className="mdl-menu__item" onClick={this.onSortAsc}>Date</li>
+                        <li value="2" className="mdl-menu__item" onClick={this.onSortAsc}>Guest</li>
+                        <li value="3" className="mdl-menu__item" onClick={this.onSortAsc}>Summary</li>
+                    </ul>
+
+                    <button id="sort-des" className="mdl-button mdl-js-button mdl-button--icon">
+                        <i className="material-icons">arrow_drop_down</i>
+                    </button>
+                    <ul className="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" htmlFor="sort-des">
+                        <li value="1" className="mdl-menu__item" onClick={this.onSortDes}>Date</li>
+                        <li value="2" className="mdl-menu__item" onClick={this.onSortDes}>Guest</li>
+                        <li value="3" className="mdl-menu__item" onClick={this.onSortDes}>Summary</li>
+                    </ul>
                 </div>
             </header>
         );
@@ -90,7 +118,6 @@ var MainContent = React.createClass({
     },
 
     getSchedule: function() {
-        console.log("getSchedule")
         var self = this;
         return new Promise((resolve, reject) => {
             var req = require('superagent');
@@ -164,11 +191,43 @@ var MainContent = React.createClass({
         });
     },
 
+    onSortAsc: function(v) {
+        // sort schedules.
+        let cb = null;
+        if(1 === v) cb = this.compareDate; // sort by StartDate.
+        else if(2 === v) cb = this.compareGuest; // sort by Guest.
+        else if(3 === v) cb = this.compareSummary; // sort by Summary.
+
+        // start sort.
+        if(cb) {
+            let schedules = this.state.schedules;
+            schedules.sort(cb);
+            this.setState({schedules: schedules});
+        }
+    },
+
+    onSortDes: function(v) {
+        // sort schedules.
+        let cb = null;
+        if(1 === v) cb = this.compareDateDes; // sort by StartDate.
+        else if(2 === v) cb = this.compareGuestDes; // sort by guest.
+        else if(3 === v) cb = this.compareSummaryDes; // sort by Summary.
+
+        // start sort.
+        if(cb) {
+            let schedules = this.state.schedules;
+            schedules.sort(cb);
+            this.setState({schedules: schedules});
+        }
+    },
+
     render: function() {
         if(this.state.schedules) {
             return (
                 <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-                    <HeaderComponent onChange={this.onChange} />
+                    <HeaderComponent onChange={this.onChange}
+                                     onSortAsc={this.onSortAsc}
+                                     onSortDes={this.onSortDes} />
                     <NaviComponent title="LifeApp" />
                     <main id="page_top" className="mdl-layout__content">
                         <div className="mdl-grid">
@@ -209,7 +268,7 @@ var MainContent = React.createClass({
     addSchedule: function(d) {
         var v = this.state.schedules;
         v.push(d);
-        v.sort(this.compare);
+        v.sort(this.compareDate);
         this.setState({schedules: v});
     },
 
@@ -218,7 +277,7 @@ var MainContent = React.createClass({
             if(v['id'] === d['id']) return d;
             return v;
         });
-        u.sort(this.compare);
+        u.sort(this.compareDate);
         this.setState({schedules: u});
     },
 
@@ -230,11 +289,42 @@ var MainContent = React.createClass({
         this.setState({schedules: r});
     },
 
-    compare: function(a, b) {
+    compareDate: function(a, b) {
         if(a['startdatetime'] > b['startdatetime']) return 1;
         if(a['startdatetime'] === b['startdatetime']) return 0;
         return -1;
     },
+
+    compareGuest: function(a, b) {
+        if(a['guest'] > b['guest']) return 1;
+        if(a['guest'] === b['guest']) return 0;
+        return -1;
+    },
+
+    compareDateDes: function(a, b) {
+        if(a['startdatetime'] > b['startdatetime']) return -1;
+        if(a['startdatetime'] === b['startdatetime']) return 0;
+        return 1;
+    },
+
+    compareGuestDes: function(a, b) {
+        if(a['guest'] > b['guest']) return -1;
+        if(a['guest'] === b['guest']) return 0;
+        return 1;
+    },
+
+    compareSummary: function(a, b) {
+        if(a['summary'] > b['summary']) return 1;
+        if(a['summary'] === b['summary']) return 0;
+        return -1;
+    },
+
+    compareSummaryDes: function(a, b) {
+        if(a['summary'] > b['summary']) return -1;
+        if(a['summary'] === b['summary']) return 0;
+        return 1;
+    },
+
 });
 
 //---------------------------------------------------------.
