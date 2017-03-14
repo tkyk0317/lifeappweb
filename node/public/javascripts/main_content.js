@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import moment from 'moment';
 import Calendar from './calendar.js';
+import ConfigModal from './config_modal.js';
 import ScheduleCardArea from './schedule.js';
 import LinearProgress from 'material-ui/LinearProgress';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -87,6 +88,36 @@ class HeaderComponent extends React.Component {
 class NaviComponent extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            isActive: false,
+            profile: this.props.profile,
+        };
+
+        // bind function.
+        this.onSubmit = this.onSubmit.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.openConfig = this.openConfig.bind(this);
+        this.closeConfig = this.closeConfig.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.profile) this.setState({profile: nextProps.profile});
+    }
+
+    onSubmit() {
+        this.closeConfig();
+    }
+
+    openConfig() {
+        this.setState({isActive: true});
+    }
+
+    closeConfig() {
+        this.setState({isActive: false});
+    }
+
+    onChange(e) {
+        this.setState({profile: { [e.target.name]: e.target.value}});
     }
 
     render() {
@@ -95,9 +126,18 @@ class NaviComponent extends React.Component {
                 <span className="mdl-layout-title">{this.props.title}</span>
                 <nav className="mdl-navigation">
                     <a className="mdl-navigation__link" href="">Link</a>
-                    <a className="mdl-navigation__link" href="">Config</a>
+                    <a className="mdl-navigation__link" onClick={this.openConfig}>Config</a>
                     <a className="mdl-navigation__link" href="/signout">Signout</a>
                 </nav>
+                <ConfigModal title="Update profile"
+                             isActive={this.state.isActive}
+                             onSubmit={this.onSubmit}
+                             onClose={this.closeConfig}
+                             onChange={this.onChange}
+                             email={this.state.profile.email}
+                             password={this.state.profile.password}
+                             firstname={this.state.profile.firstname}
+                             lastname={this.state.profile.lastname} />
             </div>
         );
     }
@@ -232,7 +272,7 @@ var MainContent = React.createClass({
                     <HeaderComponent onChange={this.onChange}
                                      onSortAsc={this.onSortAsc}
                                      onSortDes={this.onSortDes} />
-                    <NaviComponent title="LifeApp" />
+                    <NaviComponent title="LifeApp" profile={this.state.profile} />
                     <main id="page_top" className="mdl-layout__content">
                         <div className="mdl-grid">
                             <Calendar memberId={this.state.memberId}
