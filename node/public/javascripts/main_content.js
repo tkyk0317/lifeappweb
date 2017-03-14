@@ -24,6 +24,7 @@ class HeaderComponent extends React.Component {
     }
 
     onChange(e) {
+        this.setState({searchText: e.target.value});
         this.props.onChange(e);
     }
 
@@ -50,6 +51,7 @@ class HeaderComponent extends React.Component {
                                    type="text"
                                    name="search_schedule"
                                    onChange={this.onChange}
+                                   value={this.state.searchText}
                                    id="fixed-header-drawer-exp" />
                         </div>
                     </div>
@@ -185,7 +187,7 @@ var MainContent = React.createClass({
                 if(e.startdatetime.match(reg_exp)) return true;
                 if(e.enddatetime.match(reg_exp)) return true;
                 let guests_result = e.guest ? e.guest.filter((g) => { return g.match(reg_exp); }) : null;
-                return guests_result !== null;
+                return (guests_result !== null && guests_result.length > 0);
             })
         });
     },
