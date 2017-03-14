@@ -164,12 +164,15 @@ class RegistSchedule extends React.Component {
         return null;
     }
 
-    render() {
-        var obj = this;
+    componentDidMount() {
+        var self = this;
         var regist_button = document.getElementById('schedule_regist');
         regist_button.addEventListener('click', function() {
-            obj.openModal();
+            self.openModal();
         });
+    }
+
+    render() {
         return (<ScheduleModal isActive={this.state.isActive}
                                onSubmit={this.onSubmit}
                                onChange={this.onChange}

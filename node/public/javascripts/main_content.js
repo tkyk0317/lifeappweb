@@ -10,7 +10,74 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 var variables = require('./variable.js');
 
 //----------------------------------------.
-// Main Content Cpomnent.
+// Header Component.
+//----------------------------------------.
+class HeaderComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            searchText: '',
+        };
+        this.onChange = this.onChange.bind(this);
+    }
+
+    onChange(e) {
+        this.props.onChange(e);
+    }
+
+    render() {
+        return (
+            <header className="mdl-layout__header">
+                <div className="mdl-layout__header-row">
+                    <span className="mdl-layout-title">LifeApp</span>
+                    <div className="mdl-layout-spacer"></div>
+                    <button id="schedule_regist"
+                            className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
+                        <i className="material-icons">add</i>
+                    </button>
+                    <div className="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+                        <label className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
+                               htmlFor="fixed-header-drawer-exp">
+                            <i className="material-icons">search</i>
+                        </label>
+                        <div className="mdl-textfield__expandable-holder">
+                            <input className="mdl-textfield__input"
+                                   type="text"
+                                   name="search_schedule"
+                                   onChange={this.onChange}
+                                   id="fixed-header-drawer-exp" />
+                        </div>
+                    </div>
+                </div>
+            </header>
+        );
+    }
+}
+
+//----------------------------------------.
+// Navigation Component.
+//----------------------------------------.
+class NaviComponent extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <div className="mdl-layout__drawer">
+                <span className="mdl-layout-title">{this.props.title}</span>
+                <nav className="mdl-navigation">
+                    <a className="mdl-navigation__link" href="">Link</a>
+                    <a className="mdl-navigation__link" href="">Config</a>
+                    <a className="mdl-navigation__link" href="/signout">Signout</a>
+                </nav>
+            </div>
+        );
+    }
+}
+
+//----------------------------------------.
+// Main Content Component.
 //----------------------------------------.
 var MainContent = React.createClass({
     getInitialState: function() {
@@ -22,34 +89,32 @@ var MainContent = React.createClass({
         };
     },
 
-    componentDidMount: function() {
-        // to get schedule data and profile data.
+    getSchedule: function() {
+        console.log("getSchedule")
         var self = this;
-        var req = require('superagent');
-        const now = new Date();
+        return new Promise((resolve, reject) => {
+            var req = require('superagent');
+            req.get('/v1/schedules')
+               .set('Accept', 'application/json')
+               .set('Content-Type', 'application/json')
+               .end(function(err, res) {
+                   if(res.body) {
+                       self.setState({list: res.body.list || []});
+                       self.setState({schedules: res.body.schedule || []});
+                       self.setState({baseSchedules: res.body.schedule || []});
+                       self.setState({memberId: res.body.memberid || null});
+                       resolve(res);
+                   }
+               });
+        });
+    },
 
-        // get schedules.
-        let member_id = 0;
-        const getSchedule = () => {
-            return new Promise((resolve, reject) => {
-                req.get('/v1/schedules')
-                   .set('Accept', 'application/json')
-                   .set('Content-Type', 'application/json')
-                   .end(function(err, res) {
-                       if(res.body) {
-                           member_id = res.body.memberid;
-                           self.setState({list: res.body.list || []});
-                           self.setState({schedules: res.body.schedule || []});
-                           self.setState({memberId: res.body.memberid || null});
-                           resolve();
-                       }
-                   });
-            });
-        };
+    componentDidMount: function() {
         // get profile.
-        const getProfile = () => {
+        const getProfile = (res) => {
             return new Promise((resolve, reject) => {
-                req.get('/v1/profile/' + member_id)
+                var req = require('superagent');
+                req.get('/v1/profile/' + res.body.memberid)
                    .set('Accept', 'application/json')
                    .set('Content-Type', 'application/json')
                    .end(function(err, res) {
@@ -61,7 +126,8 @@ var MainContent = React.createClass({
         };
 
         // get schedule and profile.
-        getSchedule()
+        var self = this;
+        this.getSchedule()
             .then(getProfile)
             .then((d) => {
                 if(d) {
@@ -82,17 +148,39 @@ var MainContent = React.createClass({
             });
     },
 
+    onChange: function(e) {
+        // search at realtime.
+        let reg_exp = new RegExp(e.target.value);
+        this.setState({
+            schedules: this.state.baseSchedules.filter((e) => {
+                // select schedule at search-text.
+                if(e.summary.match(reg_exp)) return true;
+                if(e.memo.match(reg_exp)) return true;
+                if(e.startdatetime.match(reg_exp)) return true;
+                if(e.enddatetime.match(reg_exp)) return true;
+                let guests_result = e.guest ? e.guest.filter((g) => { return g.match(reg_exp); }) : null;
+                return guests_result !== null;
+            })
+        });
+    },
+
     render: function() {
         if(this.state.schedules) {
             return (
-                <div className="mdl-grid">
-                    <Calendar memberId={this.state.memberId}
-                              schedules={this.state.schedules}
-                              selected={moment().startOf("day")} />
-                    <ScheduleCardArea memberId={this.state.memberId}
+                <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+                    <HeaderComponent onChange={this.onChange} />
+                    <NaviComponent title="LifeApp" />
+                    <main id="page_top" className="mdl-layout__content">
+                        <div className="mdl-grid">
+                            <Calendar memberId={this.state.memberId}
                                       schedules={this.state.schedules}
-                                      calendarlist={this.state.list}
-                                      onComplete={this.onComplete}/>
+                                      selected={moment().startOf("day")} />
+                            <ScheduleCardArea memberId={this.state.memberId}
+                                              schedules={this.state.schedules}
+                                              calendarlist={this.state.list}
+                                              onComplete={this.onComplete}/>
+                        </div>
+                    </main>
                 </div>
             );
         }

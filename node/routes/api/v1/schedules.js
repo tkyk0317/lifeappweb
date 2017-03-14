@@ -43,7 +43,23 @@ class Schedule {
                 values: [user.id],
             }, (e, r, f) => {
                 if(e || !r) reject("Database error");
-                else resolve(r);
+                else {
+                    // parse guests.
+                    const records = r.map((d) => {
+                        return {
+                            id: d.id,
+                            memberid: d.memberid,
+                            summary: d.summary,
+                            memo: d.memo,
+                            guest: d.guest ? d.guest.split(',') : [],
+                            startdatetime: d.startdatetime,
+                            enddatetime: d.enddatetime,
+                            created: d.created,
+                            updated: d.updated,
+                        };
+                    });
+                    resolve(records);
+                }
             });
         });
     }
