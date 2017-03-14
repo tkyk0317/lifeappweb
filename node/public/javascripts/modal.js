@@ -172,7 +172,7 @@ export default class ScheduleModal extends React.Component {
                                 value={this.props.endtime}
                                 onChange={this.onChangeEndTime} />
                     <TextField name="guest"
-                               hintText="guest"
+                               hintText="guest(comma separated email addresse)"
                                style={style.text_field}
                                underlineFocusStyle={style.focuslineStyle}
                                defaultValue={this.props.guest}

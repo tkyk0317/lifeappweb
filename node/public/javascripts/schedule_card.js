@@ -6,7 +6,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import Avatar from 'material-ui/Avatar';
 
 var variables = require('./variable.js');
 var utility = require('./utility.js');
@@ -32,7 +31,6 @@ export default class ScheduleCard extends React.Component {
             summary: this.props.summary,
             memo: this.props.memo,
             guest: this.props.guest,
-            avatar: this.props.avatar,
             orgcalendarid: this.props.calendarid,
             calendarid: this.props.calendarid,
         };
@@ -149,11 +147,6 @@ export default class ScheduleCard extends React.Component {
         var e_date = this.state.enddate + " " + this.state.endtime;
         var date = s_date + "/" + e_date;
 
-        var avatar = this.props.avatar;
-        if(!avatar) {
-            // avatar is not uploaded, set default image.
-            avatar = <Avatar icon={<FontIcon className="material-icons">account_circle</FontIcon>}/>;
-        }
         const delete_title = this.props.calendartitle ? "Delete Schedule" + "\n(" + this.props.calendartitle + ")" : "Delete Schedule";
         return (
             <div>
@@ -162,7 +155,6 @@ export default class ScheduleCard extends React.Component {
                         <Card>
                             <CardHeader title={this.props.summary}
                                         titleStyle={{fontSize: "large"}}
-                                        avatar={avatar}
                                         subtitle={date} />
                             <CardText>
                                 {this.props.memo}
