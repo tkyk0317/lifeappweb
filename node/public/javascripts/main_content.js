@@ -42,8 +42,7 @@ class HeaderComponent extends React.Component {
                 <div className="mdl-layout__header-row">
                     <div className="mdl-layout-spacer"></div>
                     <div className="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
-                        <label className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect"
-                               htmlFor="fixed-header-drawer-exp">
+                        <label className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect" htmlFor="fixed-header-drawer-exp">
                             <i className="material-icons">search</i>
                         </label>
                         <div className="mdl-textfield__expandable-holder">
@@ -55,8 +54,7 @@ class HeaderComponent extends React.Component {
                                    id="fixed-header-drawer-exp" />
                         </div>
                     </div>
-                    <button id="schedule_regist"
-                            className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
+                    <button id="schedule_regist" className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
                         <i className="material-icons">add</i>
                     </button>
 
@@ -177,19 +175,24 @@ var MainContent = React.createClass({
     },
 
     onChange: function(e) {
+        if(e.target.value === '') {
+            this.setState({schedules: this.state.baseSchedules});
+            return;
+        }
+
+        // splited by space.
+        let reg_exp = new RegExp(e.target.value.split(/\s+/).reduce((prev, cur) => {
+            return '^(?=.*' + prev + ')' + '(?=.*' + cur +')'; // AND search.
+        }));
+
         // search at realtime.
-        let reg_exp = new RegExp(e.target.value);
-        this.setState({
-            schedules: this.state.baseSchedules.filter((e) => {
-                // select schedule at search-text.
-                if(e.summary.match(reg_exp)) return true;
-                if(e.memo.match(reg_exp)) return true;
-                if(e.startdatetime.match(reg_exp)) return true;
-                if(e.enddatetime.match(reg_exp)) return true;
-                let guests_result = e.guest ? e.guest.filter((g) => { return g.match(reg_exp); }) : null;
-                return (guests_result !== null && guests_result.length > 0);
-            })
+        let filter_schedules =
+            this.state.baseSchedules.filter((s) => {
+                let target = '';
+                for(let k in s) target += s[k];
+                return target.match(reg_exp);
         });
+        this.setState({schedules: filter_schedules});
     },
 
     onSortAsc: function(v) {
