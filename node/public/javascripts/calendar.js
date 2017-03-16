@@ -24,6 +24,10 @@ export default class Calendar extends React.Component {
         this.renderMonthLabel = this.renderMonthLabel.bind(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({schedules: nextProps.schedules});
+    }
+
     previous() {
         var month = this.state.month;
         month.add(-1, "M");
@@ -38,7 +42,7 @@ export default class Calendar extends React.Component {
 
     select(d) {
         this.setState({selected: d.date});
-        this.forceUpdate();
+        this.props.onSelect(d.date);
     }
 
     render() {

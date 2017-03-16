@@ -9,6 +9,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 var variables = require('./variable.js');
+var utility = require('./utility.js');
 
 //----------------------------------------.
 // Header Component.
@@ -166,9 +167,9 @@ var MainContent = React.createClass({
                .end(function(err, res) {
                    if(res.body) {
                        self.setState({list: res.body.list || []});
-                       self.setState({schedules: res.body.schedule || []});
                        self.setState({baseSchedules: res.body.schedule || []});
                        self.setState({memberId: res.body.memberid || null});
+                       self.searchSelectedDay(moment(new Date()), res.body.schedule);
                        resolve(res);
                    }
                });
@@ -215,7 +216,7 @@ var MainContent = React.createClass({
     },
 
     onChange: function(e) {
-        if(e.target.value === '') {
+        if(e.target.value === 'all') {
             this.setState({schedules: this.state.baseSchedules});
             return;
         }
@@ -265,8 +266,23 @@ var MainContent = React.createClass({
         }
     },
 
+    onSelect: function(date) {
+        if(!date) return;
+        this.searchSelectedDay(date, this.state.baseSchedules);
+    },
+
+    // argment: moment instance.
+    searchSelectedDay(date, schedules) {
+        // search selected day.
+        this.setState({schedules: schedules.filter((s) => {
+            if(date.format('YYYYMMDD') ===
+                moment(utility.fromDateTimeString(s.startdatetime)).format('YYYYMMDD')) return true;
+            return false;
+        })});
+    },
+
     render: function() {
-        if(this.state.schedules) {
+        if(this.state.schedules && this.state.baseSchedules) {
             return (
                 <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
                     <HeaderComponent onChange={this.onChange}
@@ -276,7 +292,8 @@ var MainContent = React.createClass({
                     <main id="page_top" className="mdl-layout__content">
                         <div className="mdl-grid">
                             <Calendar memberId={this.state.memberId}
-                                      schedules={this.state.schedules}
+                                      schedules={this.state.baseSchedules}
+                                      onSelect={this.onSelect}
                                       selected={moment().startOf("day")} />
                             <ScheduleCardArea memberId={this.state.memberId}
                                               schedules={this.state.schedules}
@@ -310,27 +327,27 @@ var MainContent = React.createClass({
     },
 
     addSchedule: function(d) {
-        var v = this.state.schedules;
+        var v = this.state.baseSchedules;
         v.push(d);
         v.sort(this.compareDate);
-        this.setState({schedules: v});
+        this.setState({baseSchedules: v});
     },
 
     updateSchedule: function(d) {
-        var u = this.state.schedules.map(function(v) {
+        var u = this.state.baseSchedules.map(function(v) {
             if(v['id'] === d['id']) return d;
             return v;
         });
         u.sort(this.compareDate);
-        this.setState({schedules: u});
+        this.setState({baseSchedules: u});
     },
 
     deleteSchedule: function(d) {
-        var r = this.state.schedules.filter(function(v, i) {
+        var r = this.state.baseSchedules.filter(function(v, i) {
             if(v['id'] !== d['id']) return true;
             return false;
         });
-        this.setState({schedules: r});
+        this.setState({baseSchedules: r});
     },
 
     compareDate: function(a, b) {

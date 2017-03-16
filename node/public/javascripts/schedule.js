@@ -19,23 +19,14 @@ export default class ScheduleCardArea extends React.Component {
         this.state = {
             canCompleteMessage: false,
             completeMessage: "",
-            schedules: this.props.schedules.filter((d) => {
-                // only schedules after today.
-                return d.startdatetime >= (utility.toDateString(new Date) + " 00:00");
-            }),
+            schedules: this.props.schedules,
         };
         // bind function.
         this.onRegist = this.onRegist.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.schedules) {
-            this.setState({
-                schedules: nextProps.schedules.filter((d) => {
-                    return d.startdatetime >= (utility.toDateString(new Date) + " 00:00");
-                })
-            });
-        }
+        this.setState({schedules: nextProps.schedules});
     }
 
     render() {
