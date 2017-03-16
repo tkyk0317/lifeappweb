@@ -190,8 +190,8 @@ export default class ScheduleModal extends React.Component {
                                style={style.text_field}
                                underlineFocusStyle={style.focuslineStyle}
                                multiLine={true}
-                               rows={2}
-                               rowsMax={4}
+                               rows={4}
+                               rowsMax={8}
                                defaultValue={this.props.memo}
                                onChange={this.props.onChange} />
                             </Dialog>
