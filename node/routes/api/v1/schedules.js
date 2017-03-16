@@ -1,16 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
+var models = require('../../../models/');
 var moment = require('moment');
 var utility = require(__dirname + '/../../../public/javascripts/utility');
 var google = require('./google');
-
-const connection = mysql.createConnection({
-    host: 'database',
-    user: 'albio',
-    password: 'albio',
-    database: 'lifeapp'
-});
 
 // get current date string.
 const getCurDate = () => {
@@ -38,28 +31,28 @@ class Schedule {
     // get schedule data.
     getSchedule(user) {
         return new Promise((resolve, reject) => {
-            connection.query({
-                sql: 'select * from schedule where memberid = ?  order by startdatetime asc',
-                values: [user.id],
-            }, (e, r, f) => {
-                if(e || !r) reject("Database error");
-                else {
-                    // parse guests.
-                    const records = r.map((d) => {
-                        return {
-                            id: d.id,
-                            memberid: d.memberid,
-                            summary: d.summary,
-                            memo: d.memo,
-                            guest: d.guest ? d.guest.split(',') : [],
-                            startdatetime: d.startdatetime,
-                            enddatetime: d.enddatetime,
-                            created: d.created,
-                            updated: d.updated,
-                        };
-                    });
-                    resolve(records);
-                }
+            models.Schedule.findAll({
+                where: {member_id: user.id}
+            })
+            .then((schedules) => {
+                // parse guests.
+                const records = schedules.map((d) => {
+                    return {
+                        id: d.id,
+                        memberid: d.member_id,
+                        summary: d.summary,
+                        memo: d.memo,
+                        guest: d.guest,
+                        startdatetime: d.start_date_time,
+                        enddatetime: d.end_date_time,
+                        created: d.created_at,
+                        updated: d.updated_at,
+                    };
+                });
+                resolve(records);
+            })
+            .catch((e) => {
+                reject(e);
             });
         });
     }
@@ -67,24 +60,45 @@ class Schedule {
     // add schedule.
     addSchedule(user, data) {
         return new Promise((resolve, reject) => {
-            connection.query({
-                sql: 'insert into schedule values(null, ?, ?, ?, ?, ?, ?, ?, ?)',
-                values: [user.id, data.summary, data.guest, data.memo, data.startdatetime, data.enddatetime, getCurDate(), getCurDate()]
-            }, (e, r) => {
-                if(e) reject(e);
-                else resolve(r.insertId);
-            });
+            let schedule = models.Schedule.build(
+                {
+                    member_id: user.id,
+                    summary: data.summary,
+                    guest: data.guest,
+                    memo: data.memo,
+                    start_date_time: data.startdatetime,
+                    end_date_time: data.enddatetime,
+                }
+            );
+            schedule.save()
+                .then((record) => {
+                    resolve(record.id);
+                })
+                .catch((e) => {
+                    reject(e);
+                });
         });
     }
 
     // update schedule.
     updateSchedule(id, data) {
-        connection.query({
-            sql: 'update schedule set startdatetime = ?, enddatetime = ?, guest = ?, summary = ?, memo = ?, updated = ? where id = ?',
-            values: [data.startdatetime, data.enddatetime, data.guest, data.summary, data.memo, getCurDate(), id]
-        }, (e, r) => {
-            if(e) reject("Datebase error: " + e);
-            else resolve();
+        return new Promise((resolve, reject) => {
+            models.Schedule.update({
+                    summary: data.summary,
+                    guest: data.guest,
+                    memo: data.memo,
+                    start_date_time: data.startdatetime,
+                    end_date_time: data.enddatetime,
+                },
+                {
+                    where: {id: id},
+                })
+                .then((s) => {
+                    resolve();
+                })
+                .catch((e) => {
+                    reject(e);
+                });
         });
     }
 
@@ -99,15 +113,14 @@ class Schedule {
     // delete schedule.
     deleteSchedule(id) {
         return new Promise((resolve, reject) => {
-            connection.query({
-                sql: 'delete from schedule where id = ?',
-                values: [id]
-            }, (e, f) => {
-                if(e) reject("Database error: " + e);
-                else resolve();
-            });
+            models.Schedule.destroy({where: {id: id}})
+                .then(() => {
+                    resolve();
+                })
+                .catch((e) => {
+                    reject(e);
+                });
         });
-
     }
 }
 

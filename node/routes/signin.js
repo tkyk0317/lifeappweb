@@ -1,17 +1,9 @@
 var express = require('express');
-var mysql = require('mysql');
 var router = express.Router();
 var jsSHA = require('jssha');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
-// for mysql.
-const connection = mysql.createConnection({
-    host: 'database',
-    user: 'albio',
-    password: 'albio',
-    database: 'lifeapp'
-});
+var models = require('../models');
 
 // for json.
 var app = express();
@@ -38,20 +30,19 @@ passport.use(new LocalStrategy(
             const email = req.body.email;
 
             // search user record.
-            connection.query({
-                sql: 'select * from member where email = ? and password = ?',
-                values: [email, encrypted_password]
-            }, (e, r, f) => {
-                if(e || !r) {
-                    req.flash('error', e);
-                    done(e);
-                }
-                else if(r.length < 1) {
+            models.Member.findOne({
+                where: {email: email, password: encrypted_password},
+            })
+            .then((member) => {
+                if(member) done(null, member);
+                else {
                     req.flash('error', 'Please enter the correct email and password');
-                    req.flash('email', email);
                     done(null, false);
                 }
-                else done(null, r[0]);
+            })
+            .catch((e) => {
+                console.log(e);
+                done(e);
             });
         });
     }));

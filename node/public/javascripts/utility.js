@@ -41,7 +41,7 @@ module.exports = {
         return d.substr(0, 10);
     },
     substrTime: (d) => {
-        return d.substr(10);
+        return d.substr(11, 5);
     },
 
     //----------------------------------------.

@@ -1,15 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
 var google = require('./google.js');
-
-// configuration database.
-const connection = mysql.createConnection({
-    host: 'database',
-    user: 'albio',
-    password: 'albio',
-    database: 'lifeapp'
-});
+var models = require('../../../models/');
 
 //---------------------------------------.
 // Profile Factory.
@@ -29,19 +21,19 @@ class Profile {
     // get profile.
     getProfile(id) {
         return new Promise((resolve, reject) => {
-            connection.query({
-                sql: 'select * from member where id = ?',
-                values: [id],
-            }, (e, r, f) => {
-                if(e || !r) reject("Database Error");
-                else resolve({
-                    id: r[0].id,
-                    firstname: r[0].firstname,
-                    lastname: r[0].lastname,
-                    email: r[0].email,
-                    avator: r[0].avator,
+            models.Member.findOne({id: id})
+                .then((r) => {
+                    resolve({
+                        id: r.id,
+                        firstname: r.firstname,
+                        lastname: r.lastname,
+                        email: r.email,
+                        avatar: r.avatar,
+                    });
+                })
+                .catch((e) => {
+                    reject(e);
                 });
-            });
         });
     }
 }
