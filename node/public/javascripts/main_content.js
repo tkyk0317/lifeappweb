@@ -4,9 +4,19 @@ import moment from 'moment';
 import Calendar from './calendar.js';
 import ConfigModal from './config_modal.js';
 import ScheduleCardArea from './schedule.js';
+import AppBar from 'material-ui/AppBar';
 import LinearProgress from 'material-ui/LinearProgress';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
+import MenuItem from 'material-ui/MenuItem';
+import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar';
+import TextField from 'material-ui/TextField';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+import Perf from 'react-addons-perf';
 
 var variables = require('./variable.js');
 var utility = require('./utility.js');
@@ -19,10 +29,18 @@ class HeaderComponent extends React.Component {
         super(props);
         this.state = {
             searchText: '',
+            isEnableSearch: false,
         };
         this.onChange = this.onChange.bind(this);
+        this.onClickSearch = this.onClickSearch.bind(this);
         this.onSortAsc = this.onSortAsc.bind(this);
         this.onSortDes = this.onSortDes.bind(this);
+
+    }
+
+    onClickSearch(e) {
+        // change display style for search field.
+        this.setState({isEnableSearch: !this.state.isEnableSearch});
     }
 
     onChange(e) {
@@ -30,55 +48,71 @@ class HeaderComponent extends React.Component {
         this.props.onChange(e);
     }
 
-    onSortAsc(e) {
-        this.props.onSortAsc(e.target.value);
+    onSortAsc(e, v) {
+        this.props.onSortAsc(v.props.value);
     }
 
-    onSortDes(e) {
-        this.props.onSortDes(e.target.value);
+    onSortDes(e, v) {
+        this.props.onSortDes(v.props.value);
     }
 
     render() {
+        let style = {
+            appbar: { backgroundColor: "#3f51b5", height: "48px" },
+            toolbar: { backgroundColor: "#3f51b5", height: "48px", margin: 0, padding: 0 },
+            toolbar_button: { color: "white", fontSize: "18px" },
+            toolbar_icon: { color: "white", fontSize: "18px" },
+            searchfield: { color: "white" },
+            focusline: { borderColor: "white" },
+            enablesearch: { display: "none", width: "150px" },
+        };
+
+        // enable or disable search box.
+        if(this.state.isEnableSearch) {
+            style.enablesearch.display = "inline";
+        }
+
         return (
-            <header className="mdl-layout__header">
-                <div className="mdl-layout__header-row">
-                    <div className="mdl-layout-spacer"></div>
-                    <div className="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
-                        <label className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect" htmlFor="fixed-header-drawer-exp">
-                            <i className="material-icons">search</i>
-                        </label>
-                        <div className="mdl-textfield__expandable-holder">
-                            <input className="mdl-textfield__input"
-                                   type="text"
-                                   name="search_schedule"
-                                   onChange={this.onChange}
-                                   value={this.state.searchText}
-                                   id="fixed-header-drawer-exp" />
-                        </div>
-                    </div>
-                    <button id="schedule_regist" className="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
-                        <i className="material-icons">add</i>
-                    </button>
-
-                    <button id="sort-asc" className="mdl-button mdl-js-button mdl-button--icon">
-                        <i className="material-icons">arrow_drop_up</i>
-                    </button>
-                    <ul className="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" htmlFor="sort-asc">
-                        <li value="1" className="mdl-menu__item" onClick={this.onSortAsc}>Date</li>
-                        <li value="2" className="mdl-menu__item" onClick={this.onSortAsc}>Guest</li>
-                        <li value="3" className="mdl-menu__item" onClick={this.onSortAsc}>Summary</li>
-                    </ul>
-
-                    <button id="sort-des" className="mdl-button mdl-js-button mdl-button--icon">
-                        <i className="material-icons">arrow_drop_down</i>
-                    </button>
-                    <ul className="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" htmlFor="sort-des">
-                        <li value="1" className="mdl-menu__item" onClick={this.onSortDes}>Date</li>
-                        <li value="2" className="mdl-menu__item" onClick={this.onSortDes}>Guest</li>
-                        <li value="3" className="mdl-menu__item" onClick={this.onSortDes}>Summary</li>
-                    </ul>
-                </div>
-            </header>
+            <MuiThemeProvider muiTheme={getMuiTheme()}>
+                <AppBar style={style.appbar}
+                    iconElementLeft={<NaviComponent profile={this.props.profile} />}>
+                    <Toolbar style={style.toolbar}>
+                        <ToolbarGroup>
+                            <IconButton onTouchTap={this.onClickSearch}
+                                        tooltip="search schedule"
+                                        iconStyle={style.toolbar_button} >
+                                <FontIcon className="material-icons">search</FontIcon>
+                            </IconButton>
+                            <TextField id="searched_word"
+                                       defaultValue=""
+                                       style={style.enablesearch}
+                                       inputStyle={style.searchfield}
+                                       underlineFocusStyle={style.focusline}
+                                       onChange={this.onChange} />
+                            <IconButton id="schedule_regist"
+                                        tooltip="add schedule"
+                                        iconStyle={style.toolbar_button} >
+                                <FontIcon className="material-icons">add</FontIcon>
+                            </IconButton>
+                            <IconMenu iconButtonElement={<FontIcon className='material-icons' style={style.toolbar_icon}>arrow_drop_up</FontIcon>}
+                                      value='0'
+                                      onItemTouchTap={this.onSortAsc}>
+                                <MenuItem value="1" primaryText="Date" />
+                                <MenuItem value="2" primaryText="Guest" />
+                                <MenuItem value="3" primaryText="Summary" />
+                            </IconMenu>
+                            <IconMenu iconButtonElement={<FontIcon className='material-icons' style={style.toolbar_icon}>arrow_drop_down</FontIcon>}
+                                      value='0'
+                                      style={{marginLeft: "10px"}}
+                                      onItemTouchTap={this.onSortDes}>
+                                <MenuItem value="1" primaryText="Date" />
+                                <MenuItem value="2" primaryText="Guest" />
+                                <MenuItem value="3" primaryText="Summary" />
+                            </IconMenu>
+                        </ToolbarGroup>
+                    </Toolbar>
+                </AppBar>
+            </MuiThemeProvider>
         );
     }
 }
@@ -97,6 +131,7 @@ class NaviComponent extends React.Component {
         // bind function.
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.onChangeMenu = this.onChangeMenu.bind(this);
         this.openConfig = this.openConfig.bind(this);
         this.closeConfig = this.closeConfig.bind(this);
     }
@@ -121,25 +156,46 @@ class NaviComponent extends React.Component {
         this.setState({profile: { [e.target.name]: e.target.value}});
     }
 
+    onChangeMenu(e, v) {
+        switch(v) {
+            case "1": // configuration.
+                this.setState({isActive: true});
+                break;
+            case "2": // signout.
+                location.href="/signout";
+                break;
+            default:
+                break;
+        }
+    }
+
     render() {
+        let style = {
+            root: { marginTop: "-8px", padding: 0, height: "48px"},
+            icon: { color: "white", fontSize: "18px", margin: 0, padding: 0 },
+        };
         return (
-            <div className="mdl-layout__drawer">
-                <span className="mdl-layout-title">{this.props.title}</span>
-                <nav className="mdl-navigation">
-                    <a className="mdl-navigation__link" href="">Link</a>
-                    <a className="mdl-navigation__link" onClick={this.openConfig}>Config</a>
-                    <a className="mdl-navigation__link" href="/signout">Signout</a>
-                </nav>
-                <ConfigModal title="Update profile"
-                             isActive={this.state.isActive}
-                             onSubmit={this.onSubmit}
-                             onClose={this.closeConfig}
-                             onChange={this.onChange}
-                             email={this.state.profile.email}
-                             password={this.state.profile.password}
-                             firstname={this.state.profile.firstname}
-                             lastname={this.state.profile.lastname} />
+            <MuiThemeProvider muiTheme={getMuiTheme()}>
+                <div>
+                    <IconMenu iconButtonElement={<IconButton><MenuIcon /></IconButton>}
+                              style={style.root}
+                              iconStyle={style.icon}
+                              value='0'
+                              onChange={this.onChangeMenu}>
+                        <MenuItem value="1" primaryText="Config" />
+                        <MenuItem value="2" primaryText="Signout" />
+                    </IconMenu>
+                    <ConfigModal title="Update profile"
+                                 isActive={this.state.isActive}
+                                 onSubmit={this.onSubmit}
+                                 onClose={this.closeConfig}
+                                 onChange={this.onChange}
+                                 email={this.state.profile.email}
+                                 password={this.state.profile.password}
+                                 firstname={this.state.profile.firstname}
+                                 lastname={this.state.profile.lastname} />
             </div>
+        </MuiThemeProvider>
         );
     }
 }
@@ -239,9 +295,9 @@ var MainContent = React.createClass({
     onSortAsc: function(v) {
         // sort schedules.
         let cb = null;
-        if(1 === v) cb = this.compareDate; // sort by StartDate.
-        else if(2 === v) cb = this.compareGuest; // sort by Guest.
-        else if(3 === v) cb = this.compareSummary; // sort by Summary.
+        if("1" === v) cb = this.compareDate; // sort by StartDate.
+        else if("2" === v) cb = this.compareGuest; // sort by Guest.
+        else if("3" === v) cb = this.compareSummary; // sort by Summary.
 
         // start sort.
         if(cb) {
@@ -254,9 +310,9 @@ var MainContent = React.createClass({
     onSortDes: function(v) {
         // sort schedules.
         let cb = null;
-        if(1 === v) cb = this.compareDateDes; // sort by StartDate.
-        else if(2 === v) cb = this.compareGuestDes; // sort by guest.
-        else if(3 === v) cb = this.compareSummaryDes; // sort by Summary.
+        if("1" === v) cb = this.compareDateDes; // sort by StartDate.
+        else if("2" === v) cb = this.compareGuestDes; // sort by guest.
+        else if("3" === v) cb = this.compareSummaryDes; // sort by Summary.
 
         // start sort.
         if(cb) {
@@ -285,10 +341,10 @@ var MainContent = React.createClass({
         if(this.state.schedules && this.state.baseSchedules) {
             return (
                 <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-                    <HeaderComponent onChange={this.onChange}
+                    <HeaderComponent profile={this.state.profile}
+                                     onChange={this.onChange}
                                      onSortAsc={this.onSortAsc}
                                      onSortDes={this.onSortDes} />
-                    <NaviComponent title="LifeApp" profile={this.state.profile} />
                     <main id="page_top" className="mdl-layout__content">
                         <div className="mdl-grid">
                             <Calendar memberId={this.state.memberId}
