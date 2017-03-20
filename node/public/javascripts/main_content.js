@@ -72,21 +72,16 @@ class HeaderComponent extends React.Component {
                     iconElementLeft={<NaviComponent profile={this.props.profile} />}>
                     <Toolbar style={style.toolbar}>
                         <ToolbarGroup>
-                            <IconButton onTouchTap={this.onClickSearch}
-                                        tooltip="search schedule"
-                                        iconStyle={style.toolbar_button} >
-                                <FontIcon className="material-icons">search</FontIcon>
-                            </IconButton>
                             <TextField id="searched_word"
                                        defaultValue=""
                                        style={style.searchbox}
                                        inputStyle={style.searchfield}
                                        underlineFocusStyle={style.focusline}
                                        onChange={this.onChange} />
-                            <IconButton id="schedule_regist"
-                                        tooltip="add schedule"
+                            <IconButton onTouchTap={this.onClickSearch}
+                                        tooltip="search schedule"
                                         iconStyle={style.toolbar_button} >
-                                <FontIcon className="material-icons">add</FontIcon>
+                                <FontIcon className="material-icons">search</FontIcon>
                             </IconButton>
                             <IconMenu iconButtonElement={<FontIcon className='material-icons' style={style.toolbar_icon}>arrow_drop_up</FontIcon>}
                                       value='0'
@@ -103,7 +98,12 @@ class HeaderComponent extends React.Component {
                                 <MenuItem value="2" primaryText="Guest" />
                                 <MenuItem value="3" primaryText="Summary" />
                             </IconMenu>
-                        </ToolbarGroup>
+                            <IconButton id="schedule_regist"
+                                        tooltip="add schedule"
+                                        iconStyle={style.toolbar_button} >
+                                <FontIcon className="material-icons">add</FontIcon>
+                            </IconButton>
+                         </ToolbarGroup>
                     </Toolbar>
                 </AppBar>
             </MuiThemeProvider>
