@@ -29,7 +29,6 @@ class HeaderComponent extends React.Component {
         super(props);
         this.state = {
             searchText: '',
-            isEnableSearch: false,
         };
         this.onChange = this.onChange.bind(this);
         this.onClickSearch = this.onClickSearch.bind(this);
@@ -39,13 +38,13 @@ class HeaderComponent extends React.Component {
     }
 
     onClickSearch(e) {
-        // change display style for search field.
-        this.setState({isEnableSearch: !this.state.isEnableSearch});
+        // search.
+        this.props.onSearch(this.state.searchText);
     }
 
-    onChange(e) {
+    onChange(e, n) {
+        // save searched word,
         this.setState({searchText: e.target.value});
-        this.props.onChange(e);
     }
 
     onSortAsc(e, v) {
@@ -64,13 +63,8 @@ class HeaderComponent extends React.Component {
             toolbar_icon: { color: "white", fontSize: "18px" },
             searchfield: { color: "white" },
             focusline: { borderColor: "white" },
-            enablesearch: { display: "none", width: "150px" },
+            searchbox: { width: "150px" },
         };
-
-        // enable or disable search box.
-        if(this.state.isEnableSearch) {
-            style.enablesearch.display = "inline";
-        }
 
         return (
             <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -85,7 +79,7 @@ class HeaderComponent extends React.Component {
                             </IconButton>
                             <TextField id="searched_word"
                                        defaultValue=""
-                                       style={style.enablesearch}
+                                       style={style.searchbox}
                                        inputStyle={style.searchfield}
                                        underlineFocusStyle={style.focusline}
                                        onChange={this.onChange} />
@@ -271,14 +265,14 @@ var MainContent = React.createClass({
             });
     },
 
-    onChange: function(e) {
-        if(e.target.value === 'all') {
+    onSearch: function(v) {
+        if(v === '') return;
+        if(v === 'all') {
             this.setState({schedules: this.state.baseSchedules});
             return;
         }
 
-        // splited by space.
-        let reg_exp = new RegExp(e.target.value.split(/\s+/).reduce((prev, cur) => {
+        let reg_exp = new RegExp(v.split(/\s+/).reduce((prev, cur) => {
             return '^(?=.*' + prev + ')' + '(?=.*' + cur +')'; // AND search.
         }));
 
@@ -287,7 +281,7 @@ var MainContent = React.createClass({
             this.state.baseSchedules.filter((s) => {
                 let target = '';
                 for(let k in s) target += s[k];
-                return target.match(reg_exp);
+                return reg_exp.test(target);
         });
         this.setState({schedules: filter_schedules});
     },
@@ -342,7 +336,7 @@ var MainContent = React.createClass({
             return (
                 <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
                     <HeaderComponent profile={this.state.profile}
-                                     onChange={this.onChange}
+                                     onSearch={this.onSearch}
                                      onSortAsc={this.onSortAsc}
                                      onSortDes={this.onSortDes} />
                     <main id="page_top" className="mdl-layout__content">
