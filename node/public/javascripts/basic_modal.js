@@ -4,6 +4,8 @@ import FlatButton from 'material-ui/FlatButton';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+var utility = require ('./utility.js');
+
 //-------------------------------------------------.
 // Basic Modal Component.
 //-------------------------------------------------.
@@ -49,7 +51,7 @@ export default class BasicModal extends React.Component {
                 <FlatButton label={this.props.btn2_title} onTouchTap={this.state.onClickBtn2} />,
             ];
             var style = {
-                dialog: { width: "400px", }
+                dialog: { width: utility.isSmartPhone() ? "300px" : "400px", }
             };
             return (
                 <MuiThemeProvider muiTheme={getMuiTheme()}>

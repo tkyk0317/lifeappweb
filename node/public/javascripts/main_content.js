@@ -63,7 +63,7 @@ class HeaderComponent extends React.Component {
             toolbar_icon: { color: "white", fontSize: "18px" },
             searchfield: { color: "white" },
             focusline: { borderColor: "white" },
-            searchbox: { width: "150px" },
+            searchbox: { width: utility.isSmartPhone() ? "120px" : "200px" },
         };
 
         return (

@@ -79,9 +79,17 @@ export default class Calendar extends React.Component {
             <div id="calendar"
                  className="mdl-cell mdl-cell--5-col mdl-cell--4-col-tablet mdl-cell--4-col-phone">
                 <div className="header">
-                    <i className="fa fa-angle-left" onClick={this.previous}></i>
+                    {(() => {
+                        if(!utility.isSmartPhone()) {
+                            return <i className="fa fa-angle-left" onClick={this.previous}></i>;
+                        }
+                    })()}
                     {this.renderMonthLabel()}
-                    <i className="fa fa-angle-right" onClick={this.next}></i>
+                    {(() => {
+                        if(!utility.isSmartPhone()) {
+                            return <i className="fa fa-angle-right" onClick={this.next}></i>;
+                        }
+                    })()}
                 </div>
                 <DayNames />
                 {this.renderWeeks()}
