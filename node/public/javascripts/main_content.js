@@ -86,17 +86,17 @@ class HeaderComponent extends React.Component {
                             <IconMenu iconButtonElement={<FontIcon className='material-icons' style={style.toolbar_icon}>arrow_drop_up</FontIcon>}
                                       value='0'
                                       onItemTouchTap={this.onSortAsc}>
-                                <MenuItem value={variable.SORT_CATEGORY.SORT_DATE} primaryText="Date" />
-                                <MenuItem value={variable.SORT_CATEGORY.SORT_GUEST} primaryText="Guest" />
-                                <MenuItem value={variable.SORT_CATEGORY.SORT_SUMMARY}" primaryText="Summary" />
+                                <MenuItem value={variables.SORT_CATEGORY.SORT_DATE} primaryText="Date" />
+                                <MenuItem value={variables.SORT_CATEGORY.SORT_GUEST} primaryText="Guest" />
+                                <MenuItem value={variables.SORT_CATEGORY.SORT_SUMMARY} primaryText="Summary" />
                             </IconMenu>
                             <IconMenu iconButtonElement={<FontIcon className='material-icons' style={style.toolbar_icon}>arrow_drop_down</FontIcon>}
                                       value='0'
                                       style={{marginLeft: "10px"}}
                                       onItemTouchTap={this.onSortDes}>
-                                <MenuItem value={variable.SORT_CATEGORY.SORT_DATE} primaryText="Date" />
-                                <MenuItem value={variable.SORT_CATEGORY.SORT_GUEST} primaryText="Guest" />
-                                <MenuItem value={variable.SORT_CATEGORY.SORT_SUMMARY}" primaryText="Summary" />
+                                <MenuItem value={variables.SORT_CATEGORY.SORT_DATE} primaryText="Date" />
+                                <MenuItem value={variables.SORT_CATEGORY.SORT_GUEST} primaryText="Guest" />
+                                <MenuItem value={variables.SORT_CATEGORY.SORT_SUMMARY} primaryText="Summary" />
                             </IconMenu>
                             <IconButton id="schedule_regist"
                                         tooltip="add schedule"
@@ -289,7 +289,7 @@ var MainContent = React.createClass({
     onSortAsc: function(v) {
         // sort schedules.
         let cb = null;
-        if(variables.SORT_CATEGORY.SORT_CATEGORY === v) cb = this.compareDate; // sort by StartDate.
+        if(variables.SORT_CATEGORY.SORT_DATE === v) cb = this.compareDate; // sort by StartDate.
         else if(variables.SORT_CATEGORY.SORT_GUEST === v) cb = this.compareGuest; // sort by Guest.
         else if(variables.SORT_CATEGORY.SORT_SUMMARY === v) cb = this.compareSummary; // sort by Summary.
 
@@ -304,7 +304,7 @@ var MainContent = React.createClass({
     onSortDes: function(v) {
         // sort schedules.
         let cb = null;
-        if(variables.SORT_CATEGORY.SORT_CATEGORY === v) cb = this.compareDateDes; // sort by StartDate.
+        if(variables.SORT_CATEGORY.SORT_DATE === v) cb = this.compareDateDes; // sort by StartDate.
         else if(variables.SORT_CATEGORY.SORT_GUEST === v) cb = this.compareGuestDes; // sort by Guest.
         else if(variables.SORT_CATEGORY.SORT_SUMMARY === v) cb = this.compareSummaryDes; // sort by Summary.
 
