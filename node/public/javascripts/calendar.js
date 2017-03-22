@@ -24,6 +24,35 @@ export default class Calendar extends React.Component {
         this.renderMonthLabel = this.renderMonthLabel.bind(this);
     }
 
+    componentDidMount() {
+        // callback functions.
+        let DIRECTION = {
+            UNKNOWN: -1,
+            LEFT: 0,
+            RIGHT: 1,
+        };
+        let pos = 0;
+        let direction = DIRECTION.UNKNOWN;
+        const onTouchStart = ((e) => {
+            direction = DIRECTION.UNKNOWN;
+            pos = getPosition(e);
+        });
+        const onTouchMove = ((e) => {
+            if(pos - getPosition(e) > 50) direction = DIRECTION.LEFT;
+            else direction = DIRECTION.RIGHT;
+        });
+        const onTouchEnd = ((e) => {
+            if(DIRECTION.LEFT === direction) this.next();
+            else if(DIRECTION.RIGHT === direction) this.previous();
+        });
+        const getPosition = ((e) => { return e.touches[0].pageX; });
+
+        // register event listener.
+        document.getElementById('calendar').addEventListener('touchstart', onTouchStart);
+        document.getElementById('calendar').addEventListener('touchmove', onTouchMove);
+        document.getElementById('calendar').addEventListener('touchend', onTouchEnd);
+    }
+
     componentWillReceiveProps(nextProps) {
         this.setState({schedules: nextProps.schedules});
     }
