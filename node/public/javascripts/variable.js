@@ -7,4 +7,10 @@ var ACTION_CATEGORY = {
     DELETE_SCHEDULE: 2,
 };
 
-export { ACTION_CATEGORY };
+var SORT_CATEGORY {
+    SORT_DATE = 1,
+    SORT_GUEST = 2,
+    SORT_SUMMARY = 3,
+};
+
+export { ACTION_CATEGORY, SORT_CATEGORY };
