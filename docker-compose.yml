@@ -23,3 +23,13 @@ node:
   #environment:
     #DEBUG: "express:*"
   container_name: lifeapp_node
+
+nginx:
+  build: nginx
+  ports:
+    - "8080:80"
+  links:
+    - node
+  tty:
+    true
+  container_name: lifeapp_node_nginx
