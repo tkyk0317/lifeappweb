@@ -102,7 +102,10 @@ export default class Calendar extends React.Component {
                              schedules={this.props.schedules}
                              selected={this.state.selected} />);
             date.add(1, "w");
-            done = (startMonthIndex + 2) === date.month();
+
+            // consider overflow month(month is zero origin).
+            const end_month = (startMonthIndex + 2 >= 12 ? startMonthIndex + 2 - 12 : startMonthIndex + 2);
+            done = end_month === date.month();
         }
         return weeks;
     }
