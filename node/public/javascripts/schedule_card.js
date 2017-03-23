@@ -146,10 +146,12 @@ export default class ScheduleCard extends React.Component {
     }
 
     render() {
-        var s_date = this.state.startdate + " " + this.state.starttime;
-        var e_date = this.state.enddate + " " + this.state.endtime;
-        var date = s_date + "/" + e_date;
-
+        const s_date = this.state.startdate + " " + this.state.starttime;
+        const e_date = this.state.enddate + " " + this.state.endtime;
+        const date = s_date + "/" + e_date;
+        const style = {
+            button: { minWidth: "85px", },
+        };
         const delete_title = this.props.calendartitle ? "Delete Schedule" + "\n(" + this.props.calendartitle + ")" : "Delete Schedule";
         return (
             <div>
@@ -158,13 +160,39 @@ export default class ScheduleCard extends React.Component {
                         <Card>
                             <CardHeader title={this.props.summary}
                                         titleStyle={{fontSize: "large"}}
-                                        subtitle={date} />
-                            <CardText>
+                                        actAsExpander={true}
+                                        showExpandableButton={true}
+                                        subtitle={date}>
+                            </CardHeader>
+                            <CardText expandable={true}>
                                 {this.props.memo}
                             </CardText>
                             <CardActions style={{display: "inline-block", textAligh: "right"}}>
-                                <RaisedButton icon={<FontIcon className="material-icons">description</FontIcon>} label="Detail" primary={true} onTouchTap={this.openModal} />
-                                <RaisedButton icon={<FontIcon className="material-icons">delete_forever</FontIcon>} label="Delete" secondary={true} onTouchTap={this.openDeleteModal} />
+                                <RaisedButton icon={<FontIcon className="material-icons">description</FontIcon>}
+                                              label={utility.isSmartPhone() ? "" : "Detail"}
+                                              primary={true}
+                                              style={style.button}
+                                              onTouchTap={this.openModal} />
+                                <RaisedButton icon={<FontIcon className="material-icons">delete_forever</FontIcon>}
+                                              label={utility.isSmartPhone() ? "" : "Delete"}
+                                              style={style.button}
+                                              secondary={true}
+                                              onTouchTap={this.openDeleteModal} />
+                                {
+                                    (() => {
+                                        if(this.props.location) {
+                                            return (
+                                                <a href={"http://maps.google.com/maps?q=" + this.props.location} target="_blank">
+                                                    <RaisedButton icon={<FontIcon className="material-icons" style={{color: "white"}}>place</FontIcon>}
+                                                                  label={utility.isSmartPhone() ? "" : "Map"}
+                                                                  style={style.button}
+                                                                  labelStyle={{color: "white"}}
+                                                                  backgroundColor="#a4c639" />
+                                                </a>
+                                            );
+                                        }
+                                    })()
+                                }
                             </CardActions>
                         </Card>
                     </div>
