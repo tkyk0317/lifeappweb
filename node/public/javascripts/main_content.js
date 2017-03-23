@@ -34,7 +34,6 @@ class HeaderComponent extends React.Component {
         this.onClickSearch = this.onClickSearch.bind(this);
         this.onSortAsc = this.onSortAsc.bind(this);
         this.onSortDes = this.onSortDes.bind(this);
-
     }
 
     onClickSearch(e) {
@@ -57,9 +56,9 @@ class HeaderComponent extends React.Component {
 
     render() {
         let style = {
-            appbar: { backgroundColor: "#3f51b5", height: "48px", paddingRight: 0, },
+            appbar: { backgroundColor: "#3f51b5", height: "48px", padding: "0 0 0 12px" },
             toolbar: { backgroundColor: "#3f51b5", height: "46px", margin: 0, padding: 0 },
-            toolbar_button: { color: "white", fontSize: "18px" },
+            toolbar_button: { color: "white", fontSize: "18px", },
             toolbar_icon: { color: "white", fontSize: "18px" },
             searchfield: { color: "white" },
             focusline: { borderColor: "white" },
@@ -80,6 +79,7 @@ class HeaderComponent extends React.Component {
                                        onChange={this.onChange} />
                             <IconButton onTouchTap={this.onClickSearch}
                                         tooltip="search schedule"
+                                        style={{height: "18px", width: "18px", margin: "0 10px 0 10px", padding: 0}}
                                         iconStyle={style.toolbar_button} >
                                 <FontIcon className="material-icons">search</FontIcon>
                             </IconButton>
@@ -100,10 +100,17 @@ class HeaderComponent extends React.Component {
                             </IconMenu>
                             <IconButton id="schedule_regist"
                                         tooltip="add schedule"
+                                        style={{height: "18px", width: "18px", margin: "0 0 0 10px", padding: 0}}
                                         iconStyle={style.toolbar_button} >
                                 <FontIcon className="material-icons">add</FontIcon>
                             </IconButton>
-                         </ToolbarGroup>
+                            <IconButton onTouchTap={this.props.onReturnToday}
+                                        tooltip="return today"
+                                        style={{height: "18px", width: "18px", margin: "0 10px 0 10px", padding: 0}}
+                                        iconStyle={style.toolbar_button} >
+                                <FontIcon className="material-icons">event</FontIcon>
+                            </IconButton>
+                        </ToolbarGroup>
                     </Toolbar>
                 </AppBar>
             </MuiThemeProvider>
@@ -204,6 +211,7 @@ var MainContent = React.createClass({
             schedules: [],
             list: [],
             profile: {},
+            today: moment().startOf('day'),
         };
     },
 
@@ -263,6 +271,10 @@ var MainContent = React.createClass({
             .catch((e) => {
                 console.log(e);
             });
+    },
+
+    onReturnToday: function() {
+        this.refs.calendar.returnToday();
     },
 
     onSearch: function(v) {
@@ -337,15 +349,17 @@ var MainContent = React.createClass({
             return (
                 <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
                     <HeaderComponent profile={this.state.profile}
+                                     onReturnToday={this.onReturnToday}
                                      onSearch={this.onSearch}
                                      onSortAsc={this.onSortAsc}
                                      onSortDes={this.onSortDes} />
                     <main id="page_top" className="mdl-layout__content">
                         <div className="mdl-grid">
-                            <Calendar memberId={this.state.memberId}
+                            <Calendar ref="calendar"
+                                      memberId={this.state.memberId}
                                       schedules={this.state.baseSchedules}
                                       onSelect={this.onSelect}
-                                      selected={moment().startOf("day")} />
+                                      selected={this.state.today} />
                             <ScheduleCardArea memberId={this.state.memberId}
                                               schedules={this.state.schedules}
                                               calendarlist={this.state.list}

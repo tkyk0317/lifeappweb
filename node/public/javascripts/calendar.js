@@ -69,6 +69,13 @@ export default class Calendar extends React.Component {
         this.setState({month: month});
     }
 
+    returnToday() {
+        this.setState({month: this.props.selected.clone()});
+        this.setState({selected: this.props.selected});
+        this.setState({schedules: this.props.schedules});
+        this.props.onSelect(this.props.selected);
+    }
+
     select(d) {
         this.setState({selected: d.date});
         this.props.onSelect(d.date);
