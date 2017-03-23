@@ -38,6 +38,7 @@ export default class ScheduleCard extends React.Component {
         };
 
         //  bind function.
+        this.isExpandable = this.isExpandable.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -156,10 +157,16 @@ export default class ScheduleCard extends React.Component {
         }
     }
 
+    isExpandable() {
+        if(utility.isSmartPhone() &&
+           (this.props.memo || this.props.guest || this.props.location)) return true;
+        return false;
+    }
+
     render() {
         const s_date = this.state.startdate + " " + this.state.starttime;
         const e_date = this.state.enddate + " " + this.state.endtime;
-        const date = s_date + "/" + e_date;
+        const date = s_date.substr(11) + " - " + e_date.substr(11);
         const style = {
             button: { minWidth: this.state.buttonWidth, },
         };
@@ -170,15 +177,19 @@ export default class ScheduleCard extends React.Component {
                     <div id="schedule_card">
                         <Card>
                             <CardHeader title={this.props.summary}
+                                        style={{padding: "10px 0 0 10px", margin: 0}}
                                         titleStyle={{fontSize: "large"}}
-                                        actAsExpander={utility.isSmartPhone() ? true : false}
-                                        showExpandableButton={utility.isSmartPhone() ? true : false}
+                                        actAsExpander={this.isExpandable() ? true : false}
+                                        showExpandableButton={this.isExpandable() ? true : false}
                                         subtitle={date}>
                             </CardHeader>
-                            <CardText expandable={utility.isSmartPhone() ? true : false}>
-                                {this.props.memo}
+                            <CardText style={{padding: "10px 0 0 16px", margin: 0}}
+                                      expandable={this.isExpandable() ? true : false}>
+                                {this.props.memo ? <p>{this.props.memo}</p> : ''}
+                                {this.props.location ? <p>{this.props.location}</p> : ''}
+                                {this.props.guest ? <p>{this.props.guest}</p> : ''}
                             </CardText>
-                            <CardActions style={{display: "inline-block", textAligh: "right"}}>
+                            <CardActions style={{display: "inline-block", textAligh: "right", padding: "10px 0 10px 10px", margin: 0}}>
                                 <RaisedButton icon={<FontIcon className="material-icons">description</FontIcon>}
                                               label={utility.isSmartPhone() ? "" : "Detail"}
                                               primary={true}
