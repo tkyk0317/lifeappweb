@@ -13,6 +13,15 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+// configuration callback url
+let callback_url = '';
+if('production' === app.get('env')) {
+    callback_url = 'http://h203-137-99-161.vps.ablenet.jp/auth/google/callback';
+}
+else {
+    callback_url = 'http://localhost:8080/auth/google/callback';
+}
+
 //-----------------------------------.
 // google oauth2 configuration.
 //-----------------------------------.
@@ -21,7 +30,7 @@ passport.use(
         {
             clientID: '546592957711-hcj7ou2imh6f3f4f13eh5j0619p4i7u5.apps.googleusercontent.com',
             clientSecret: 'klxyxpTc-XMOZbS9uLzAFVGA',
-            callbackURL: 'http://localhost:8080/auth/google/callback',
+            callbackURL: callback_url,
             passReqToCallback: true,
         },
         (req, accessToken, refreshToken, profile, done) => {
