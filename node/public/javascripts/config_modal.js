@@ -59,7 +59,7 @@ export default class ConfigModal extends React.Component {
                 menuline_field: { width: "100%", margin: "0", },
                 menu_button: { right: "0", },
                 focuslineStyle: { borderColor: "#3f51b5", },
-                dialog: { width: "400px" },
+                dialog: { width: utility.isSmartPhone() ? "300px" : "400px" },
             };
 
             return (
