@@ -16,8 +16,6 @@ node:
     - database
   tty:
     true
-  ports:
-    - "3000:3000"
   volumes:
     - ./node:/opt/server/
   #environment:
