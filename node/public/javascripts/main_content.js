@@ -8,6 +8,7 @@ import AppBar from 'material-ui/AppBar';
 import LinearProgress from 'material-ui/LinearProgress';
 import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
+import Divider from 'material-ui/Divider';
 import FontIcon from 'material-ui/FontIcon';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import MenuItem from 'material-ui/MenuItem';
@@ -63,12 +64,13 @@ class HeaderComponent extends React.Component {
             searchfield: { color: "white" },
             focusline: { borderColor: "white" },
             searchbox: { width: utility.isSmartPhone() ? "120px" : "200px" },
+            menu: { paddingLeft: "5px", fontSize: "small" },
         };
 
         return (
             <MuiThemeProvider muiTheme={getMuiTheme()}>
                 <AppBar style={style.appbar}
-                    iconElementLeft={<NaviComponent profile={this.props.profile} />}>
+                        iconElementLeft={<NaviComponent profile={this.props.profile} />}>
                     <Toolbar style={style.toolbar}>
                         <ToolbarGroup>
                             <TextField id="searched_word"
@@ -85,17 +87,23 @@ class HeaderComponent extends React.Component {
                             <IconMenu iconButtonElement={<FontIcon className='material-icons' style={style.toolbar_icon}>arrow_drop_up</FontIcon>}
                                       value='0'
                                       onItemTouchTap={this.onSortAsc}>
-                                <MenuItem value={variables.SORT_CATEGORY.SORT_DATE} primaryText="Date" />
-                                <MenuItem value={variables.SORT_CATEGORY.SORT_GUEST} primaryText="Guest" />
-                                <MenuItem value={variables.SORT_CATEGORY.SORT_SUMMARY} primaryText="Summary" />
+                                <MenuItem primaryText="Sort Asc"
+                                          leftIcon={<FontIcon className='material-icons'>sort</FontIcon>} />
+                                 <Divider />
+                                <MenuItem style={style.menu} value={variables.SORT_CATEGORY.SORT_DATE} primaryText="Date" />
+                                <MenuItem style={style.menu} value={variables.SORT_CATEGORY.SORT_GUEST} primaryText="Guest" />
+                                <MenuItem style={style.menu} value={variables.SORT_CATEGORY.SORT_SUMMARY} primaryText="Summary" />
                             </IconMenu>
                             <IconMenu iconButtonElement={<FontIcon className='material-icons' style={style.toolbar_icon}>arrow_drop_down</FontIcon>}
                                       value='0'
                                       style={{marginLeft: "10px"}}
                                       onItemTouchTap={this.onSortDes}>
-                                <MenuItem value={variables.SORT_CATEGORY.SORT_DATE} primaryText="Date" />
-                                <MenuItem value={variables.SORT_CATEGORY.SORT_GUEST} primaryText="Guest" />
-                                <MenuItem value={variables.SORT_CATEGORY.SORT_SUMMARY} primaryText="Summary" />
+                                <MenuItem primaryText="Sort Des"
+                                          leftIcon={<FontIcon className='material-icons'>sort</FontIcon>} />
+                                <Divider />
+                                <MenuItem style={style.menu} value={variables.SORT_CATEGORY.SORT_DATE} primaryText="Date" />
+                                <MenuItem style={style.menu} value={variables.SORT_CATEGORY.SORT_GUEST} primaryText="Guest" />
+                                <MenuItem style={style.menu} value={variables.SORT_CATEGORY.SORT_SUMMARY} primaryText="Summary" />
                             </IconMenu>
                             <IconButton id="schedule_regist"
                                         style={{height: "18px", width: "18px", margin: "0 0 0 10px", padding: 0}}
@@ -171,6 +179,7 @@ class NaviComponent extends React.Component {
         let style = {
             root: { marginTop: "-8px", padding: 0, height: "48px"},
             icon: { color: "white", fontSize: "18px", margin: 0, padding: 0 },
+            menu: { paddingLeft: "5px", fontSize: "small" },
         };
         return (
             <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -180,8 +189,11 @@ class NaviComponent extends React.Component {
                               iconStyle={style.icon}
                               value='0'
                               onChange={this.onChangeMenu}>
-                        <MenuItem value="1" primaryText="Config" />
-                        <MenuItem value="2" primaryText="Signout" />
+                        <MenuItem primaryText="LifeApp"
+                                  leftIcon={<FontIcon className='material-icons'>account_circle</FontIcon>} />
+                        <Divider />
+                        <MenuItem style={style.menu} value="1" primaryText="Config" />
+                        <MenuItem style={style.menu} value="2" primaryText="Signout" />
                     </IconMenu>
                     <ConfigModal title="Update profile"
                                  isActive={this.state.isActive}
