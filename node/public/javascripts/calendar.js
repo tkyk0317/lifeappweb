@@ -38,8 +38,9 @@ export default class Calendar extends React.Component {
             pos = getPosition(e);
         });
         const onTouchMove = ((e) => {
-            if(pos - getPosition(e) > 50) direction = DIRECTION.LEFT;
-            else direction = DIRECTION.RIGHT;
+            if(pos - getPosition(e) > 150) direction = DIRECTION.LEFT;
+            else if(getPosition(e) - pos > 150) direction = DIRECTION.RIGHT;
+            else direction = DIRECTION.UNKNOWN;
         });
         const onTouchEnd = ((e) => {
             if(DIRECTION.LEFT === direction) this.next();
