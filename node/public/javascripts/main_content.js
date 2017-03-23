@@ -78,7 +78,6 @@ class HeaderComponent extends React.Component {
                                        underlineFocusStyle={style.focusline}
                                        onChange={this.onChange} />
                             <IconButton onTouchTap={this.onClickSearch}
-                                        tooltip="search schedule"
                                         style={{height: "18px", width: "18px", margin: "0 10px 0 10px", padding: 0}}
                                         iconStyle={style.toolbar_button} >
                                 <FontIcon className="material-icons">search</FontIcon>
@@ -99,13 +98,11 @@ class HeaderComponent extends React.Component {
                                 <MenuItem value={variables.SORT_CATEGORY.SORT_SUMMARY} primaryText="Summary" />
                             </IconMenu>
                             <IconButton id="schedule_regist"
-                                        tooltip="add schedule"
                                         style={{height: "18px", width: "18px", margin: "0 0 0 10px", padding: 0}}
                                         iconStyle={style.toolbar_button} >
                                 <FontIcon className="material-icons">add</FontIcon>
                             </IconButton>
                             <IconButton onTouchTap={this.props.onReturnToday}
-                                        tooltip="return today"
                                         style={{height: "18px", width: "18px", margin: "0 10px 0 10px", padding: 0}}
                                         iconStyle={style.toolbar_button} >
                                 <FontIcon className="material-icons">event</FontIcon>
