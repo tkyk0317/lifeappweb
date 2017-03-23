@@ -31,6 +31,7 @@ export default class ScheduleCard extends React.Component {
             summary: this.props.summary,
             memo: this.props.memo,
             guest: this.props.guest,
+            location: this.props.location,
             orgcalendarid: this.props.calendarid,
             calendarid: this.props.calendarid,
         };
@@ -93,6 +94,7 @@ export default class ScheduleCard extends React.Component {
             "summary": this.state.summary,
             "memo": this.state.memo,
             "guest": this.state.guest,
+            "location": this.state.location,
         };
         ajax.put('/v1/schedules/' + this.props.scheduleId, params,
                  function(err, res) {
@@ -121,6 +123,7 @@ export default class ScheduleCard extends React.Component {
             "summary": this.state.summary,
             "memo": this.state.memo,
             "guest": this.state.guest,
+            "location": this.state.location,
         };
         var self = this;
         ajax.del('/v1/schedules/' + this.props.scheduleId, params,
@@ -182,6 +185,7 @@ export default class ScheduleCard extends React.Component {
                                summary={this.props.summary}
                                memo={this.props.memo}
                                guest={this.props.guest}
+                               location={this.props.location}
                                confirmButtonTitle="Update" />
                 <BasicModal isActive={this.state.isDeleteModalActive}
                             onClickBtn1={this.onDeleteBtnOk}

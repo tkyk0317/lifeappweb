@@ -103,6 +103,7 @@ class ScheduleList extends React.Component {
                                           summary={v.summary}
                                           memo={v.memo}
                                           guest={v.guest}
+                                          location={v.location}
                                           onRegist={self.props.onRegist} />);
                 });
             return (<ReactCSSTransitionGroup transitionName="schedule_card"
@@ -179,6 +180,7 @@ class RegistSchedule extends React.Component {
                                summary=""
                                memo=""
                                guest=""
+                               location=""
                                targetcalid={this.state.targetcalid}
                                confirmButtonTitle="Regist"
                 />);
@@ -207,6 +209,7 @@ class RegistSchedule extends React.Component {
             "summary": this.state.summary,
             "memo": this.state.memo,
             "guest": this.state.guest,
+            "location": this.state.location,
         };
         ajax.post('/v1/schedules', params,
                   function(err, res) {

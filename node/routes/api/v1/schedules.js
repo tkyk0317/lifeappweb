@@ -43,6 +43,7 @@ class Schedule {
                         summary: d.summary,
                         memo: d.memo,
                         guest: d.guest,
+                        location: d.location,
                         startdatetime: d.start_date_time,
                         enddatetime: d.end_date_time,
                         created: d.created_at,
@@ -66,6 +67,7 @@ class Schedule {
                     summary: data.summary,
                     guest: data.guest,
                     memo: data.memo,
+                    location: data.location,
                     start_date_time: data.startdatetime,
                     end_date_time: data.enddatetime,
                 }
@@ -87,6 +89,7 @@ class Schedule {
                     summary: data.summary,
                     guest: data.guest,
                     memo: data.memo,
+                    location: data.location,
                     start_date_time: data.startdatetime,
                     end_date_time: data.enddatetime,
                 },
@@ -156,6 +159,7 @@ class GoogleSchedule extends Schedule {
                     summary: i.summary || '',
                     guest: attendees || '',
                     memo: i.description || '',
+                    location: i.location || '',
                     startdatetime: i.start.dateTime.replace('T', ' ').substr(0, 16) || '',
                     enddatetime: i.end.dateTime.replace('T', ' ').substr(0, 16) || '',
                 });
@@ -256,6 +260,7 @@ class GoogleSchedule extends Schedule {
                                                   summary: data.summary || '',
                                                   description: data.memo || '',
                                                   attendees: data.guest ? [{email: data.guest}] : '',
+                                                  location: data.location || '',
                                                   start: {dateTime: startdatetime, timeZone: 'Asia/Tokyo',},
                                                   end: {dateTime: enddatetime, timeZone: 'Asia/Tokyo',},
                                               },
@@ -344,7 +349,7 @@ router.put('/:id', (req, res) => {
     }
     else {
         schedule.updateSchedule(req.params.id, req.body)
-            .then(() => {res.json({result: 'sucess'});},
+            .then(() => {res.json({result: 'success'});},
                   (e) => { console.log(e); res.json({error: 'error: ' + e});}
             );
     }

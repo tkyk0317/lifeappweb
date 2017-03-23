@@ -5,6 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     summary: DataTypes.STRING,
     memo: DataTypes.STRING,
     guest: DataTypes.STRING,
+    location: DataTypes.STRING,
     start_date_time: DataTypes.STRING,
     end_date_time: DataTypes.STRING
   }, {
@@ -12,6 +13,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
+        Schedule.belongsTo(models.Member, {"foreignKey": "member_id"});
       }
     }
   });

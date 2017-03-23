@@ -39,6 +39,7 @@ export default class ScheduleModal extends React.Component {
             summary: this.props.summary,
             memo: this.props.memo,
             guest: this.props.guest,
+            location: this.props.location,
             targetcalid: this.props.targetcalid, // not render DropDownMenu, unless save this.state.targetcalid and save when onChange Event.
         };
 
@@ -183,6 +184,13 @@ export default class ScheduleModal extends React.Component {
                                style={style.text_field}
                                underlineFocusStyle={style.focuslineStyle}
                                defaultValue={this.props.summary}
+                               onChange={this.props.onChange} />
+                    <br/>
+                    <TextField name="location"
+                               hintText="location"
+                               style={style.text_field}
+                               underlineFocusStyle={style.focuslineStyle}
+                               defaultValue={this.props.location}
                                onChange={this.props.onChange} />
                     <br/>
                     <TextField name="memo"
