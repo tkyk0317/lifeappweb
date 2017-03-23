@@ -25,10 +25,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 //-----------------------------------.
 // Configuration Session.
 //-----------------------------------.
+var SqlStore = require('express-mysql-session')(session);
+var options = {
+    host: 'database',
+    port: 3306,
+    user: 'albio',
+    password: 'albio',
+    database: 'lifeapp_session',
+};
+var sql_session = new SqlStore(options);
+
 app.use(session({
     secret: 'lifeapp',
     resave: false,
-    saveUninitialized :false,
+    saveUninitialized :true,
+    store: sql_session,
     cookie: {
         maxAge: 1000 * 60 * 60, // mill-seconds.
     }
