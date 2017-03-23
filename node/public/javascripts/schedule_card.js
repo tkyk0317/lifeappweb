@@ -34,6 +34,7 @@ export default class ScheduleCard extends React.Component {
             location: this.props.location,
             orgcalendarid: this.props.calendarid,
             calendarid: this.props.calendarid,
+            buttonWidth: 0,
         };
 
         //  bind function.
@@ -145,16 +146,26 @@ export default class ScheduleCard extends React.Component {
         this.setState({isDeleteModalActive: false})
     }
 
+    componentDidMount() {
+        if(utility.isSmartPhone()) {
+            const width = this.refs.card.clientWidth / 4;
+            this.setState({buttonWidth: width - 16});
+        }
+        else {
+            this.setState({buttonWidth: 100});
+        }
+    }
+
     render() {
         const s_date = this.state.startdate + " " + this.state.starttime;
         const e_date = this.state.enddate + " " + this.state.endtime;
         const date = s_date + "/" + e_date;
         const style = {
-            button: { minWidth: "85px", },
+            button: { minWidth: this.state.buttonWidth, },
         };
         const delete_title = this.props.calendartitle ? "Delete Schedule" + "\n(" + this.props.calendartitle + ")" : "Delete Schedule";
         return (
-            <div>
+            <div ref="card">
                 <MuiThemeProvider muiTheme={getMuiTheme()}>
                     <div id="schedule_card">
                         <Card>
@@ -178,6 +189,21 @@ export default class ScheduleCard extends React.Component {
                                               style={style.button}
                                               secondary={true}
                                               onTouchTap={this.openDeleteModal} />
+                                {
+                                    (() => {
+                                        if(this.props.guest) {
+                                            return (
+                                                <a href={"mailto:" + this.props.guest}>
+                                                    <RaisedButton icon={<FontIcon className="material-icons" style={{color: "white"}}>email</FontIcon>}
+                                                                  label={utility.isSmartPhone() ? "" : "Email"}
+                                                                  style={style.button}
+                                                                  labelStyle={{color: "white"}}
+                                                                  backgroundColor="#e67e22" />
+                                                </a>
+                                            );
+                                        }
+                                    })()
+                                }
                                 {
                                     (() => {
                                         if(this.props.location) {
