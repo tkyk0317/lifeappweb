@@ -26,7 +26,7 @@ export default class ScheduleModal extends React.Component {
         this.state = {
             isAcive: false,
             willClose: false,
-            onSubmit: this.props.onSubmit,
+            guestError: '',
             onChange: this.props.onChange,
             onClose: this.props.onClose,
             onChangeDateTime: this.props.onChangeDateTime,
@@ -44,6 +44,8 @@ export default class ScheduleModal extends React.Component {
         };
 
         // bind function.
+        this.onSubmit = this.onSubmit.bind(this);
+        this.onChangeGuest = this.onChangeGuest.bind(this);
         this.onChangeStartDate = this.onChangeStartDate.bind(this);
         this.onChangeEndDate = this.onChangeEndDate.bind(this);
         this.onChangeStartTime = this.onChangeStartTime.bind(this);
@@ -80,13 +82,26 @@ export default class ScheduleModal extends React.Component {
         this.state.onChange(e);
     }
 
+    onChangeGuest(e) {
+        // check validation.
+        if(!utility.checkScheduleEmailValidation(e.target.value)) {
+            this.setState({guestError: 'invalid email format'})
+        }
+        else {
+            this.setState({guestError: ''});
+        }
+        this.state.onChange(e);
+    }
+
     onChangeCalList(e, i, v) {
         this.setState({targetcalid: v});
         this.state.onChangeCalList(e, i, v);
    }
 
     onSubmit() {
-        this.state.onSubmit();
+        if(this.state.guestError === '') {
+            this.props.onSubmit();
+        }
     }
 
     onClose() {
@@ -98,7 +113,7 @@ export default class ScheduleModal extends React.Component {
             const actions = [
                 <FlatButton label={this.props.confirmButtonTitle}
                             primary={true}
-                            onTouchTap={this.state.onSubmit} />,
+                            onTouchTap={this.onSubmit} />,
                 <FlatButton label="Cancel"
                             onTouchTap={this.state.onClose} />,
             ];
@@ -174,10 +189,11 @@ export default class ScheduleModal extends React.Component {
                                 onChange={this.onChangeEndTime} />
                     <TextField name="guest"
                                hintText="guest(comma separated email addresse)"
+                               errorText={this.state.guestError}
                                style={style.text_field}
                                underlineFocusStyle={style.focuslineStyle}
                                defaultValue={this.props.guest}
-                               onChange={this.props.onChange} />
+                               onChange={this.onChangeGuest} />
                     <br/>
                     <TextField name="summary"
                                hintText="summary"

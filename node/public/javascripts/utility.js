@@ -60,5 +60,10 @@ module.exports = {
         if("" === password) return true;
         if(password.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d]{8,12}$/)) return true;
         return false;
-    }
+    },
+    checkScheduleEmailValidation: (email) => {
+        if("" === email) return true;
+        if(email.match(/^((\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)*([,])*)*$/) && !email.match(/,$/)) return true;
+        return false;
+    },
 };
