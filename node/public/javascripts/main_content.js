@@ -105,7 +105,7 @@ class HeaderComponent extends React.Component {
                             <IconButton onTouchTap={this.props.onReturnToday}
                                         style={{height: "18px", width: "18px", margin: "0 10px 0 10px", padding: 0}}
                                         iconStyle={style.toolbar_button} >
-                                <FontIcon className="material-icons">event</FontIcon>
+                                <FontIcon className="material-icons">today</FontIcon>
                             </IconButton>
                         </ToolbarGroup>
                     </Toolbar>
