@@ -254,12 +254,17 @@ class GoogleSchedule extends Schedule {
             const startdatetime = utility.fromDateTimeString(data.startdatetime);
             const enddatetime = utility.fromDateTimeString(data.enddatetime);
 
+            // set attendees.
+            let attendees = data.guest ? data.guest.split(',').map((g) => {
+                return { email: g };
+            }) : null;
+
             // update other parameters.
             self.googleCalendar.events.update(data.calendarid, id,
                                               {
                                                   summary: data.summary || '',
                                                   description: data.memo || '',
-                                                  attendees: data.guest ? [{email: data.guest}] : '',
+                                                  attendees: attendees || '',
                                                   location: data.location || '',
                                                   start: {dateTime: startdatetime, timeZone: 'Asia/Tokyo',},
                                                   end: {dateTime: enddatetime, timeZone: 'Asia/Tokyo',},
