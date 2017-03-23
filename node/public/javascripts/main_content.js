@@ -393,6 +393,7 @@ var MainContent = React.createClass({
         v.push(d);
         v.sort(this.compareDate);
         this.setState({baseSchedules: v});
+        this.searchSelectedDay(moment(new Date()), v);
     },
 
     updateSchedule: function(d) {
@@ -402,6 +403,7 @@ var MainContent = React.createClass({
         });
         u.sort(this.compareDate);
         this.setState({baseSchedules: u});
+        this.searchSelectedDay(moment(new Date()), u);
     },
 
     deleteSchedule: function(d) {
@@ -410,6 +412,7 @@ var MainContent = React.createClass({
             return false;
         });
         this.setState({baseSchedules: r});
+        this.searchSelectedDay(moment(new Date()), r);
     },
 
     compareDate: function(a, b) {
