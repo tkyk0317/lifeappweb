@@ -160,11 +160,11 @@ export default class ScheduleCard extends React.Component {
                         <Card>
                             <CardHeader title={this.props.summary}
                                         titleStyle={{fontSize: "large"}}
-                                        actAsExpander={true}
-                                        showExpandableButton={true}
+                                        actAsExpander={utility.isSmartPhone() ? true : false}
+                                        showExpandableButton={utility.isSmartPhone() ? true : false}
                                         subtitle={date}>
                             </CardHeader>
-                            <CardText expandable={true}>
+                            <CardText expandable={utility.isSmartPhone() ? true : false}>
                                 {this.props.memo}
                             </CardText>
                             <CardActions style={{display: "inline-block", textAligh: "right"}}>
