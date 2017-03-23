@@ -57,7 +57,7 @@ class HeaderComponent extends React.Component {
 
     render() {
         let style = {
-            appbar: { backgroundColor: "#3f51b5", height: "48px" },
+            appbar: { backgroundColor: "#3f51b5", height: "48px", paddingRight: 0, },
             toolbar: { backgroundColor: "#3f51b5", height: "46px", margin: 0, padding: 0 },
             toolbar_button: { color: "white", fontSize: "18px" },
             toolbar_icon: { color: "white", fontSize: "18px" },
