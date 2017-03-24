@@ -22,7 +22,6 @@ node:
   #environment:
     #DEBUG: "express:*"
   container_name: lifeapp_node
-  cpuset: "0"
 
 nginx:
   build: nginx
@@ -33,4 +32,4 @@ nginx:
   tty:
     true
   container_name: lifeapp_node_nginx
-  cpuset: "0,1"
+  cpuset: "0"

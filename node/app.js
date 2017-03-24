@@ -1,4 +1,5 @@
 var express = require('express');
+var cluster = require('express-cluster');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -97,5 +98,9 @@ app.use(function(err, req, res, next) {
     res.render('error');
 });
 
-app.listen(3000);
+// create cluster.
+cluster((worker) => {
+    app.listen(3000);
+});
+
 module.exports = app;
