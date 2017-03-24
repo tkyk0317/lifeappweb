@@ -41,7 +41,7 @@ app.use(session({
     saveUninitialized :true,
     store: sql_session,
     cookie: {
-        maxAge: 1000 * 60 * 60, // mill-seconds.
+        maxAge: 1000 * 60 * 60 * 24, // mill-seconds(one day).
     }
 }));
 app.use(passport.initialize());
