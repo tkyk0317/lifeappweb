@@ -152,7 +152,7 @@ class GoogleSchedule extends Schedule {
         cal.items.forEach((i) => {
             // parse calendar.
             try {
-                var attendees = i.attendees ? i.attendees.map((guest) => {return guest.email;}) : null;
+                var attendees = i.attendees ? i.attendees.map((guest) => {return guest.email;}).join(',') : null;
                 cals.push({
                     id: i.id, // event id.
                     calendarid: id, // calendarid.
