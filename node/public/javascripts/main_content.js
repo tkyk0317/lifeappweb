@@ -229,6 +229,7 @@ var MainContent = React.createClass({
             list: [],
             profile: {},
             today: moment().startOf('day'),
+            is_search: false,
         };
     },
 
@@ -295,24 +296,34 @@ var MainContent = React.createClass({
     },
 
     onSearch: function(v) {
-        if(v === '') return;
-        if(v === 'all') {
-            this.setState({schedules: this.state.baseSchedules});
-            return;
-        }
+        const search = ((v) => {
+            if(v === '') {
+                this.setState({is_search: false});
+                return;
+            }
+            if(v === 'all') {
+                this.setState({schedules: this.state.baseSchedules});
+                this.setState({is_search: false});
+                return;
+            }
 
-        let reg_exp = new RegExp(v.split(/\s+/).reduce((prev, cur) => {
-            return '^(?=.*' + prev + ')' + '(?=.*' + cur +')'; // AND search.
-        }));
+            let reg_exp = new RegExp(v.split(/\s+/).reduce((prev, cur) => {
+                return '^(?=.*' + prev + ')' + '(?=.*' + cur +')'; // AND search.
+            }));
 
-        // search at realtime.
-        let filter_schedules =
-            this.state.baseSchedules.filter((s) => {
-                let target = '';
-                for(let k in s) target += s[k];
-                return reg_exp.test(target);
+            // search at realtime.
+            let filter_schedules =
+                this.state.baseSchedules.filter((s) => {
+                    let target = '';
+                    for(let k in s) target += s[k];
+                    return reg_exp.test(target);
+                });
+            this.setState({schedules: filter_schedules});
+            this.setState({is_search: false});
         });
-        this.setState({schedules: filter_schedules});
+        // set timeout.
+        this.setState({is_search: true});
+        setTimeout(search, 500, v);
     },
 
     onSortAsc: function(v) {
@@ -362,7 +373,34 @@ var MainContent = React.createClass({
     },
 
     render: function() {
-        if(this.state.schedules && this.state.baseSchedules) {
+        if(this.state.is_search) {
+            // loading icon, while searching.
+            return (
+                <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+                    <HeaderComponent profile={this.state.profile}
+                                     onReturnToday={this.onReturnToday}
+                                     onSearch={this.onSearch}
+                                     onSortAsc={this.onSortAsc}
+                                     onSortDes={this.onSortDes} />
+                    <main id="page_top" className="mdl-layout__content">
+                        <div className="mdl-grid">
+                            <Calendar ref="calendar"
+                                      memberId={this.state.memberId}
+                                      schedules={this.state.baseSchedules}
+                                      onSelect={this.onSelect}
+                                      selected={this.state.today} />
+                            <Loading width={utility.isSmartPhone() ? '90%' : '60%'}
+                                     top={utility.isSmartPhone() ? '15%' : '0'}
+                                     left={utility.isSmartPhone() ? '0' : '25%'}
+                                     right='0'
+                                     bottom='0'
+                                     />
+                        </div>
+                    </main>
+                </div>
+            );
+        }
+        else if(this.state.schedules && this.state.baseSchedules) {
             return (
                 <div className="mdl-layout mdl-js-layout mdl-layout--fixed-header">
                     <HeaderComponent profile={this.state.profile}
@@ -386,7 +424,7 @@ var MainContent = React.createClass({
                 </div>
             );
         }
-        return <Loading />
+        return <Loading width='90%' top='0' bottom='0' left='0' right='0'/>
     },
 
     onComplete: function(msg, category, data) {
@@ -477,14 +515,15 @@ var MainContent = React.createClass({
 // Loading Icon Component.
 //---------------------------------------------------------.
 var Loading = React.createClass({
+
     render: function() {
         var style = {
-            width: '90%',
+            width: this.props.width,
             position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
+            top: this.props.top,
+            left: this.props.left,
+            right: this.props.right,
+            bottom: this.props.bottom,
             margin: 'auto',
         };
         return (<MuiThemeProvider muiTheme={getMuiTheme()}>
