@@ -32,7 +32,7 @@ class HeaderComponent extends React.Component {
             searchText: '',
         };
         this.onChange = this.onChange.bind(this);
-        this.onSearchKeyPress = this.onSearchKeyPress.bind(this);
+        this.onSearchKeyDown = this.onSearchKeyDown.bind(this);
         this.onClickSearch = this.onClickSearch.bind(this);
         this.onSortAsc = this.onSortAsc.bind(this);
         this.onSortDes = this.onSortDes.bind(this);
@@ -43,10 +43,10 @@ class HeaderComponent extends React.Component {
         this.props.onSearch(this.state.searchText);
     }
 
-    onSearchKeyPress(e) {
+    onSearchKeyDown(e) {
         // if press the enter key, start searching.
         const ENTER_KEY = 13;
-        if(ENTER === e.charCode) this.props.onSearch(this.state.searchText);
+        if(ENTER_KEY === e.which) this.props.onSearch(this.state.searchText);
     }
 
     onChange(e, v) {
@@ -86,7 +86,7 @@ class HeaderComponent extends React.Component {
                                        inputStyle={style.searchfield}
                                        underlineFocusStyle={style.focusline}
                                        onChange={this.onChange}
-                                       onKeyPress={this.onSearchKeyPress} />
+                                       onKeyDown={this.onSearchKeyDown} />
                             <IconButton onTouchTap={this.onClickSearch}
                                         style={{height: "18px", width: "18px", margin: "0 10px 0 10px", padding: 0}}
                                         iconStyle={style.toolbar_button} >
