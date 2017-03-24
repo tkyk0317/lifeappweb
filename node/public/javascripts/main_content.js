@@ -199,6 +199,7 @@ class NaviComponent extends React.Component {
                               onChange={this.onChangeMenu}>
                         <MenuItem primaryText="LifeApp"
                                   leftIcon={<FontIcon className='material-icons'>account_circle</FontIcon>} />
+                        <MenuItem style={style.menu} primaryText={this.state.profile.email || ''} />
                         <Divider />
                         <MenuItem style={style.menu} value="1" primaryText="Config" />
                         <MenuItem style={style.menu} value="2" primaryText="Signout" />
