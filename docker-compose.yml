@@ -7,6 +7,7 @@ database:
       MYSQL_DATABASE: lifeapp
       MYSQL_USER: albio
       MYSQL_PASSWORD: albio
+  cpuset: "1"
   container_name: lifeapp_node_db
 
 node:
@@ -21,6 +22,7 @@ node:
   #environment:
     #DEBUG: "express:*"
   container_name: lifeapp_node
+  cpuset: "0"
 
 nginx:
   build: nginx
@@ -31,3 +33,4 @@ nginx:
   tty:
     true
   container_name: lifeapp_node_nginx
+  cpuset: "0,1"
