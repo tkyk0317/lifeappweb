@@ -41,7 +41,9 @@ app.use(session({
     resave: true,
     saveUninitialized :true,
     store: sql_session,
-    cookie: {
+    clear_interval: 60 * 60, // seconds(1hour).
+    cookie: { // default cookie.
+        httpOnly: false,
         maxAge: 1000 * 60 * 60 * 24, // mill-seconds(one day).
     }
 }));
