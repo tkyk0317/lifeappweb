@@ -38,7 +38,7 @@ var sql_session = new SqlStore(options);
 
 app.use(session({
     secret: 'lifeapp',
-    resave: false,
+    resave: true,
     saveUninitialized :true,
     store: sql_session,
     cookie: {
