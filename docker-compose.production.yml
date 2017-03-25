@@ -19,14 +19,15 @@ node:
     true
   volumes:
     - ./node:/opt/server/
-  #environment:
-    #DEBUG: "express:*"
+  environment:
+    NODE_ENV: "production"
+    CALLBACK_URL: "http://h203-137-99-161.vps.ablenet.jp/auth/google/callback"
   container_name: lifeapp_node
 
 nginx:
   build: nginx
   ports:
-    - "8080:80"
+    - "80:80"
   links:
     - node
   tty:
