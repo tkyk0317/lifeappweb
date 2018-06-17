@@ -1,0 +1,258 @@
+h1 {
+    text-align: center;
+}
+html {
+  overflow: hidden;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+  position: fixed;
+}
+.mdl-layout__content {
+  overflow:hidden;
+  height: 95%;
+}
+#page-content {
+  width: 100%;
+  height: 100%;
+}
+.mdl-grid {
+  height: 100%;
+}
+#loading_icon {
+  width: 200px;
+  height: 200px;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+}
+#calendar {
+  display: block;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height:98%;
+
+  div.header {
+    background: #3f51b5;
+    height: 5%;
+    color: white;
+    * {
+        height: 100%;
+        /*line-height: 50px !important;*/
+        display: inline-block;
+        vertical-align: middle;
+    }
+    i {
+        float: left;
+        width: 40px;
+        font-size: 1.0em;
+        font-weight: bold;
+        position: relative;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        padding: 0 10px;
+        cursor: pointer;
+    }
+    i.fa-angle-left {
+        text-align: left;
+        /* align vertical middle */
+        display: flex;
+        -webkit-align-items: center;
+        align-items: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+    }
+    i.fa-angle-right {
+        text-align: right;
+        margin-left: -40px;
+        display: -webkit-flex;
+        /* align vertical middle */
+        display: flex;
+        -webkit-align-items: center;
+        align-items: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+     }
+     span {
+        float: left;
+        width: 100%;
+        font-weight: bold;
+        text-transform: uppercase;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        padding-left: 50px;
+        margin-left: -40px;
+        padding-right: 40px;
+        color: inherit;
+        display: -webkit-flex;
+        /* align vertical middle */
+        display: flex;
+        -webkit-align-items: center;
+        align-items: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+     }
+  }
+
+  div.week {
+    float: left;
+    width: 100%;
+    height: 12%;
+    border-top: solid 1px #CCC;
+
+    span.day {
+      float: left;
+      width: 14.28571429%;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      border-left: solid 1px #CCC;
+      font-size: 1.0em;
+      text-align: center;
+      height: 100%;
+      line-height: 30px !important;
+      display: inline-block;
+      vertical-align: middle;
+      background: white;
+      cursor: pointer;
+      color: black;
+    }
+    span.day:first-child {
+      border-left: none;
+    }
+    span.day.today {
+      background: #E3F2FF;
+    }
+    span.day.different-month {
+      color: #C0C0C0;
+    }
+    span.day.selected {
+      background: #3f51b5;
+      color: white;
+    }
+  }
+  div.week:first-child {
+    border-top: none;
+  }
+  div.week.names {
+    height: 3%;
+    span {
+      color: #2875C7;
+      font-weight: bold;
+    }
+  }
+}
+
+.mdl-mini-footer {
+  height: 10vh;
+}
+.mdl-snackbar {
+  background: #3f51b5;
+}
+/* Card Area Style */
+#card_area {
+  padding-right: 0.6em;
+  height:98%;
+  overflow-y: scroll;
+
+  #schedule_card {
+    border-left: 5px solid #3f51b5;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  #action_button {
+    float: right;
+    margin-left: 3px;
+    margin-right: 3px;
+  }
+
+  .dialog_form {
+    width: 350px;
+  }
+
+  #add_button {
+    backgournd-color: #3f51b5;
+  }
+
+  .regist_button {
+    width: 350px;
+    text-align: center;
+  }
+}
+
+/* action item */
+#signout_button {
+  float: right;
+}
+
+/* regist schedule */
+#regist_sch_button {
+  float: right;
+  margin-bottom: 5px;
+}
+
+/* for smartphone layout */
+@media screen and (max-width:640px) {
+  #calendar {
+    display: block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    position: fixed !important;
+    top: 55px;
+    height: 35%;
+    margin: auto;
+    div.header {
+      background: #3f51b5;
+      height: 10%;
+      color: white;
+      font-size: 0.8em;
+      /* align vertical middle */
+      display: flex;
+      -webkit-align-items: center;
+      align-items: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+      * {
+        height: 100%;
+        line-height: 30px !important;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+
+    div.week {
+      height: 12%;
+      span.day {
+        float: left;
+        width: 14.28571429%;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        border-left: solid 1px #CCC;
+        font-size: 0.8em;
+        text-align: center;
+        height: 100%;
+        line-height: 30px !important;
+        display: inline-block;
+        vertical-align: middle;
+        background: white;
+        cursor: pointer;
+        color: black;
+      }
+    }
+    div.week.names {
+      height: 10%;
+    }
+  }
+  #card_area {
+    display: block;
+    padding-right: 0.6em;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    overflow-x: hidden;
+    margin: auto;
+    position: absolute !important;
+    top: 45%;
+    height: 56%;
+  }
+}

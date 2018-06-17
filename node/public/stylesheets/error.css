@@ -1,0 +1,13 @@
+#error {
+	  align-items: center;
+    justify-content: center;
+    height: 100vh;
+	  display: flex;
+}
+#content {
+    text-align: center;
+}
+#recovery {
+    margin-bottom: 5px;
+    font-size: large;
+}

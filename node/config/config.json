@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "albio",
+    "password": "albio",
+    "database": "lifeapp_development",
+    "host": "database",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "albio",
+    "password": "albio",
+    "database": "lifeapp_test",
+    "host": "database",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "albio",
+    "password": "albio",
+    "database": "lifeapp",
+    "host": "database",
+    "dialect": "mysql"
+  }
+}

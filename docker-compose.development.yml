@@ -1,0 +1,37 @@
+database:
+  build: database
+  volumes:
+    - ./database/data:/var/lib/mysql
+  environment:
+      MYSQL_ROOT_PASSWORD: takayuki
+      MYSQL_DATABASE: lifeapp
+      MYSQL_USER: albio
+      MYSQL_PASSWORD: albio
+  cpuset: "1"
+  container_name: lifeapp_node_db
+
+node:
+  build: node
+  command: /opt/server/node_modules/.bin/supervisor -e node,js,json -i node_modules,public /opt/server/app.js
+  links:
+    - database
+  tty:
+    true
+  volumes:
+    - ./node:/opt/server/
+  environment:
+    NODE_ENV: "development"
+    CALLBACK_URL: "http://localhost:8080/auth/google/callback"
+    #DEBUG: "express:*"
+  container_name: lifeapp_node
+
+nginx:
+  build: nginx
+  ports:
+    - "8080:80"
+  links:
+    - node
+  tty:
+    true
+  container_name: lifeapp_node_nginx
+  cpuset: "0"

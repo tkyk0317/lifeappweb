@@ -1,0 +1,29 @@
+/* Animation CSS */
+
+/* Animation Schedule Card */
+.schedule_card-appear {
+  opacity: 0.1;
+  transform:translateX(50%) scale(.95,.95);
+}
+.schedule_card-appear.active {
+  opacity: 1.0;
+  transform:translateX(0) scale(1,1);
+}
+.schedule_card-enter {
+  opacity: 0.1;
+  transform:translateX(50%) scale(.95,.95);
+  transition: opacity 700ms ease-in;
+}
+.schedule_card-enter.schedule_card-enter-active {
+  opacity: 1.0;
+  transform:translateX(0) scale(1,1);
+}
+.schedule_card-leave {
+  opacity: 1.0;
+  transform:translateX(0) scale(1,1);
+  transition: opacity 700ms ease-in;
+}
+.schedule_card-leave.schedule_card-leave-active {
+  opacity: 0.1;
+  transform:translateX(50%) scale(.95,.95);
+}
